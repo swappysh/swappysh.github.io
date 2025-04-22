@@ -12,7 +12,7 @@ alwaysApply: true
 1.  **Identify Task:** Clearly understand the feature or bug fix to be implemented.
 2.  **Branch Creation:**
     *   Determine a descriptive branch name (e.g., `feat/short-desc`, `fix/short-desc`, `chore/short-desc`).
-    *   Ensure you are on the correct base branch (usually `main`).
+    *   Ensure you are on the correct base branch (usually `master`).
     *   Create the new branch: `git checkout -b <new-branch-name>`
 3.  **Implementation:**
     *   Make the necessary code changes.
@@ -37,15 +37,22 @@ alwaysApply: true
 7.  **Pull Request - Creation (Only if user confirms):**
     *   Push the branch to the remote: `git push -u origin <new-branch-name>`
     *   Prepare a structured PR title following conventional commit format (e.g., `feat: Add login button`).
-    *   Prepare a structured PR body including:
-        *   **Motivation:** Briefly explain *why* the change is needed.
-        *   **Summary:** Describe *what* the change does.
-        *   **Related Issues/Tasks:** Link to relevant items if applicable (use inline code for numbers, e.g., `Related to: #123`).
-    *   Create a temporary file (e.g., `pr_body.tmp`) containing the prepared multi-line PR body content. Using a file ensures correct formatting.
+    *   Prepare a structured PR body using the following Markdown format:
+        ```markdown
+        **Motivation:**
+        [Briefly explain *why* the change is needed.]
+
+        **Summary:**
+        - [Describe *what* the change does using bullet points.]
+
+        **Related Issues/Tasks:**
+        [Link to relevant items if applicable (e.g., `Related to: #123`). Use "None" if not applicable.]
+        ```
+    *   Create a temporary file (e.g., `pr_body.tmp`) containing the prepared multi-line PR body content **exactly as shown above**. Using a file ensures correct formatting.
     *   Create the PR using the `gh` command. If `gh` is not in the default PATH, use the full path (e.g., `/opt/homebrew/bin/gh`):
         ```bash
         # Example using full path and temporary file
-        /opt/homebrew/bin/gh pr create --title "Your Conventional Commit Title" --body-file pr_body.tmp --base main --head <new-branch-name>
+        /opt/homebrew/bin/gh pr create --title "Your Conventional Commit Title" --body-file pr_body.tmp --base master --head <new-branch-name>
         ```
     *   Clean up the temporary file (e.g., `rm pr_body.tmp`).
 
