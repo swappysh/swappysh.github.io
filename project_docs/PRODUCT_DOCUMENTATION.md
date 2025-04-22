@@ -6,11 +6,13 @@ This project aims to build and maintain a personal portfolio website for Swapnil
 
 ## 2. Tasks
 
-- **Task 1: Initial Project Setup:** Configure Hugo, select and install the theme ('hello-friend-ng').
-- **Task 2: Core Content Creation:** Create the 'About Me' page and add the resume PDF.
-- **Task 3: Site Configuration:** Set up site parameters in `config.toml` (title, subtitle, social links, menu, profile image).
-- **Task 4: Deployment Setup:** Configure the build process to output to the `docs/` directory for deployment (likely via GitHub Pages).
-- **Task 5: Ongoing Maintenance:** Update the resume file, potentially update the theme, or add new content sections (e.g., blog, projects) if desired later.
+- [x] **Task 1: Initial Project Setup:** Configure Hugo, select and install the theme ('hello-friend-ng').
+- [x] **Task 2: Core Content Creation:** Create the 'About Me' page and add the resume PDF.
+- [x] **Task 3: Site Configuration:** Set up site parameters in `config.toml` (title, subtitle, social links, menu, profile image).
+- [x] **Task 4: Deployment Setup:** Configure the build process and deployment workflow (GitHub Actions) for GitHub Pages.
+- [ ] **Task 5: Ongoing Maintenance:** Update the resume file, potentially update the theme, or add new content sections (e.g., blog, projects) if desired later.
+- [x] **Task 6: Fix Build Workflow:** Resolve Hugo build errors caused by theme updates and SCSS processing changes.
+- [x] **Task 7: Add Repository README:** Create a `README.md` file explaining the project structure, development, and deployment process.
 
 ## 3. User Stories
 
