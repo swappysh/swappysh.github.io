@@ -1,0 +1,22 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Swapnil Sharma</title><link>https://swappysh.github.io/posts/</link><description>Recent content in Posts on Swapnil Sharma</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>&lt;a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener"&gt;CC BY-NC 4.0&lt;/a&gt;</copyright><lastBuildDate>Wed, 25 Feb 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://swappysh.github.io/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Hello, World</title><link>https://swappysh.github.io/posts/welcome/</link><pubDate>Wed, 25 Feb 2026 00:00:00 +0000</pubDate><guid>https://swappysh.github.io/posts/welcome/</guid><description>&lt;p&gt;I&amp;rsquo;ve spent the last few years building production AI systems: multi-agent architectures, LLM evaluation pipelines, safety-critical patient conversation platforms, code generation tools. A lot of that work happened in fast-moving startups where the goal was to ship, not to document.&lt;/p&gt;
+&lt;p&gt;This blog is an attempt to fix that.&lt;/p&gt;
+&lt;h2 id="what-ill-write-about"&gt;What I&amp;rsquo;ll write about&lt;/h2&gt;
+&lt;p&gt;Most of what I&amp;rsquo;ll cover sits at the intersection of &lt;strong&gt;research and production engineering&lt;/strong&gt;, the gap that doesn&amp;rsquo;t get enough attention. Things like:&lt;/p&gt;</description><content type="html"><![CDATA[<p>I&rsquo;ve spent the last few years building production AI systems: multi-agent architectures, LLM evaluation pipelines, safety-critical patient conversation platforms, code generation tools. A lot of that work happened in fast-moving startups where the goal was to ship, not to document.</p>
+<p>This blog is an attempt to fix that.</p>
+<h2 id="what-ill-write-about">What I&rsquo;ll write about</h2>
+<p>Most of what I&rsquo;ll cover sits at the intersection of <strong>research and production engineering</strong>, the gap that doesn&rsquo;t get enough attention. Things like:</p>
+<ul>
+<li>What actually breaks when you take a multi-agent system from prototype to 1M+ calls per week</li>
+<li>How to build LLM-as-a-judge pipelines that you can actually trust</li>
+<li>The practical tradeoffs in RAG, tool-calling, and fine-tuning when the stakes are real</li>
+<li>Lessons from building evaluation infrastructure that surfaces signal, not noise</li>
+</ul>
+<p>I&rsquo;m less interested in &ldquo;here&rsquo;s how to call the OpenAI API&rdquo; tutorials and more interested in the decisions that determine whether a system is reliable, debuggable, and worth deploying.</p>
+<h2 id="background">Background</h2>
+<p>I&rsquo;m currently a Senior Research Engineer at Aleph, building a semi-autonomous FP&amp;A agent for finance teams. Before that I was part of the founding team at HippocraticAI, where I worked on Polaris, a multi-agent system for safety-critical patient conversations.</p>
+<p>Earlier work includes code generation research at Microsoft, biomedical NLP at Nference, and payments infrastructure at Zeta. I did my MS in CS at NYU, where my research focused on code generation and bias evaluation in LLMs.</p>
+<p>The through-line across all of it: systems that need to work when it matters.</p>
+<h2 id="format">Format</h2>
+<p>Posts will mostly be technical. Some will be long-form deep dives, some will be shorter notes on a specific problem or pattern I found interesting. No fixed cadence, I&rsquo;ll write when I have something worth saying.</p>
+<p>If something resonates or you want to push back on something, reach out.</p>
+]]></content></item></channel></rss>
