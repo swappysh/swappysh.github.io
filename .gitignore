@@ -1,10 +1,11 @@
 
-# Jekyll
-_site
-.sass-cache
-.jekyll-cache
-.jekyll-metadata
-vendor
+# Hugo build output
+public/
+docs/
+resources/
 
 # macOS
 .DS_Store
+
+# Claude agent logs
+.code/
