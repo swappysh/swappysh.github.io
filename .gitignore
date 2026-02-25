@@ -8,3 +8,6 @@ vendor
 
 # macOS
 .DS_Store
+
+# Claude agent logs
+.code/
