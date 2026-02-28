@@ -9,3 +9,7 @@ resources/
 
 # Claude agent logs
 .code/
+
+# Worker
+worker/node_modules/
+worker/.wrangler/

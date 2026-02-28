@@ -1,0 +1,156 @@
+interface SaveItem {
+  id: string;
+  url: string;
+  title: string;
+  excerpt: string;
+  source: string;
+  type: 'tweet' | 'video' | 'article' | 'other';
+  created_at: string;
+}
+
+interface Env {
+  saves: KVNamespace;
+  WRITE_SECRET: string;
+  READ_SECRET: string;
+  ENVIRONMENT: string;
+}
+
+interface SaveBody {
+  url: string;
+  title: string;
+  source?: string;
+  timestamp?: string;
+}
+
+interface ListResponse {
+  items: SaveItem[];
+  total: number;
+  limit: number;
+  offset: number;
+}
+
+function inferType(url: string): SaveItem['type'] {
+  try {
+    const { hostname } = new URL(url);
+    if (hostname.includes('twitter.com') || hostname.includes('x.com')) return 'tweet';
+    if (hostname.includes('youtube.com') || hostname.includes('youtu.be')) return 'video';
+    return 'article';
+  } catch {
+    return 'other';
+  }
+}
+
+function corsHeaders(env: Env): Record<string, string> {
+  const origin =
+    env.ENVIRONMENT === 'development'
+      ? 'http://localhost:1313'
+      : 'https://swappysh.github.io';
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Headers': 'Authorization, Content-Type',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+  };
+}
+
+function json(data: unknown, status = 200, cors: Record<string, string>): Response {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { 'Content-Type': 'application/json', ...cors },
+  });
+}
+
+function unauthorized(cors: Record<string, string>): Response {
+  return json({ error: 'Unauthorized' }, 401, cors);
+}
+
+function generateId(): string {
+  return crypto.randomUUID().replace(/-/g, '').slice(0, 10);
+}
+
+export default {
+  async fetch(request: Request, env: Env): Promise<Response> {
+    const url = new URL(request.url);
+    const cors = corsHeaders(env);
+
+    if (request.method === 'OPTIONS') {
+      return new Response(null, { status: 204, headers: cors });
+    }
+
+    const token = request.headers.get('Authorization')?.replace('Bearer ', '').trim();
+
+    // POST /api/save
+    if (request.method === 'POST' && url.pathname === '/api/save') {
+      if (token !== env.WRITE_SECRET) return unauthorized(cors);
+
+      let body: SaveBody;
+      try {
+        body = (await request.json()) as SaveBody;
+      } catch {
+        return json({ error: 'Invalid JSON' }, 400, cors);
+      }
+
+      if (!body.url || !body.title) {
+        return json({ error: 'url and title are required' }, 400, cors);
+      }
+
+      const id = generateId();
+      const item: SaveItem = {
+        id,
+        url: body.url,
+        title: body.title,
+        excerpt: '',
+        source: body.source ?? 'shortcut',
+        type: inferType(body.url),
+        created_at: body.timestamp ?? new Date().toISOString(),
+      };
+
+      // Note: read-modify-write on index:all is safe with a single writer (iPhone)
+      await env.saves.put(`item:${id}`, JSON.stringify(item));
+
+      const raw = await env.saves.get('index:all');
+      const index: string[] = raw ? (JSON.parse(raw) as string[]) : [];
+      index.unshift(id);
+      await env.saves.put('index:all', JSON.stringify(index));
+
+      return json(item, 201, cors);
+    }
+
+    // GET /api/list
+    if (request.method === 'GET' && url.pathname === '/api/list') {
+      if (token !== env.READ_SECRET) return unauthorized(cors);
+
+      const limit = Math.min(parseInt(url.searchParams.get('limit') ?? '100', 10), 200);
+      const offset = Math.max(parseInt(url.searchParams.get('offset') ?? '0', 10), 0);
+
+      const raw = await env.saves.get('index:all');
+      const index: string[] = raw ? (JSON.parse(raw) as string[]) : [];
+      const page = index.slice(offset, offset + limit);
+
+      const items = (
+        await Promise.all(page.map((id) => env.saves.get(`item:${id}`, 'json')))
+      ).filter((item): item is SaveItem => item !== null);
+
+      const response: ListResponse = { items, total: index.length, limit, offset };
+      return json(response, 200, cors);
+    }
+
+    // DELETE /api/item/:id
+    const deleteMatch = url.pathname.match(/^\/api\/item\/([a-zA-Z0-9]+)$/);
+    if (request.method === 'DELETE' && deleteMatch) {
+      if (token !== env.WRITE_SECRET) return unauthorized(cors);
+
+      const id = deleteMatch[1];
+      await env.saves.delete(`item:${id}`);
+
+      const raw = await env.saves.get('index:all');
+      if (raw) {
+        const index: string[] = JSON.parse(raw) as string[];
+        await env.saves.put('index:all', JSON.stringify(index.filter((i) => i !== id)));
+      }
+
+      return json({ deleted: id }, 200, cors);
+    }
+
+    return json({ error: 'Not found' }, 404, cors);
+  },
+};
