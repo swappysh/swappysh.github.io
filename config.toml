@@ -79,3 +79,8 @@ theme        = "hello-friend-ng"
       identifier = "posts"
       name       = "Posts"
       url        = "/posts/"
+
+    [[menu.main]]
+      identifier = "saves"
+      name       = "Saves"
+      url        = "/saves/"

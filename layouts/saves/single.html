@@ -1,0 +1,179 @@
+{{ define "main" }}
+<style>
+  .saves-header {
+    margin-bottom: 2rem;
+  }
+  .saves-filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .filter-btn {
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid currentColor;
+    font-size: 0.875rem;
+    cursor: pointer;
+    background: transparent;
+    opacity: 0.6;
+    transition: opacity 0.15s, background 0.15s;
+  }
+  .filter-btn:hover { opacity: 1; }
+  .filter-btn.active {
+    opacity: 1;
+    background: rgba(var(--color-primary-500), 0.15);
+    border-color: rgb(var(--color-primary-500));
+  }
+  .saves-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .save-card {
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+    transition: border-color 0.15s;
+  }
+  .save-card:hover { border-color: rgba(128, 128, 128, 0.5); }
+  .save-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .save-title {
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.4;
+    text-decoration: none;
+    color: inherit;
+  }
+  .save-title:hover { text-decoration: underline; }
+  .save-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.4rem;
+    font-size: 0.8rem;
+    opacity: 0.6;
+  }
+  .type-badge {
+    display: inline-block;
+    padding: 0.1rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .type-tweet   { background: rgba(29, 155, 240, 0.15); color: #1d9bf0; }
+  .type-video   { background: rgba(255, 0, 0, 0.12); color: #ff4444; }
+  .type-article { background: rgba(128, 128, 128, 0.15); }
+  .type-other   { background: rgba(128, 128, 128, 0.15); }
+  .saves-empty, .saves-error {
+    text-align: center;
+    padding: 3rem 0;
+    opacity: 0.5;
+  }
+  .saves-count {
+    font-size: 0.85rem;
+    opacity: 0.5;
+    margin-bottom: 1rem;
+  }
+</style>
+
+<article class="max-w-prose">
+  <header class="saves-header">
+    <h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">
+      Saves
+    </h1>
+    <p class="mt-2 text-neutral-500 dark:text-neutral-400">
+      Links worth keeping.
+    </p>
+  </header>
+
+  <div class="saves-filters" id="saves-filters" style="display:none">
+    <button class="filter-btn active" data-filter="all">All</button>
+    <button class="filter-btn" data-filter="tweet">Tweets</button>
+    <button class="filter-btn" data-filter="article">Articles</button>
+    <button class="filter-btn" data-filter="video">Videos</button>
+  </div>
+
+  <div class="saves-count" id="saves-count"></div>
+  <div class="saves-grid" id="saves-grid">
+    <div class="saves-empty">Loading...</div>
+  </div>
+</article>
+
+<script>
+(function () {
+  const WORKER_URL = 'https://saves-worker.swappysh.workers.dev';
+  const READ_TOKEN = '{{ site.Params.savesreadtoken }}';
+
+  let allItems = [];
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  function hostname(url) {
+    try { return new URL(url).hostname.replace('www.', ''); } catch { return ''; }
+  }
+
+  function renderCard(item) {
+    const badge = `<span class="type-badge type-${item.type}">${item.type}</span>`;
+    return `
+      <div class="save-card" data-type="${item.type}">
+        <div class="save-card-top">
+          <a class="save-title" href="${item.url}" target="_blank" rel="noopener noreferrer">
+            ${item.title}
+          </a>
+          ${badge}
+        </div>
+        <div class="save-meta">
+          <span>${hostname(item.url)}</span>
+          <span>&middot;</span>
+          <span>${formatDate(item.created_at)}</span>
+        </div>
+      </div>`;
+  }
+
+  function applyFilter(filter) {
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.filter === filter);
+    });
+    const visible = filter === 'all' ? allItems : allItems.filter(i => i.type === filter);
+    document.getElementById('saves-count').textContent =
+      `${visible.length} of ${allItems.length}`;
+    document.getElementById('saves-grid').innerHTML =
+      visible.length ? visible.map(renderCard).join('') : '<div class="saves-empty">Nothing here yet.</div>';
+  }
+
+  async function load() {
+    try {
+      const res = await fetch(`${WORKER_URL}/api/list?limit=200`, {
+        headers: { Authorization: `Bearer ${READ_TOKEN}` },
+      });
+      if (!res.ok) throw new Error(`${res.status}`);
+      const data = await res.json();
+      allItems = data.items || [];
+      document.getElementById('saves-filters').style.display = allItems.length ? 'flex' : 'none';
+      applyFilter('all');
+    } catch (err) {
+      document.getElementById('saves-grid').innerHTML =
+        '<div class="saves-error">Could not load saves. Try again later.</div>';
+    }
+  }
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
+  });
+
+  load();
+})();
+</script>
+{{ end }}
