@@ -25,6 +25,10 @@ This repository contains the source code for my personal blog and website, hoste
   3.  It runs `hugo --minify` to build the static website into the `./public` directory.
   4.  It pushes the contents of the `./public` directory to the `gh-pages` branch (or deploys using a dedicated action configured in the workflow), which updates the live site.
 
+## Saves
+
+The `/saves` page is backed by a Cloudflare Worker in `worker/`. It stores bookmarked links in Workers KV and exposes a small API (`POST /api/save`, `GET /api/list`, `DELETE /api/item/:id`). Links are captured via iPhone Shortcut and a browser bookmarklet. See `worker/README.md` for setup.
+
 ## Branches
 
 - `master`: The main branch containing the source code. Pushing to this branch triggers deployment.
