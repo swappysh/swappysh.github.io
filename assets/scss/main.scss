@@ -1,0 +1,95 @@
+// === Color overrides (dark theme) ===
+$dark-background:            #0d0d0d;
+$dark-background-secondary:  #161616;
+$dark-background-header:     #0d0d0d;
+$dark-color:                 #e6e6e6;
+$dark-color-variant:         #ffffff;
+$dark-color-secondary:       #888888;
+$dark-border-color:          #2a2a2a;
+$dark-table-color:           #2a2a2a;
+
+// Light theme (unchanged)
+$light-background:           #fff;
+$light-background-secondary: #eaeaea;
+$light-background-header:    #fafafa;
+$light-color:                #222;
+$light-color-variant:        black;
+$light-color-secondary:      #999;
+$light-border-color:         #dcdcdc;
+$light-table-color:          #dcdcdc;
+
+$media-size-phone:  "(max-width: 684px)";
+$media-size-tablet: "(max-width: 900px)";
+
+:root {
+  --phoneWidth:  (max-width: 684px);
+  --tabletWidth: (max-width: 900px);
+}
+
+$max-width: 860px;
+
+// Theme imports — skip "fonts" (IBM Plex Sans loaded via <link> in head.html)
+@import "normalize";
+@import "prism";
+@import "flag-icons";
+@import "mixins";
+@import "buttons";
+@import "header";
+@import "logo";
+@import "menu";
+@import "main";
+@import "list";
+@import "single";
+@import "footer";
+@import "sharing-buttons";
+@import "tables";
+@import "404";
+
+// === Font family ===
+body {
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+code, pre {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+}
+
+// === Accent color on hover ===
+a:hover, a:focus {
+  color: #f59e0b;
+}
+
+// === Home page bio ===
+.home-bio {
+  text-align: left;
+  max-width: 65ch;
+
+  p {
+    line-height: 1.7;
+    margin-bottom: 1.2rem;
+  }
+}
+
+// === Social icons ===
+.social-icons a:hover {
+  color: #f59e0b;
+  opacity: 1;
+}
+
+// === Vim syntax highlight ===
+.vim-hl {
+  color: #98c379;
+}
+
+// === Mobile home padding ===
+@media #{$media-size-phone} {
+  .home-inner {
+    padding: 0 1.25rem;
+  }
+}
+
+// === Post list date in mono ===
+.post-day {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+}
