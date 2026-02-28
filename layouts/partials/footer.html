@@ -1,0 +1,7 @@
+<footer class="footer">
+    <div class="footer__inner">
+        {{- if and (not .IsHome) .Site.Params.social }}
+            <div class="footer__content">{{ partial "social-icons.html" .Site.Params.social }}</div>
+        {{- end }}
+    </div>
+</footer>

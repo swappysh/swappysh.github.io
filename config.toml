@@ -13,7 +13,7 @@ theme        = "hello-friend-ng"
   dateformNumTime = "2006-01-02 15:04"
   lastModDisplay = "Modified:"
 
-  homeSubtitle = "Experienced Computer Scientist"
+  homeSubtitle = "AI/ML Engineer · LLM Systems"
 
   disableReadOtherPosts  = false
   enableSharingButtons   = false
@@ -25,6 +25,9 @@ theme        = "hello-friend-ng"
 
   footerLeft  = "Powered by <a href=\"https://gohugo.io\">Hugo</a>"
   footerRight = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
+
+[markup.goldmark.renderer]
+  unsafe = true
 
 [taxonomies]
   category = "blog"
@@ -65,11 +68,6 @@ theme        = "hello-friend-ng"
       url  = "https://twitter.com/mradul_swapnil"
 
   [menu]
-    [[menu.main]]
-      identifier = "about_me"
-      name       = "About Me"
-      url        = "about_me/"
-
     [[menu.main]]
       identifier = "resume"
       name       = "Resume"
