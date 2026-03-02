@@ -63,6 +63,29 @@ function generateId(): string {
   return crypto.randomUUID().replace(/-/g, '').slice(0, 10);
 }
 
+async function fetchTweetExcerpt(tweetUrl: string): Promise<string> {
+  try {
+    const res = await fetch(
+      `https://publish.twitter.com/oembed?url=${encodeURIComponent(tweetUrl)}&omit_script=true`,
+    );
+    if (!res.ok) return '';
+    const data = (await res.json()) as { html?: string };
+    if (!data.html) return '';
+    const match = data.html.match(/<p[^>]*>([\s\S]*?)<\/p>/);
+    if (!match) return '';
+    return match[1]
+      .replace(/<[^>]+>/g, '')
+      .replace(/&amp;/g, '&')
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&#39;/g, "'")
+      .replace(/&quot;/g, '"')
+      .trim();
+  } catch {
+    return '';
+  }
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -90,13 +113,14 @@ export default {
       }
 
       const id = generateId();
+      const type = inferType(body.url);
       const item: SaveItem = {
         id,
         url: body.url,
         title: body.title,
-        excerpt: '',
+        excerpt: type === 'tweet' ? await fetchTweetExcerpt(body.url) : '',
         source: body.source ?? 'shortcut',
-        type: inferType(body.url),
+        type,
         created_at: body.timestamp ?? new Date().toISOString(),
       };
 
