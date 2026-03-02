@@ -86,8 +86,17 @@ async function fetchTweetExcerpt(tweetUrl: string): Promise<string> {
   }
 }
 
+async function backfillExcerpts(items: SaveItem[], env: Env): Promise<void> {
+  for (const item of items) {
+    const excerpt = await fetchTweetExcerpt(item.url);
+    if (excerpt) {
+      await env.saves.put(`item:${item.id}`, JSON.stringify({ ...item, excerpt }));
+    }
+  }
+}
+
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
     const cors = corsHeaders();
 
@@ -151,6 +160,8 @@ export default {
       ).filter((item): item is SaveItem => item !== null);
 
       const response: ListResponse = { items, total: index.length, limit, offset };
+      const toBackfill = items.filter((i) => i.type === 'tweet' && !i.excerpt);
+      if (toBackfill.length > 0) ctx.waitUntil(backfillExcerpts(toBackfill, env));
       return json(response, 200, cors);
     }
 
