@@ -191,8 +191,8 @@
   function renderCard(item) {
     const title = item.type === 'tweet' ? tweetTitle(item.url) : item.title;
     const badge = `<span class="type-badge type-${item.type}">${item.type}</span>`;
-    const excerpt = item.excerpt
-      ? `<div class="save-excerpt">${esc(item.excerpt)}</div>`
+    const excerpt = item.excerpt?.trim()
+      ? `<div class="save-excerpt">${esc(item.excerpt.trim())}</div>`
       : '';
     return `
       <div class="save-card" data-type="${item.type}">

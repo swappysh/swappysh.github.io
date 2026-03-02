@@ -91,9 +91,7 @@ async function fetchTweetExcerpt(tweetUrl: string): Promise<string> {
 async function backfillExcerpts(items: SaveItem[], env: Env): Promise<void> {
   for (const item of items) {
     const excerpt = await fetchTweetExcerpt(item.url);
-    if (excerpt) {
-      await env.saves.put(`item:${item.id}`, JSON.stringify({ ...item, excerpt }));
-    }
+    await env.saves.put(`item:${item.id}`, JSON.stringify({ ...item, excerpt: excerpt || ' ' }));
   }
 }
 
