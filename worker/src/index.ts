@@ -74,12 +74,14 @@ async function fetchTweetExcerpt(tweetUrl: string): Promise<string> {
     const match = data.html.match(/<p[^>]*>([\s\S]*?)<\/p>/);
     if (!match) return '';
     return match[1]
-      .replace(/<[^>]+>/g, '')
+      .replace(/<a[^>]*href="https?:\/\/t\.co\/[^"]*"[^>]*>[\s\S]*?<\/a>/g, '')
+      .replace(/<[^>]+>/g, ' ')
       .replace(/&amp;/g, '&')
       .replace(/&lt;/g, '<')
       .replace(/&gt;/g, '>')
       .replace(/&#39;/g, "'")
       .replace(/&quot;/g, '"')
+      .replace(/\s+/g, ' ')
       .trim();
   } catch {
     return '';
