@@ -160,7 +160,7 @@ export default {
       ).filter((item): item is SaveItem => item !== null);
 
       const response: ListResponse = { items, total: index.length, limit, offset };
-      const toBackfill = items.filter((i) => i.type === 'tweet' && !i.excerpt);
+      const toBackfill = items.filter((i) => i.type === 'tweet' && (!i.excerpt || i.excerpt.includes('t.co')));
       if (toBackfill.length > 0) ctx.waitUntil(backfillExcerpts(toBackfill, env));
       return json(response, 200, cors);
     }
