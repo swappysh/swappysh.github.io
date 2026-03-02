@@ -3,11 +3,17 @@
   .saves-header {
     margin-bottom: 2rem;
   }
-  .saves-filters {
+  .saves-toolbar {
+    display: none;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .saves-toolbar-row {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
     flex-wrap: wrap;
-    margin-bottom: 1.5rem;
   }
   .filter-btn {
     padding: 0.25rem 0.75rem;
@@ -25,6 +31,33 @@
     background: rgba(var(--color-primary-500), 0.15);
     border-color: rgb(var(--color-primary-500));
   }
+  .shuffle-btn {
+    margin-left: auto;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    border: 1px solid currentColor;
+    font-size: 0.875rem;
+    cursor: pointer;
+    background: transparent;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+  }
+  .shuffle-btn:hover { opacity: 1; }
+  .search-input {
+    width: 100%;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    background: transparent;
+    color: inherit;
+    font-size: 1rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+  }
+  .search-input:focus { border-color: rgba(128, 128, 128, 0.6); }
+  .search-input::placeholder { opacity: 0.4; }
   .saves-grid {
     display: flex;
     flex-direction: column;
@@ -60,6 +93,16 @@
     margin-top: 0.4rem;
     font-size: 0.8rem;
     opacity: 0.6;
+  }
+  .save-excerpt {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    opacity: 0.6;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .type-badge {
     display: inline-block;
@@ -97,11 +140,15 @@
     </p>
   </header>
 
-  <div class="saves-filters" id="saves-filters" style="display:none">
-    <button class="filter-btn active" data-filter="all">All</button>
-    <button class="filter-btn" data-filter="tweet">Tweets</button>
-    <button class="filter-btn" data-filter="article">Articles</button>
-    <button class="filter-btn" data-filter="video">Videos</button>
+  <div class="saves-toolbar" id="saves-toolbar">
+    <div class="saves-toolbar-row">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="tweet">Tweets</button>
+      <button class="filter-btn" data-filter="article">Articles</button>
+      <button class="filter-btn" data-filter="video">Videos</button>
+      <button class="shuffle-btn" id="shuffle-btn">⇄ Shuffle</button>
+    </div>
+    <input class="search-input" id="search-input" type="text" placeholder="Search...">
   </div>
 
   <div class="saves-count" id="saves-count"></div>
@@ -116,6 +163,14 @@
   const READ_TOKEN = '{{ site.Params.savesreadtoken }}';
 
   let allItems = [];
+  let displayItems = [];
+  let activeFilter = 'all';
+  let searchQuery = '';
+  let isShuffled = false;
+
+  function esc(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
 
   function formatDate(iso) {
     const d = new Date(iso);
@@ -126,13 +181,24 @@
     try { return new URL(url).hostname.replace('www.', ''); } catch { return ''; }
   }
 
+  function tweetTitle(url) {
+    try {
+      const parts = new URL(url).pathname.split('/').filter(Boolean);
+      return parts[0] ? `@${parts[0]}` : url;
+    } catch { return url; }
+  }
+
   function renderCard(item) {
+    const title = item.type === 'tweet' ? tweetTitle(item.url) : item.title;
     const badge = `<span class="type-badge type-${item.type}">${item.type}</span>`;
+    const excerpt = item.excerpt
+      ? `<div class="save-excerpt">${esc(item.excerpt)}</div>`
+      : '';
     return `
       <div class="save-card" data-type="${item.type}">
         <div class="save-card-top">
-          <a class="save-title" href="${item.url}" target="_blank" rel="noopener noreferrer">
-            ${item.title}
+          <a class="save-title" href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">
+            ${esc(title)}
           </a>
           ${badge}
         </div>
@@ -141,18 +207,39 @@
           <span>&middot;</span>
           <span>${formatDate(item.created_at)}</span>
         </div>
+        ${excerpt}
       </div>`;
   }
 
-  function applyFilter(filter) {
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.dataset.filter === filter);
-    });
-    const visible = filter === 'all' ? allItems : allItems.filter(i => i.type === filter);
+  function getVisible() {
+    let items = activeFilter === 'all' ? displayItems : displayItems.filter(i => i.type === activeFilter);
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      items = items.filter(i =>
+        i.title.toLowerCase().includes(q) ||
+        i.url.toLowerCase().includes(q) ||
+        (i.excerpt || '').toLowerCase().includes(q)
+      );
+    }
+    return items;
+  }
+
+  function render() {
+    const visible = getVisible();
     document.getElementById('saves-count').textContent =
       `${visible.length} of ${allItems.length}`;
+    const emptyMsg = searchQuery ? `No results for "${esc(searchQuery)}"` : 'Nothing here yet.';
     document.getElementById('saves-grid').innerHTML =
-      visible.length ? visible.map(renderCard).join('') : '<div class="saves-empty">Nothing here yet.</div>';
+      visible.length ? visible.map(renderCard).join('') : `<div class="saves-empty">${emptyMsg}</div>`;
+  }
+
+  function shuffled(arr) {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
   }
 
   async function load() {
@@ -163,8 +250,9 @@
       if (!res.ok) throw new Error(`${res.status}`);
       const data = await res.json();
       allItems = data.items || [];
-      document.getElementById('saves-filters').style.display = allItems.length ? 'flex' : 'none';
-      applyFilter('all');
+      displayItems = allItems;
+      document.getElementById('saves-toolbar').style.display = allItems.length ? 'flex' : 'none';
+      render();
     } catch (err) {
       document.getElementById('saves-grid').innerHTML =
         '<div class="saves-error">Could not load saves. Try again later.</div>';
@@ -172,7 +260,25 @@
   }
 
   document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
+    btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.filter;
+      document.querySelectorAll('.filter-btn').forEach(b =>
+        b.classList.toggle('active', b.dataset.filter === activeFilter)
+      );
+      render();
+    });
+  });
+
+  document.getElementById('shuffle-btn').addEventListener('click', () => {
+    isShuffled = !isShuffled;
+    displayItems = isShuffled ? shuffled(allItems) : allItems;
+    document.getElementById('shuffle-btn').textContent = isShuffled ? '↕ Date' : '⇄ Shuffle';
+    render();
+  });
+
+  document.getElementById('search-input').addEventListener('input', e => {
+    searchQuery = e.target.value.trim();
+    render();
   });
 
   load();

@@ -40,13 +40,9 @@ function inferType(url: string): SaveItem['type'] {
   }
 }
 
-function corsHeaders(env: Env): Record<string, string> {
-  const origin =
-    env.ENVIRONMENT === 'development'
-      ? 'http://localhost:1313'
-      : 'https://swappysh.github.io';
+function corsHeaders(): Record<string, string> {
   return {
-    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Authorization, Content-Type',
     'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
   };
@@ -70,7 +66,7 @@ function generateId(): string {
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
-    const cors = corsHeaders(env);
+    const cors = corsHeaders();
 
     if (request.method === 'OPTIONS') {
       return new Response(null, { status: 204, headers: cors });
