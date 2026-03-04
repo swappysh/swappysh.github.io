@@ -59,8 +59,8 @@ read -r -p "Confirm? [y/N] " CONFIRM
 
 echo "$SELECTED" | cut -f1 | while read -r id; do
   echo -n "  Deleting $id... "
-  curl -sf -X DELETE "$WORKER_URL/api/item/$id" -H "Authorization: Bearer $WRITE_TOKEN" > /dev/null
-  echo "done"
+  curl -sf -X DELETE "$WORKER_URL/api/item/$id" -H "Authorization: Bearer $WRITE_TOKEN" > /dev/null \
+    && echo "done" || echo "FAILED"
 done
 
 echo "Deleted $COUNT item(s)."
