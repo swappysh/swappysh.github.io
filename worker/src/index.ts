@@ -63,6 +63,13 @@ function generateId(): string {
   return crypto.randomUUID().replace(/-/g, '').slice(0, 10);
 }
 
+async function urlHash(url: string): Promise<string> {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(url));
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
 async function fetchTweetExcerpt(tweetUrl: string): Promise<string> {
   try {
     const res = await fetch(
@@ -121,6 +128,10 @@ export default {
         return json({ error: 'url and title are required' }, 400, cors);
       }
 
+      const hash = await urlHash(body.url);
+      const existingId = await env.saves.get(`url-idx:${hash}`);
+      if (existingId) return json({ error: 'Already saved', id: existingId }, 409, cors);
+
       const id = generateId();
       const type = inferType(body.url);
       const item: SaveItem = {
@@ -135,6 +146,7 @@ export default {
 
       // Note: read-modify-write on index:all is safe with a single writer (iPhone)
       await env.saves.put(`item:${id}`, JSON.stringify(item));
+      await env.saves.put(`url-idx:${hash}`, id);
 
       const raw = await env.saves.get('index:all');
       const index: string[] = raw ? (JSON.parse(raw) as string[]) : [];
@@ -171,7 +183,12 @@ export default {
       if (token !== env.WRITE_SECRET) return unauthorized(cors);
 
       const id = deleteMatch[1];
+      const itemRaw = await env.saves.get(`item:${id}`, 'json') as SaveItem | null;
       await env.saves.delete(`item:${id}`);
+      if (itemRaw) {
+        const hash = await urlHash(itemRaw.url);
+        await env.saves.delete(`url-idx:${hash}`);
+      }
 
       const raw = await env.saves.get('index:all');
       if (raw) {
