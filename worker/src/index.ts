@@ -184,11 +184,11 @@ export default {
 
       const id = deleteMatch[1];
       const itemRaw = await env.saves.get(`item:${id}`, 'json') as SaveItem | null;
-      await env.saves.delete(`item:${id}`);
       if (itemRaw) {
         const hash = await urlHash(itemRaw.url);
         await env.saves.delete(`url-idx:${hash}`);
       }
+      await env.saves.delete(`item:${id}`);
 
       const raw = await env.saves.get('index:all');
       if (raw) {

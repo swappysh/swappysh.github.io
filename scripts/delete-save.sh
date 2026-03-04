@@ -1,47 +1,66 @@
 #!/usr/bin/env bash
-# Usage: ./scripts/delete-save.sh <url-or-id>
-# Requires SAVES_WORKER_URL, SAVES_READ_TOKEN, SAVES_WRITE_TOKEN in env or .env
-
+# Interactive saves manager — fuzzy search and delete
+# Requires: fzf (brew install fzf)
 set -euo pipefail
 
-if [ $# -ne 1 ]; then
-  echo "Usage: $0 <url-or-id>" >&2
-  exit 1
-fi
-
-# Load .env if present
-[ -f "$(dirname "$0")/../.env" ] && source "$(dirname "$0")/../.env"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+[ -f "$SCRIPT_DIR/../.env" ] && source "$SCRIPT_DIR/../.env"
 
 WORKER_URL="${SAVES_WORKER_URL:?SAVES_WORKER_URL not set}"
 READ_TOKEN="${SAVES_READ_TOKEN:?SAVES_READ_TOKEN not set}"
 WRITE_TOKEN="${SAVES_WRITE_TOKEN:?SAVES_WRITE_TOKEN not set}"
 
-INPUT="$1"
-
-# Determine if input looks like an ID (alphanumeric, ~10 chars) or a URL
-if [[ "$INPUT" =~ ^https?:// ]]; then
-  # Fetch list and find by URL
-  LIST=$(curl -sf "$WORKER_URL/api/list?limit=200" -H "Authorization: Bearer $READ_TOKEN")
-  ID=$(echo "$LIST" | python3 -c "
-import sys, json
-data = json.load(sys.stdin)
-url = '$INPUT'
-for item in data['items']:
-    if item['url'] == url:
-        print(item['id'])
-        sys.exit(0)
-sys.exit(1)
-" 2>/dev/null || true)
-
-  if [ -z "$ID" ]; then
-    echo "Not found: $INPUT" >&2
-    exit 1
-  fi
-else
-  ID="$INPUT"
+if ! command -v fzf &>/dev/null; then
+  echo "fzf required: brew install fzf" >&2
+  exit 1
 fi
 
-echo "Deleting item: $ID"
-curl -sf -X DELETE "$WORKER_URL/api/item/$ID" -H "Authorization: Bearer $WRITE_TOKEN"
+echo "Fetching saves..." >&2
+LIST=$(curl -sf "$WORKER_URL/api/list?limit=200" -H "Authorization: Bearer $READ_TOKEN")
+
+FORMATTED=$(python3 -c "
+import sys, json
+data = json.load(sys.stdin)
+for item in data['items']:
+    title = item.get('title','').replace('\t',' ')
+    url   = item.get('url','').replace('\t',' ')
+    type_ = item.get('type','other')
+    print(f\"{item['id']}\t[{type_}] {title}  \033[2m{url}\033[0m\")
+" <<< "$LIST")
+
+if [ -z "$FORMATTED" ]; then
+  echo "No saves found." >&2
+  exit 0
+fi
+
+SELECTED=$(echo "$FORMATTED" | fzf \
+  --ansi \
+  --multi \
+  --with-nth=2 \
+  --delimiter=$'\t' \
+  --prompt="Search: " \
+  --header="TAB=select  ENTER=delete  ESC=cancel" \
+  --height=80% \
+  --reverse \
+  || true)
+
+if [ -z "$SELECTED" ]; then
+  echo "Nothing selected." >&2
+  exit 0
+fi
+
+COUNT=$(echo "$SELECTED" | wc -l | tr -d ' ')
 echo ""
-echo "Done."
+echo "About to delete $COUNT item(s):"
+echo "$SELECTED" | cut -f2 | sed 's/^/  /'
+echo ""
+read -r -p "Confirm? [y/N] " CONFIRM
+[[ "$CONFIRM" =~ ^[yY]$ ]] || { echo "Aborted."; exit 0; }
+
+echo "$SELECTED" | cut -f1 | while read -r id; do
+  echo -n "  Deleting $id... "
+  curl -sf -X DELETE "$WORKER_URL/api/item/$id" -H "Authorization: Bearer $WRITE_TOKEN" > /dev/null
+  echo "done"
+done
+
+echo "Deleted $COUNT item(s)."
