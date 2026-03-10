@@ -7,3 +7,5 @@ Before that, I was an AI Engineer / Senior AI Engineer at <span class="vim-hl">H
 Earlier, I worked at <span class="vim-hl">Microsoft</span> on code generation for JavaScript unit tests using OpenAI Codex, at <span class="vim-hl">Nference</span> on biomedical search and NLP systems, and at <span class="vim-hl">Zeta (Directi)</span> on high-throughput payments infrastructure.
 
 I completed my MS in Computer Science at <span class="vim-hl">NYU</span>, where I worked on code generation and bias evaluation research with publications on arXiv.
+
+Outside of work I am building: <span class="vim-hl"><a href="https://lekh.space">lekh.space</a></span> — a private encrypted writing vault; an MBTI-aware voice journaling app on LiveKit and Gemini; and Beacon, an emoji-only messenger.
