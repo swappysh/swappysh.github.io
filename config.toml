@@ -11,7 +11,7 @@ theme        = "hello-friend-ng"
   dateformShort   = "Jan 2"
   dateformNum     = "2006-01-02"
   dateformNumTime = "2006-01-02 15:04"
-  lastModDisplay = "Modified:"
+  lastModDisplay = "Updated:"
 
   homeSubtitle = "AI/ML Engineer · LLM Systems"
 
@@ -26,6 +26,8 @@ theme        = "hello-friend-ng"
   footerLeft  = "Powered by <a href=\"https://gohugo.io\">Hugo</a>"
   footerRight = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
 
+# TODO: libsass deprecated in Hugo v0.153.0 - migrate to dartsass
+# See: https://gohugo.io/functions/css/sass/#dart-sass
 [markup.goldmark.renderer]
   unsafe = true
 
@@ -40,7 +42,7 @@ theme        = "hello-friend-ng"
     subtitle = "AI/ML Engineer · LLM Systems"
     keywords = ""
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
-    readOtherPosts = "Read other posts"
+    readOtherPosts = "More posts"
 
     [languages.en.params.logo]
       logoText     = "$ bash ./swapnil.sh"

@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+# Send a message to the coworker tmux pane (default: opencode). See AGENTS.md.
+set -euo pipefail
+
+TARGET="${TM_AGENT_TARGET:-opencode}"
+BIN="${TM_AGENT_BIN:-$HOME/.agent-bus/tm-agent/bin/tm-agent}"
+
+[[ -x "$BIN" ]] || { echo "tm-agent not found at $BIN. Set TM_AGENT_BIN." >&2; exit 1; }
+[[ $# -gt 0 ]] || { echo "Usage: $0 \"message\"" >&2; exit 1; }
+
+"$BIN" -t "$TARGET" "$*"

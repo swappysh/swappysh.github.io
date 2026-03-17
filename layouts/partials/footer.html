@@ -5,3 +5,32 @@
         {{- end }}
     </div>
 </footer>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  var menuTrigger = document.querySelector(".menu-trigger");
+  if (menuTrigger) {
+    menuTrigger.addEventListener("click", function() {
+      var v = this.getAttribute("aria-expanded");
+      this.setAttribute("aria-expanded", v === "true" ? "false" : "true");
+    });
+  }
+
+  var backToTop = document.querySelector(".back-to-top");
+  if (backToTop) {
+    var scrollThreshold = 400;
+    var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function updateVisibility() {
+      backToTop.classList.toggle("is-visible", window.scrollY > scrollThreshold);
+    }
+
+    window.addEventListener("scroll", updateVisibility, { passive: true });
+    updateVisibility();
+
+    backToTop.addEventListener("click", function(e) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+    });
+  }
+});
+</script>

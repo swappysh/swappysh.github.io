@@ -1,4 +1,4 @@
-// === Color overrides (dark theme) ===
+// === Design tokens (color overrides) ===
 $dark-background:            #0d0d0d;
 $dark-background-secondary:  #161616;
 $dark-background-header:     #0d0d0d;
@@ -8,7 +8,6 @@ $dark-color-secondary:       #888888;
 $dark-border-color:          #2a2a2a;
 $dark-table-color:           #2a2a2a;
 
-// Light theme (unchanged)
 $light-background:           #fff;
 $light-background-secondary: #eaeaea;
 $light-background-header:    #fafafa;
@@ -18,12 +17,30 @@ $light-color-secondary:      #999;
 $light-border-color:         #dcdcdc;
 $light-table-color:          #dcdcdc;
 
+// Accent
+$accent:                     #f59e0b;
+// Logo cursor
+$logo-cursor:                #fe5186;
+// Vim-style highlight (inline content)
+$vim-hl:                     #98c379;
+
 $media-size-phone:  "(max-width: 684px)";
 $media-size-tablet: "(max-width: 900px)";
+
+// Dark theme (system or data-theme)
+@mixin dark-theme {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+  [data-theme="dark"] & {
+    @content;
+  }
+}
 
 :root {
   --phoneWidth:  (max-width: 684px);
   --tabletWidth: (max-width: 900px);
+  --accent:      #{$accent};
 }
 
 $max-width: 860px;
@@ -44,6 +61,7 @@ $max-width: 860px;
 @import "sharing-buttons";
 @import "tables";
 @import "404";
+@import "saves";
 
 // === Font family ===
 body {
@@ -54,15 +72,41 @@ code, pre {
   font-family: 'JetBrains Mono', Consolas, monospace;
 }
 
-// === Accent color on hover ===
+// === Accent (design token) ===
 a:hover, a:focus {
-  color: #f59e0b;
+  color: $accent;
 }
 
-// === Home page bio ===
+// === Home: hero ===
+.home .home-hero__title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-top: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+.home-subtitle {
+  margin-bottom: 1.5rem;
+  p {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: $light-color-secondary;
+    @include dark-theme { color: $dark-color-secondary; }
+  }
+}
+.home-hero__social {
+  margin-bottom: 2rem;
+}
+
+// === Home: bio ===
 .home-bio {
   text-align: left;
   max-width: 65ch;
+  border-left: 3px solid $accent;
+  padding-left: 1.25rem;
+  margin-left: 0;
 
   p {
     line-height: 1.7;
@@ -70,21 +114,82 @@ a:hover, a:focus {
   }
 }
 
+// === Home: primary CTA ===
+.home-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 2.5rem;
+  justify-content: flex-start;
+}
+.home-cta__link {
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.5rem 0;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+  &:hover, &:focus {
+    color: $accent;
+    border-bottom-color: $accent;
+  }
+}
+.home-cta__link--primary {
+  font-weight: 700;
+  color: $accent;
+  padding: 0.6rem 1.25rem;
+  border: 2px solid $accent;
+  border-radius: 4px;
+  background: transparent;
+  &:hover, &:focus {
+    background: $accent;
+    color: $dark-background;
+    border-bottom-color: $accent;
+  }
+}
+
+// === Home: staggered reveal ===
+@keyframes homeReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.home-inner > * {
+  animation: homeReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  @for $i from 1 through 10 {
+    &:nth-child(#{$i}) { animation-delay: #{($i - 1) * 50}ms; }
+  }
+  @media (prefers-reduced-motion: reduce) { animation: none; }
+}
+
 // === Social icons ===
 .social-icons a:hover {
-  color: #f59e0b;
+  color: $accent;
   opacity: 1;
 }
 
 // === Vim syntax highlight ===
 .vim-hl {
-  color: #98c379;
+  color: $vim-hl;
 }
 
-// === Mobile home padding ===
+// === Mobile home: hero scale and spacing ===
 @media #{$media-size-phone} {
   .home-inner {
     padding: 0 1.25rem;
+  }
+  .home .home-hero__title {
+    font-size: 2.25rem;
+  }
+  .home-cta {
+    margin-top: 2rem;
+  }
+  .home-bio {
+    padding-left: 1rem;
   }
 }
 
@@ -92,4 +197,150 @@ a:hover, a:focus {
 .post-day {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.8rem;
+}
+
+// === Theme token overrides ===
+blockquote {
+  border-left-color: $accent;
+}
+
+pre code {
+  color: $light-color-secondary;
+  @include dark-theme { color: inherit; }
+}
+
+.posts .post-item {
+  border-bottom: 1px dashed $light-border-color;
+  @include dark-theme { border-bottom-color: $dark-border-color; }
+}
+
+.post-excerpt {
+  color: $light-color-secondary;
+  @include dark-theme { color: $dark-color-secondary; }
+}
+
+.post-info a:hover {
+  border-bottom-color: $light-color-variant;
+  @include dark-theme { border-bottom-color: $dark-color-variant; }
+}
+
+.screen-reader-text:focus {
+  background-color: $light-background-header;
+  color: $accent;
+  box-shadow: 0 0 0 2px $accent;
+  @include dark-theme {
+    background-color: $dark-background-header;
+    color: $accent;
+  }
+}
+
+.logo__cursor {
+  background-color: $logo-cursor;
+}
+
+// === Accessibility: focus, touch targets, truncation ===
+
+// Visible focus
+a:focus-visible,
+.button:focus-visible,
+.theme-toggle:focus-visible,
+.menu-trigger:focus-visible,
+.code-toolbar .toolbar-item a:focus-visible,
+.home-cta__link:focus-visible {
+  outline: 2px solid $accent;
+  outline-offset: 2px;
+}
+
+// Theme toggle, menu trigger
+.theme-toggle,
+.menu-trigger {
+  background: none;
+  border: none;
+  padding: 10px;
+  min-width: 44px;
+  min-height: 44px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  font: inherit;
+}
+
+// Post list truncation
+.posts .post-item-inner {
+  min-width: 0;
+}
+.posts .post-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Reduced motion
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+// Posts empty state
+.posts-empty {
+  margin: 2rem 0;
+  opacity: 0.8;
+}
+
+// === Back to top ===
+.back-to-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 2px solid $accent;
+  border-radius: 50%;
+  background: $accent;
+  color: $dark-background;
+  font-size: 1.25rem;
+  line-height: 1;
+  text-decoration: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0.2s ease, background 0.2s ease, color 0.2s ease;
+
+  &:hover,
+  &:focus {
+    background: transparent;
+    color: $accent;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $accent;
+    outline-offset: 2px;
+  }
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+
+  @media #{$media-size-phone} {
+    bottom: 1rem;
+    right: 1rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.1rem;
+  }
 }
