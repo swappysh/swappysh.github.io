@@ -11,7 +11,7 @@ resources/
 .code/
 
 # Excalidraw
-excalidraw.log
+excalidraw*.log
 *.excalidraw
 
 # Worker
