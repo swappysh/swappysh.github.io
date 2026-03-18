@@ -190,6 +190,56 @@ $max-width: 860px;
   @include text-secondary;
 }
 
+.footer {
+  margin-top: var(--space-3xl);
+  padding: var(--space-xl) 0;
+  border-top: 1px solid $light-border-color;
+  @include dark-theme { border-top-color: $dark-border-color; }
+}
+
+.footer__inner {
+  max-width: $max-width;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.footer__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  align-items: center;
+  text-align: center;
+  @include text-secondary;
+  font-size: var(--text-small);
+  
+  @media #{$media-size-tablet} {
+    align-items: flex-start;
+    text-align: left;
+  }
+}
+
+.footer__social {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  
+  @media #{$media-size-tablet} {
+    align-items: flex-start;
+  }
+}
+
+.footer__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-sm) var(--space-md);
+  
+  @media #{$media-size-tablet} {
+    justify-content: flex-start;
+  }
+}
+
 .btn-404 a {
   margin: 0 var(--space-md);
   &:focus-visible {
@@ -308,6 +358,7 @@ main.home {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-xs);
   min-height: var(--touch-target);
   padding: var(--space-sm) var(--space-lg);
   border: 2px solid var(--color-accent);
@@ -323,12 +374,22 @@ main.home {
     (background 0.2s ease, color 0.2s ease, border-color 0.2s ease)
   );
 
+  svg {
+    transition: transform 0.2s var(--ease-out-quart);
+  }
+
   &:hover,
   &:focus {
     background: transparent;
     color: var(--color-accent);
     transform: scale(1.02);
-    @media (prefers-reduced-motion: reduce) { transform: none; }
+    svg {
+      transform: translateX(3px);
+    }
+    @media (prefers-reduced-motion: reduce) { 
+      transform: none; 
+      svg { transform: none; }
+    }
   }
 
   &:active {
@@ -344,8 +405,6 @@ main.home {
 .home-bio {
   text-align: left;
   max-width: 65ch;
-  border-left: var(--space-2xs) solid $accent;
-  padding-left: var(--space-md);
   margin-left: 0;
   margin-top: 0;
   margin-bottom: var(--space-2xl);
@@ -353,6 +412,10 @@ main.home {
   p {
     line-height: 1.7;
     margin-bottom: var(--space-sm);
+  }
+  p:first-child {
+    font-size: var(--text-lead);
+    font-weight: 500;
   }
   p:last-child {
     margin-bottom: 0;
@@ -476,13 +539,16 @@ pre code {
 
 .home-recent__list {
   list-style: none;
-  margin: 0 0 var(--space-md) 0;
+  margin: 0 0 var(--space-lg) 0;
   padding: 0;
 }
 
 .home-recent__item {
   border-bottom: 1px dashed $light-border-color;
   @include dark-theme { border-bottom-color: $dark-border-color; }
+  &:last-child {
+    border-bottom: none;
+  }
 }
 
 .home-recent__link {
@@ -490,13 +556,16 @@ pre code {
   justify-content: space-between;
   align-items: baseline;
   gap: var(--space-md);
-  padding: var(--space-sm) 0;
+  padding: var(--space-md) 0;
   text-decoration: none;
   color: inherit;
   min-width: 0;
+  border-radius: var(--radius-sm);
   @include transition-with-reduced-motion(color 0.2s var(--ease-out-quart), background-color 0.2s var(--ease-out-quart));
   &:hover {
     color: var(--color-link);
+    background: transparentize($accent, $opacity-surface-hover);
+    @include dark-theme { background: transparentize($accent, $opacity-surface-hover); }
   }
   &:focus-visible {
     @include focus-ring;
@@ -512,9 +581,9 @@ pre code {
 
 .home-recent__date {
   font-family: 'JetBrains Mono', Consolas, monospace;
-  font-size: var(--text-meta);
-  flex-shrink: 0;
+  font-size: var(--text-small);
   @include text-secondary;
+  flex-shrink: 0;
 }
 
 .home-recent__more {
