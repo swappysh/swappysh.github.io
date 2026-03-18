@@ -80,8 +80,8 @@
 
 .filter-btn.active {
   opacity: 1;
-  border-color: $accent;
-  background: transparentize($accent, $opacity-surface-strong);
+  border-color: var(--color-accent);
+  background: color-mix(in srgb, var(--color-accent), transparent 85%);
 }
 
 .shuffle-btn {
@@ -130,19 +130,15 @@
   border-radius: var(--radius-sm);
   padding: var(--space-md) var(--space-lg);
   @include border-default;
-  background: transparentize($light-color, $opacity-surface-subtle);
+  background: color-mix(in srgb, var(--color-text), transparent 97%);
   @include transition-with-reduced-motion(
     (border-color 0.2s var(--ease-out-quart), background 0.2s var(--ease-out-quart)),
     (border-color 0.2s ease, background 0.2s ease)
   );
 
-  @include dark-theme {
-    background: transparentize($dark-color, $opacity-surface-subtle);
-  }
-
   &:hover {
-    border-color: $accent;
-    background: transparentize($accent, $opacity-surface-hover);
+    border-color: var(--color-accent);
+    background: color-mix(in srgb, var(--color-accent), transparent 95%);
   }
 }
 
@@ -217,27 +213,26 @@
 }
 
 .type-tweet {
-  background: transparentize($tweet-color, $opacity-surface-strong);
-  color: $tweet-color;
+  background: color-mix(in srgb, var(--color-accent) 15%, transparent);
+  color: #1d9bf0;
 }
 
 .type-video {
-  background: transparentize($video-color, $opacity-surface-mid);
-  color: $video-color;
+  background: color-mix(in srgb, #ff4444 12%, transparent);
+  color: #ff4444;
 }
 
 .type-article {
-  background: transparentize($article-color, $opacity-surface-strong);
-  color: $article-color;
+  background: color-mix(in srgb, #14b8a6 15%, transparent);
+  color: #14b8a6;
 }
 
 .type-other {
-  background: transparentize($light-color, $opacity-surface-strong);
-  color: $light-color-secondary;
+  background: color-mix(in srgb, var(--color-text) 15%, transparent);
+  color: var(--color-text-secondary);
 
   @include dark-theme {
-    background: transparentize($dark-color, $opacity-surface-strong);
-    color: $dark-color-secondary;
+    background: color-mix(in srgb, var(--color-text) 15%, transparent);
   }
 }
 

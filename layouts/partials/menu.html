@@ -9,7 +9,7 @@
 
         {{- if .Site.Params.EnableGlobalLanguageMenu }}
         <li class="dropdown">
-            <button type="button" class="dropbtn" aria-expanded="false" aria-haspopup="true">{{ .Language }}</button>
+            <button type="button" class="dropbtn" aria-expanded="false" aria-haspopup="menu">{{ .Language }}</button>
             <div class="dropdown-content" role="menu">
                 {{- if hugo.IsMultilingual }}
                     {{ range $.Translations }}

@@ -22,7 +22,7 @@
     </title>
 {{ end }}
 
-{{ $opts := dict "transpiler" "libsass" "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" false }}
+{{ $opts := dict "transpiler" "dartsass" "targetPath" "main.css" "outputStyle" "compressed" "enableSourceMap" false "includePaths" (slice "themes/hello-friend-ng/assets/scss") }}
 {{ with resources.Get "scss/main.scss" | toCSS $opts | minify | fingerprint }}
   <link rel="stylesheet" href="{{ .RelPermalink }}" integrity="{{ .Data.Integrity }}" crossorigin="anonymous">
 {{ end }}

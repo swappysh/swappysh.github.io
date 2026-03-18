@@ -1,70 +1,6 @@
-$dark-background:            #0d0d0d;
-$dark-background-secondary:  #161616;
-$dark-background-header:     #0d0d0d;
-$dark-color:                 #e6e6e6;
-$dark-color-variant:         #ffffff;
-$dark-color-secondary:       #9a9996;
-$dark-border-color:          #363534;
-$dark-table-color:           #363534;
-
-$light-background:           #fcfbf9;
-$light-background-secondary: #f0eeeb;
-$light-background-header:    #f8f6f3;
-$light-color:                #1e1d1c;
-$light-color-variant:        #0f0e0d;
-$light-color-secondary:      #6f6e6b;
-$light-border-color:         #e2e0dc;
-$light-table-color:          #e2e0dc;
-
-$accent:                     #f59e0b;
-$accent-light:               #b45309;
-$accent-secondary:           #0d9488;
-$logo-cursor:                #f59e0b;
-$tweet-color:                #1d9bf0;
-$video-color:                #ff4444;
-$article-color:              #14b8a6;
-$vim-hl:                     #98c379;
-
-$opacity-surface-subtle:     0.97;
-$opacity-surface-strong:     0.85;
-$opacity-surface-hover:      0.95;
-$opacity-surface-mid:        0.88;
-
-$media-size-phone:  "(max-width: 684px)";
-$media-size-tablet: "(max-width: 900px)";
-
-@mixin dark-theme {
-  @media (prefers-color-scheme: dark) {
-    @content;
-  }
-  [data-theme="dark"] & {
-    @content;
-  }
-}
-
-@mixin focus-ring {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-@mixin border-default {
-  border: 1px solid $light-border-color;
-  @include dark-theme { border-color: $dark-border-color; }
-}
-@mixin text-secondary {
-  color: $light-color-secondary;
-  @include dark-theme { color: $dark-color-secondary; }
-}
-
-@mixin transition-with-reduced-motion($default, $reduced: none) {
-  transition: $default;
-  @media (prefers-reduced-motion: reduce) {
-    @if $reduced != none {
-      transition: $reduced;
-    } @else {
-      transition: none;
-    }
-  }
-}
+@import "tokens";
+@import "mixins";
+@import "home";
 
 :root {
   --phoneWidth:  (max-width: 684px);
@@ -85,6 +21,11 @@ $media-size-tablet: "(max-width: 900px)";
 
   --radius-sm: 0.5rem;
   --radius-full: 9999px;
+
+  --opacity-surface-subtle: 0.97;
+  --opacity-surface-strong: 0.85;
+  --opacity-surface-hover: 0.95;
+  --opacity-surface-mid: 0.88;
 
   --text-caption: 0.7rem;
   --text-meta: 0.8rem;
@@ -154,7 +95,6 @@ $max-width: 860px;
 @import "normalize";
 @import "prism";
 @import "flag-icons";
-@import "mixins";
 @import "buttons";
 @import "header";
 @import "logo";
@@ -242,7 +182,7 @@ main.home {
       content: "";
       position: absolute;
       inset: -10% 0 30% 0;
-      background: radial-gradient(ellipse 80% 60% at 50% -5%, rgba($accent, 0.05), transparent 50%);
+      background: radial-gradient(ellipse 80% 60% at 50% -5%, color-mix(in srgb, var(--color-accent), transparent 95%), transparent 50%);
       pointer-events: none;
       z-index: -1;
     }
@@ -253,7 +193,7 @@ main.home {
       content: "";
       position: absolute;
       inset: -20% 0 40% 0;
-      background: radial-gradient(ellipse 90% 70% at 50% -10%, rgba($accent, 0.07), transparent 55%);
+      background: radial-gradient(ellipse 90% 70% at 50% -10%, color-mix(in srgb, var(--color-accent), transparent 93%), transparent 55%);
       pointer-events: none;
       z-index: -1;
     }
@@ -264,16 +204,16 @@ main.home {
   margin-left: 0;
   margin-right: auto;
   margin-bottom: var(--space-md);
-  border: 2px solid rgba($accent, 0.35);
+  border: 2px solid color-mix(in srgb, var(--color-accent), transparent 65%);
   box-sizing: border-box;
-  @include dark-theme { border-color: rgba($accent, 0.4); }
+  @include dark-theme { border-color: color-mix(in srgb, var(--color-accent), transparent 60%); }
   @include transition-with-reduced-motion(
     (transform 0.3s var(--ease-out-quart), box-shadow 0.3s var(--ease-out-quart)),
     (transform 0.3s ease, box-shadow 0.3s ease)
   );
   &:hover {
     transform: scale(1.02);
-    box-shadow: 0 0 0 4px rgba($accent, 0.15);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent), transparent 85%);
     @media (prefers-reduced-motion: reduce) { transform: none; }
   }
 }
@@ -309,7 +249,7 @@ main.home {
     display: inline-flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0;
+    gap: var(--space-xs);
   }
 }
 
@@ -332,7 +272,7 @@ main.home {
   font-weight: 600;
   letter-spacing: 0.02em;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba($accent, 0.25);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--color-accent), transparent 75%);
   @include transition-with-reduced-motion(
     (background 0.2s var(--ease-out-quart), color 0.2s var(--ease-out-quart), border-color 0.2s var(--ease-out-quart), transform 0.15s var(--ease-out-quart), box-shadow 0.2s var(--ease-out-quart)),
     (background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease)
@@ -347,7 +287,7 @@ main.home {
     background: transparent;
     color: var(--color-accent);
     transform: scale(1.02);
-    box-shadow: 0 4px 16px rgba($accent, 0.35);
+    box-shadow: 0 4px 16px color-mix(in srgb, var(--color-accent), transparent 65%);
     svg {
       transform: translateX(3px);
     }
@@ -359,7 +299,7 @@ main.home {
 
   &:active {
     transform: translateY(1px) scale(1.02);
-    box-shadow: 0 2px 4px rgba($accent, 0.2);
+    box-shadow: 0 2px 4px color-mix(in srgb, var(--color-accent), transparent 80%);
     @media (prefers-reduced-motion: reduce) { transform: none; }
   }
 
@@ -531,8 +471,8 @@ pre code {
   @include transition-with-reduced-motion(color 0.2s var(--ease-out-quart), background-color 0.2s var(--ease-out-quart));
   &:hover {
     color: var(--color-link);
-    background: transparentize($accent, $opacity-surface-hover);
-    @include dark-theme { background: transparentize($accent, $opacity-surface-hover); }
+    background: color-mix(in srgb, var(--color-accent), transparent 95%);
+    @include dark-theme { background: color-mix(in srgb, var(--color-accent), transparent 95%); }
   }
   &:focus-visible {
     @include focus-ring;
@@ -554,10 +494,10 @@ pre code {
   @include text-secondary;
   flex-shrink: 0;
   padding: 2px 6px;
-  background: rgba($accent, 0.08);
+  background: color-mix(in srgb, var(--color-accent), transparent 92%);
   border-radius: var(--radius-sm);
   @include dark-theme {
-    background: rgba($accent, 0.12);
+    background: color-mix(in srgb, var(--color-accent), transparent 88%);
   }
 }
 
@@ -595,8 +535,8 @@ pre code {
     (color 0.2s ease)
   );
   &:hover {
-    background-color: rgba($accent, 0.06);
-    @include dark-theme { background-color: rgba($accent, 0.08); }
+    background-color: color-mix(in srgb, var(--color-accent), transparent 94%);
+    @include dark-theme { background-color: color-mix(in srgb, var(--color-accent), transparent 92%); }
   }
 }
 .posts .post-year {
