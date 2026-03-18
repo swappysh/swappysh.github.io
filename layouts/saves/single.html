@@ -6,7 +6,8 @@
   </header>
 
   <div class="saves-toolbar" id="saves-toolbar">
-    <div class="saves-toolbar-row" role="toolbar" aria-label="Saves filters">
+    <span class="saves-toolbar-label">Filter</span>
+    <div class="saves-toolbar-row" role="toolbar" aria-label="Filter saves by type">
       <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
       <button class="filter-btn" data-filter="tweet" aria-pressed="false">Tweets</button>
       <button class="filter-btn" data-filter="article" aria-pressed="false">Articles</button>
@@ -16,9 +17,12 @@
     <input class="search-input" id="search-input" type="text" placeholder="Search saves" aria-label="Search saves" disabled>
   </div>
 
-  <div class="saves-count" id="saves-count" aria-live="polite"></div>
+  <div class="saves-count" id="saves-count" aria-live="polite">Loading…</div>
   <div class="saves-grid" id="saves-grid" aria-live="polite">
-    <div class="saves-empty">Loading saves…</div>
+    <div class="saves-loading">
+      <div class="saves-spinner"></div>
+      <span>Loading your saves…</span>
+    </div>
   </div>
 </article>
 
@@ -115,17 +119,33 @@
 
   function render() {
     const visible = getVisible();
-    countEl.textContent = allItems.length ? `${visible.length} of ${allItems.length} saves` : '0 saves';
-    const emptyMsg = searchQuery ? `No results for "${esc(searchQuery)}"` : 'No saves yet. <a href="https://github.com/swappysh/saves-worker" target="_blank" rel="noopener">Install the extension</a> to start saving.';
+    const total = allItems.length;
+    const filtered = visible.length;
+    if (total === 0) {
+      countEl.textContent = '0 saves';
+    } else if (filtered === total) {
+      countEl.textContent = `${total} saves`;
+    } else {
+      countEl.textContent = `${filtered} of ${total} saves`;
+    }
+    const emptyMsg = searchQuery 
+      ? `No saves matching "${esc(searchQuery)}"` 
+      : 'Save links from the web and revisit them here. <a href="https://github.com/swappysh/saves-worker" target="_blank" rel="noopener">Install the browser extension</a> to start saving links from around the web.';
     gridEl.innerHTML = visible.length ? visible.map(renderCard).join('') : `<div class="saves-empty">${emptyMsg}</div>`;
   }
 
   function setLoading(loading) {
     filterBtns.forEach(btn => { btn.disabled = loading; });
     if (shuffleBtn) shuffleBtn.disabled = loading;
-    if (searchInput) searchInput.disabled = loading;
+    if (searchInput) {
+      searchInput.disabled = loading;
+      searchInput.placeholder = loading ? 'Search when loaded' : 'Search saves';
+    }
     gridEl.setAttribute('aria-busy', loading ? 'true' : 'false');
-    if (loading) countEl.textContent = 'Loading saves…';
+    if (loading) {
+      countEl.textContent = 'Loading…';
+      gridEl.innerHTML = '<div class="saves-loading"><div class="saves-spinner"></div><span>Loading your saves…</span></div>';
+    }
   }
 
   function shuffled(arr) {

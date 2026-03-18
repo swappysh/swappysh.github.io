@@ -1,7 +1,13 @@
 # See https://gohugo.io/content-management/multilingual/#translation-of-strings
 
 [notFound]
-other = "This page doesn't exist or was moved. Go home or browse all posts."
+other = "This page doesn't exist or was moved."
+
+[notFoundHint]
+other = "Go home or browse all posts."
+
+[footerElsewhere]
+other = "Find me"
 
 [archives]
 other = "All posts"

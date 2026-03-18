@@ -1,7 +1,8 @@
 <footer class="footer">
     <div class="footer__inner">
         <div class="footer__content">
-            {{- if and (not .IsHome) .Site.Params.social }}
+            {{- if .Site.Params.social }}
+                <span class="footer-elsewhere">{{ i18n "footerElsewhere" }}</span>
                 {{ partial "social-icons.html" .Site.Params.social }}
             {{- end }}
             {{- with .Site.Params.footerLeft }}<span>{{ . | safeHTML }}</span>{{ end }}
@@ -9,56 +10,4 @@
         </div>
     </div>
 </footer>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const menuTrigger = document.querySelector(".menu-trigger");
-  const menu = document.querySelector(".menu");
-  if (menuTrigger && menu) {
-    const syncMenuAria = () => {
-      menuTrigger.setAttribute("aria-expanded", (!menu.classList.contains("hidden")).toString());
-    };
-    menuTrigger.addEventListener("click", syncMenuAria);
-    window.addEventListener("resize", syncMenuAria);
-    syncMenuAria();
-  }
-
-  const dropdown = document.querySelector(".dropdown");
-  const dropbtn = dropdown?.querySelector(".dropbtn");
-  const panel = dropdown?.querySelector(".dropdown-content");
-  if (dropdown && dropbtn && panel) {
-    const setOpen = (open) => {
-      panel.classList.toggle("show", open);
-      dropbtn.setAttribute("aria-expanded", open.toString());
-    };
-    dropbtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      setOpen(!panel.classList.contains("show"));
-    });
-    dropbtn.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        setOpen(false);
-        dropbtn.focus();
-      }
-    });
-    document.addEventListener("click", (e) => {
-      if (!dropdown.contains(e.target)) setOpen(false);
-    });
-  }
-
-  const backToTop = document.querySelector(".back-to-top");
-  if (backToTop) {
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const onScroll = () => {
-      const show = window.scrollY > 400;
-      backToTop.classList.toggle("is-visible", show);
-      backToTop.setAttribute("tabindex", show ? "0" : "-1");
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    backToTop.addEventListener("click", (e) => {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
-    });
-  }
-});
-</script>
+<script src="/js/site.js" defer></script>
