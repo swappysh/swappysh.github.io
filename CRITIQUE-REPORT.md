@@ -1,0 +1,60 @@
+# Design Critique Report: Swapnil Sharma's Portfolio
+
+## Anti-Patterns Verdict
+**PASS.** 
+The interface successfully avoids the common "AI-generated" aesthetic of 2024-2025. It does not use the standardInter/Geist font stack, generic bento-box layouts, or heavy glassmorphism. Instead, it leverages a strong typographic foundation (IBM Plex Sans & JetBrains Mono) and a terminal-inspired header that feels authentic to a developer's personality. The dark mode is grounded in deep blacks (`#0d0d0d`) rather than generic dark blues, and the amber accent (`#f59e0b`) is used with purpose.
+
+## Overall Impression
+The site is clean, professional, and highly readable. It communicates "technical expertise" through its font choices and subtle highlights. The staggered reveal animations provide a premium feel on initial load. The single biggest opportunity is to push the "delight" factor further in the interactive elements (logo, social icons, and hover states) to make the experience feel more "alive."
+
+## What's Working
+1. **Typographic Hierarchy**: The use of `IBM Plex Sans` for body text with a generous `1.7` line-height in the bio makes for an excellent reading experience. The `var(--text-hero)` title is bold and commanding.
+2. **Technical Branding**: The `$ bash ./swapnil.sh` logo and `vim-hl` highlights (pink/green/teal) create a consistent "terminal/editor" theme without being overbearing.
+3. **Verified Recent Fixes**:
+    - **CTA Arrow**: The resume button's SVG arrow correctly translates on hover, providing clear affordance.
+    - **Bio Typography**: The larger first paragraph correctly establishes an introductory rhythm.
+    - **Recent Posts**: The list is clean, and the subtle hover background in amber-tinted transparency is polished.
+
+## Priority Issues
+
+### 1. Logo Font Consistency
+- **What**: The logo currently uses `monospace, monospace` instead of the project's primary mono font.
+- **Why it matters**: It breaks the design system's cohesion and lacks the character of `JetBrains Mono`.
+- **Fix**: Update the logo's SCSS to use `var(--font-mono)`.
+- **Command**: `/polish "In themes/hello-friend-ng/assets/scss/_logo.scss, update .logo font-family to var(--font-mono)."`
+
+### 2. Recent Posts Date Styling
+- **What**: The date in the recent posts list feels a bit disconnected and "default."
+- **Why it matters**: It's a key meta-information point that could be used to reinforce the brand's aesthetic.
+- **Fix**: Use a more intentional alignment or a subtle pill/background for the date to make it feel like a "tag" or a "stamp."
+- **Command**: `/arrange "In assets/scss/main.scss, style .home-recent__date with a subtle background-color (rgba of accent) and padding to make it look like a technical tag."`
+
+### 3. Social Icon Interactions
+- **What**: Social icons currently just translate slightly on hover.
+- **Why it matters**: This is a great place for "delight." A more expressive interaction (scale + color transition) would feel more premium.
+- **Fix**: Update social icon hover states to include `transform: scale(1.1)` and change the color to `var(--color-accent)`.
+- **Command**: `/delight "In assets/scss/main.scss, update .social-icons a hover state to use a scale transform and color: var(--color-accent)."`
+
+### 4. Footer Polish & Alignment
+- **What**: The footer is a bit bare and its top border (if any) doesn't match the `home-recent` section.
+- **Why it matters**: A strong finish to the page (the "footer") is essential for a complete feeling of quality.
+- **Fix**: Add a subtle top border, ensure content is centered, and perhaps use a slightly smaller, more refined font size for the meta links.
+- **Command**: `/polish "In themes/hello-friend-ng/assets/scss/_footer.scss, refine the padding and ensure the top border matches the home-recent section in main.scss."`
+
+### 5. Light Mode "Glow"
+- **What**: Dark mode has a nice radial gradient in the hero; light mode feels slightly flatter.
+- **Why it matters**: Maintaining visual interest across themes is key for "boldness."
+- **Fix**: Add a very subtle, warm radial gradient for light mode in the `home__inner` container.
+- **Command**: `/colorize "In assets/scss/main.scss, add a light-theme radial gradient to .home__inner that uses a very faint amber glow (2-3% opacity)."`
+
+## Minor Observations
+- **Logo Animation**: The cursor blink is standard. A "typing" effect for the `$ bash ./swapnil.sh` text on page load would be a major "delight" win.
+- **Focus Rings**: Ensure the focus ring mixin is applied to *all* interactive elements, including the theme toggle and menu trigger.
+
+## Questions to Consider
+- "What if the 'Resume' button had a subtle pulse or glow to draw more attention as the primary CTA?"
+- "Could the portrait have a 'terminal green' or 'accent amber' border that pulses or changes on hover?"
+- "Is the '$ bash ./swapnil.sh' logo too long for mobile? Should it shorten to just './swapnil.sh'?"
+
+---
+*Report generated by Gemini CLI Design Critic*

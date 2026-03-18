@@ -236,6 +236,18 @@ main.home {
   flex-direction: column;
   gap: 0;
   position: relative;
+
+  &:not([data-theme="dark"]):not([data-theme="dark="]) {
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -10% 0 30% 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -5%, rgba($accent, 0.03), transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+  }
+
   @include dark-theme {
     &::before {
       content: "";
@@ -441,9 +453,9 @@ main.home {
   );
 }
 .social-icons a:hover {
-  color: var(--color-link);
+  color: var(--color-accent);
   opacity: 1;
-  transform: translateY(-2px);
+  transform: scale(1.1);
   @media (prefers-reduced-motion: reduce) { transform: none; }
 }
 
@@ -541,6 +553,12 @@ pre code {
   font-size: var(--text-small);
   @include text-secondary;
   flex-shrink: 0;
+  padding: 2px 6px;
+  background: rgba($accent, 0.08);
+  border-radius: var(--radius-sm);
+  @include dark-theme {
+    background: rgba($accent, 0.12);
+  }
 }
 
 .home-recent__more {
