@@ -17,6 +17,7 @@ $light-border-color:         #e2e0dc;
 $light-table-color:          #e2e0dc;
 
 $accent:                     #f59e0b;
+$accent-light:               #b45309;
 $accent-secondary:           #0d9488;
 $logo-cursor:                #fe5186;
 $tweet-color:                #1d9bf0;
@@ -42,7 +43,7 @@ $media-size-tablet: "(max-width: 900px)";
 }
 
 @mixin focus-ring {
-  outline: 2px solid $accent;
+  outline: 2px solid var(--color-accent);
   outline-offset: 2px;
 }
 @mixin border-default {
@@ -104,8 +105,8 @@ $media-size-tablet: "(max-width: 900px)";
   --color-text:           #{$light-color};
   --color-text-variant:   #{$light-color-variant};
   --color-text-secondary: #{$light-color-secondary};
-  --color-link:           #{$accent};
-  --color-accent:         #{$accent};
+  --color-link:           #{$accent-light};
+  --color-accent:         #{$accent-light};
   --color-border:         #{$light-border-color};
 
   --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
@@ -174,8 +175,21 @@ $max-width: 860px;
   margin-bottom: var(--space-sm);
 }
 .error-404 .error-404__message {
-  margin-bottom: var(--space-md);
+  margin-bottom: var(--space-xs);
 }
+.error-404 .error-404__hint {
+  @include text-secondary;
+  margin-bottom: var(--space-md);
+  font-size: var(--text-base);
+}
+.footer-elsewhere {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+  @include text-secondary;
+}
+
 .btn-404 a {
   margin: 0 var(--space-md);
   &:focus-visible {
@@ -200,7 +214,7 @@ a {
   @include transition-with-reduced-motion(color 0.2s var(--ease-out-quart));
 }
 a:hover, a:focus {
-  color: $accent;
+  color: var(--color-link);
 }
 
 .visually-hidden {
@@ -243,6 +257,8 @@ main.home {
 }
 
 .home__inner .home-hero__portrait {
+  margin-left: 0;
+  margin-right: auto;
   margin-bottom: var(--space-md);
   border: 2px solid rgba($accent, 0.35);
   box-sizing: border-box;
@@ -294,9 +310,9 @@ main.home {
   justify-content: center;
   min-height: var(--touch-target);
   padding: var(--space-sm) var(--space-lg);
-  border: 2px solid $accent;
+  border: 2px solid var(--color-accent);
   border-radius: var(--radius-full);
-  background: $accent;
+  background: var(--color-accent);
   color: $dark-background;
   font-size: var(--text-base);
   font-weight: 600;
@@ -310,11 +326,13 @@ main.home {
   &:hover,
   &:focus {
     background: transparent;
-    color: $accent;
+    color: var(--color-accent);
+    transform: scale(1.02);
+    @media (prefers-reduced-motion: reduce) { transform: none; }
   }
 
   &:active {
-    transform: translateY(1px);
+    transform: translateY(1px) scale(1.02);
     @media (prefers-reduced-motion: reduce) { transform: none; }
   }
 
@@ -351,9 +369,51 @@ main.home {
     transform: translateY(0);
   }
 }
+
+@keyframes homeRevealPortrait {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
 .home__inner > * {
-  animation: homeReveal 0.4s var(--ease-out-quint) 0.1s both;
+  animation: homeReveal 0.4s var(--ease-out-quint) both;
   @media (prefers-reduced-motion: reduce) { animation: none; }
+}
+
+.home__inner > .home-hero__portrait {
+  animation-name: homeRevealPortrait;
+  animation-duration: 0.45s;
+  animation-delay: 0s;
+}
+
+.home__inner > .home-hero__title {
+  animation-delay: 0.08s;
+}
+
+.home__inner > .home-subtitle {
+  animation-delay: 0.14s;
+}
+
+.home__inner > .home-hero__social {
+  animation-delay: 0.2s;
+}
+
+.home__inner > .home-bio {
+  animation-delay: 0.26s;
+}
+
+.home__inner > .home-hero__cta {
+  animation-delay: 0.32s;
+}
+
+.home__inner > .home-recent {
+  animation-delay: 0.38s;
 }
 
 .social-icons a {
@@ -364,7 +424,7 @@ main.home {
   );
 }
 .social-icons a:hover {
-  color: $accent;
+  color: var(--color-link);
   opacity: 1;
   transform: translateY(-2px);
   @media (prefers-reduced-motion: reduce) { transform: none; }
@@ -392,7 +452,7 @@ main.home {
 }
 
 blockquote {
-  border-left-color: $accent;
+  border-left-color: var(--color-accent);
 }
 
 pre code {
@@ -436,7 +496,7 @@ pre code {
   min-width: 0;
   @include transition-with-reduced-motion(color 0.2s var(--ease-out-quart), background-color 0.2s var(--ease-out-quart));
   &:hover {
-    color: $accent;
+    color: var(--color-link);
   }
   &:focus-visible {
     @include focus-ring;
@@ -464,7 +524,7 @@ pre code {
   a {
     color: inherit;
     text-decoration: none;
-    &:hover { color: $accent; }
+    &:hover { color: var(--color-link); }
     &:focus-visible { @include focus-ring; }
   }
 }
@@ -510,11 +570,10 @@ pre code {
 
 .screen-reader-text:focus {
   background-color: $light-background-header;
-  color: $accent;
-  box-shadow: 0 0 0 2px $accent;
+  color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent);
   @include dark-theme {
     background-color: $dark-background-header;
-    color: $accent;
   }
 }
 
@@ -645,7 +704,7 @@ a:focus-visible,
   &:hover,
   &:focus {
     background: transparent;
-    color: $accent;
+    color: var(--color-accent);
   }
 
   &:active {
