@@ -1,16 +1,8 @@
 <footer class="footer">
     <div class="footer__inner">
         <div class="footer__content">
-            <div class="footer__social">
-                {{- if .Site.Params.social }}
-                    <span class="footer-elsewhere">{{ i18n "footerElsewhere" }}</span>
-                    {{ partial "social-icons.html" .Site.Params.social }}
-                {{- end }}
-            </div>
-            <div class="footer__meta">
-                {{- with .Site.Params.footerLeft }}<span>{{ . | safeHTML }}</span>{{ end }}
-                {{- with .Site.Params.footerRight }}<span>{{ . | safeHTML }}</span>{{ end }}
-            </div>
+            {{- with .Site.Params.footerLeft }}<span>{{ . | safeHTML }}</span>{{ end }}
+            {{- with .Site.Params.footerRight }}<span>{{ . | safeHTML }}</span>{{ end }}
         </div>
     </div>
 </footer>

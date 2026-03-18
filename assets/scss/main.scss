@@ -182,64 +182,6 @@ $max-width: 860px;
   margin-bottom: var(--space-md);
   font-size: var(--text-base);
 }
-.footer-elsewhere {
-  display: block;
-  font-size: var(--text-sm);
-  font-weight: 600;
-  margin-bottom: var(--space-xs);
-  @include text-secondary;
-}
-
-.footer {
-  margin-top: var(--space-3xl);
-  padding: var(--space-xl) 0;
-  border-top: 1px solid $light-border-color;
-  @include dark-theme { border-top-color: $dark-border-color; }
-}
-
-.footer__inner {
-  max-width: $max-width;
-  margin: 0 auto;
-  padding: 0 var(--space-lg);
-}
-
-.footer__content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
-  align-items: center;
-  text-align: center;
-  @include text-secondary;
-  font-size: var(--text-small);
-  
-  @media #{$media-size-tablet} {
-    align-items: flex-start;
-    text-align: left;
-  }
-}
-
-.footer__social {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-xs);
-  
-  @media #{$media-size-tablet} {
-    align-items: flex-start;
-  }
-}
-
-.footer__meta {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--space-sm) var(--space-md);
-  
-  @media #{$media-size-tablet} {
-    justify-content: flex-start;
-  }
-}
-
 .btn-404 a {
   margin: 0 var(--space-md);
   &:focus-visible {
@@ -313,6 +255,15 @@ main.home {
   border: 2px solid rgba($accent, 0.35);
   box-sizing: border-box;
   @include dark-theme { border-color: rgba($accent, 0.4); }
+  @include transition-with-reduced-motion(
+    (transform 0.3s var(--ease-out-quart), box-shadow 0.3s var(--ease-out-quart)),
+    (transform 0.3s ease, box-shadow 0.3s ease)
+  );
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 4px rgba($accent, 0.15);
+    @media (prefers-reduced-motion: reduce) { transform: none; }
+  }
 }
 
 .home .home-hero__title {
@@ -369,9 +320,10 @@ main.home {
   font-weight: 600;
   letter-spacing: 0.02em;
   text-decoration: none;
+  box-shadow: 0 2px 8px rgba($accent, 0.25);
   @include transition-with-reduced-motion(
-    (background 0.2s var(--ease-out-quart), color 0.2s var(--ease-out-quart), border-color 0.2s var(--ease-out-quart), transform 0.15s var(--ease-out-quart)),
-    (background 0.2s ease, color 0.2s ease, border-color 0.2s ease)
+    (background 0.2s var(--ease-out-quart), color 0.2s var(--ease-out-quart), border-color 0.2s var(--ease-out-quart), transform 0.15s var(--ease-out-quart), box-shadow 0.2s var(--ease-out-quart)),
+    (background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease)
   );
 
   svg {
@@ -383,6 +335,7 @@ main.home {
     background: transparent;
     color: var(--color-accent);
     transform: scale(1.02);
+    box-shadow: 0 4px 16px rgba($accent, 0.35);
     svg {
       transform: translateX(3px);
     }
@@ -394,6 +347,7 @@ main.home {
 
   &:active {
     transform: translateY(1px) scale(1.02);
+    box-shadow: 0 2px 4px rgba($accent, 0.2);
     @media (prefers-reduced-motion: reduce) { transform: none; }
   }
 
@@ -541,13 +495,13 @@ pre code {
   list-style: none;
   margin: 0 0 var(--space-lg) 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .home-recent__item {
-  border-bottom: 1px dashed $light-border-color;
-  @include dark-theme { border-bottom-color: $dark-border-color; }
-  &:last-child {
-    border-bottom: none;
+  &:not(:last-child) {
+    margin-bottom: var(--space-xs);
   }
 }
 
@@ -556,7 +510,8 @@ pre code {
   justify-content: space-between;
   align-items: baseline;
   gap: var(--space-md);
-  padding: var(--space-md) 0;
+  padding: var(--space-sm) var(--space-md);
+  margin: 0 calc(var(--space-md) * -1);
   text-decoration: none;
   color: inherit;
   min-width: 0;
@@ -577,6 +532,8 @@ pre code {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  font-weight: 500;
+  font-size: var(--text-base);
 }
 
 .home-recent__date {
