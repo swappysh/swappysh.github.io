@@ -1,7 +1,9 @@
 <footer class="footer">
     <div class="footer__inner">
-        {{- if and (not .IsHome) .Site.Params.social }}
-            <div class="footer__content">{{ partial "social-icons.html" .Site.Params.social }}</div>
-        {{- end }}
+        <div class="footer__content">
+            {{- with .Site.Params.footerLeft }}<span>{{ . | safeHTML }}</span>{{ end }}
+            {{- with .Site.Params.footerRight }}<span>{{ . | safeHTML }}</span>{{ end }}
+        </div>
     </div>
 </footer>
+<script src="/js/site.js" defer></script>

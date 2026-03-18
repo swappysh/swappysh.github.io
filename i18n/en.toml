@@ -1,0 +1,37 @@
+# See https://gohugo.io/content-management/multilingual/#translation-of-strings
+
+[notFound]
+other = "This page doesn't exist or was moved."
+
+[notFoundHint]
+other = "Go home or browse all posts."
+
+[footerElsewhere]
+other = "Find me"
+
+[archives]
+other = "All posts"
+
+[recentPosts]
+other = "Recent posts"
+
+[home]
+other = "Home"
+
+[readingTime]
+one   = "1 min read"
+other = "{{ .Count }} min read"
+
+[wordCount]
+one   = "1 word"
+other = "{{ .Count }} words"
+
+[tableOfContents]
+other = "On this page"
+
+[lastModified]
+other = "Updated"
+
+[pagination]
+newerPosts = "Newer posts"
+olderPosts = "Older posts"

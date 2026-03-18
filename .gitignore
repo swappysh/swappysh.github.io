@@ -10,8 +10,12 @@ resources/
 # Claude agent logs
 .code/
 
+# Excalidraw
+excalidraw*.log
+*.excalidraw
+
 # Worker
-worker/node_modules/
+node_modules/
 worker/.wrangler/
 worker/.dev.vars
 .wrangler/

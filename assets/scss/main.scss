@@ -1,34 +1,156 @@
-// === Color overrides (dark theme) ===
 $dark-background:            #0d0d0d;
 $dark-background-secondary:  #161616;
 $dark-background-header:     #0d0d0d;
 $dark-color:                 #e6e6e6;
 $dark-color-variant:         #ffffff;
-$dark-color-secondary:       #888888;
-$dark-border-color:          #2a2a2a;
-$dark-table-color:           #2a2a2a;
+$dark-color-secondary:       #9a9996;
+$dark-border-color:          #363534;
+$dark-table-color:           #363534;
 
-// Light theme (unchanged)
-$light-background:           #fff;
-$light-background-secondary: #eaeaea;
-$light-background-header:    #fafafa;
-$light-color:                #222;
-$light-color-variant:        black;
-$light-color-secondary:      #999;
-$light-border-color:         #dcdcdc;
-$light-table-color:          #dcdcdc;
+$light-background:           #fcfbf9;
+$light-background-secondary: #f0eeeb;
+$light-background-header:    #f8f6f3;
+$light-color:                #1e1d1c;
+$light-color-variant:        #0f0e0d;
+$light-color-secondary:      #6f6e6b;
+$light-border-color:         #e2e0dc;
+$light-table-color:          #e2e0dc;
+
+$accent:                     #f59e0b;
+$accent-light:               #b45309;
+$accent-secondary:           #0d9488;
+$logo-cursor:                #f59e0b;
+$tweet-color:                #1d9bf0;
+$video-color:                #ff4444;
+$article-color:              #14b8a6;
+$vim-hl:                     #98c379;
+
+$opacity-surface-subtle:     0.97;
+$opacity-surface-strong:     0.85;
+$opacity-surface-hover:      0.95;
+$opacity-surface-mid:        0.88;
 
 $media-size-phone:  "(max-width: 684px)";
 $media-size-tablet: "(max-width: 900px)";
 
+@mixin dark-theme {
+  @media (prefers-color-scheme: dark) {
+    @content;
+  }
+  [data-theme="dark"] & {
+    @content;
+  }
+}
+
+@mixin focus-ring {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+@mixin border-default {
+  border: 1px solid $light-border-color;
+  @include dark-theme { border-color: $dark-border-color; }
+}
+@mixin text-secondary {
+  color: $light-color-secondary;
+  @include dark-theme { color: $dark-color-secondary; }
+}
+
+@mixin transition-with-reduced-motion($default, $reduced: none) {
+  transition: $default;
+  @media (prefers-reduced-motion: reduce) {
+    @if $reduced != none {
+      transition: $reduced;
+    } @else {
+      transition: none;
+    }
+  }
+}
+
 :root {
   --phoneWidth:  (max-width: 684px);
   --tabletWidth: (max-width: 900px);
+  --accent:      #{$accent};
+  --accent-secondary: #{$accent-secondary};
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --space-2xs: 0.25rem;
+  --space-xs:  0.5rem;
+  --space-sm:  0.75rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  --radius-sm: 0.5rem;
+  --radius-full: 9999px;
+
+  --text-caption: 0.7rem;
+  --text-meta: 0.8rem;
+  --text-small: 0.85rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lead: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-section: 2.625rem;
+  --text-section-sm: 2rem;
+  --text-hero: 4.5rem;
+  --text-hero-sm: 2.25rem;
+
+  --touch-target: 44px;
+
+  --color-bg:             #{$light-background};
+  --color-bg-secondary:   #{$light-background-secondary};
+  --color-text:           #{$light-color};
+  --color-text-variant:   #{$light-color-variant};
+  --color-text-secondary: #{$light-color-secondary};
+  --color-link:           #{$accent-light};
+  --color-accent:         #{$accent-light};
+  --color-border:         #{$light-border-color};
+
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --leading-tight: 1.2;
+  --leading-snug: 1.3;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.05em;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg:             #{$dark-background};
+    --color-bg-secondary:   #{$dark-background-secondary};
+    --color-text:           #{$dark-color};
+    --color-text-variant:   #{$dark-color-variant};
+    --color-text-secondary: #{$dark-color-secondary};
+    --color-link:           #{$accent};
+    --color-accent:         #{$accent};
+    --color-border:         #{$dark-border-color};
+  }
+}
+
+[data-theme="dark"] {
+  --color-bg:             #{$dark-background};
+  --color-bg-secondary:   #{$dark-background-secondary};
+  --color-text:           #{$dark-color};
+  --color-text-variant:   #{$dark-color-variant};
+  --color-text-secondary: #{$dark-color-secondary};
+  --color-link:           #{$accent};
+  --color-accent:         #{$accent};
+  --color-border:         #{$dark-border-color};
 }
 
 $max-width: 860px;
 
-// Theme imports — skip "fonts" (IBM Plex Sans loaded via <link> in head.html)
 @import "normalize";
 @import "prism";
 @import "flag-icons";
@@ -44,52 +166,622 @@ $max-width: 860px;
 @import "sharing-buttons";
 @import "tables";
 @import "404";
+@import "saves";
 
-// === Font family ===
+.error-404 .img-404 {
+  margin-bottom: var(--space-lg);
+}
+.error-404 .banner-404 h1 {
+  margin-bottom: var(--space-sm);
+}
+.error-404 .error-404__message {
+  margin-bottom: var(--space-xs);
+}
+.error-404 .error-404__hint {
+  @include text-secondary;
+  margin-bottom: var(--space-md);
+  font-size: var(--text-base);
+}
+.btn-404 a {
+  margin: 0 var(--space-md);
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+.btn-404 svg {
+  margin-right: var(--space-xs);
+}
+
 body {
   font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: $light-background;
+  @include dark-theme { background-color: $dark-background; }
 }
 
 code, pre {
   font-family: 'JetBrains Mono', Consolas, monospace;
 }
 
-// === Accent color on hover ===
+a {
+  @include transition-with-reduced-motion(color 0.2s var(--ease-out-quart));
+}
 a:hover, a:focus {
-  color: #f59e0b;
+  color: var(--color-link);
 }
 
-// === Home page bio ===
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+main.home {
+  width: 100%;
+  max-width: 100%;
+}
+
+.home__inner {
+  padding: var(--space-3xl) var(--space-lg) 0;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+
+  &:not([data-theme="dark"]):not([data-theme="dark="]) {
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -10% 0 30% 0;
+      background: radial-gradient(ellipse 80% 60% at 50% -5%, rgba($accent, 0.05), transparent 50%);
+      pointer-events: none;
+      z-index: -1;
+    }
+  }
+
+  @include dark-theme {
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -20% 0 40% 0;
+      background: radial-gradient(ellipse 90% 70% at 50% -10%, rgba($accent, 0.07), transparent 55%);
+      pointer-events: none;
+      z-index: -1;
+    }
+  }
+}
+
+.home__inner .home-hero__portrait {
+  margin-left: 0;
+  margin-right: auto;
+  margin-bottom: var(--space-md);
+  border: 2px solid rgba($accent, 0.35);
+  box-sizing: border-box;
+  @include dark-theme { border-color: rgba($accent, 0.4); }
+  @include transition-with-reduced-motion(
+    (transform 0.3s var(--ease-out-quart), box-shadow 0.3s var(--ease-out-quart)),
+    (transform 0.3s ease, box-shadow 0.3s ease)
+  );
+  &:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 0 4px rgba($accent, 0.15);
+    @media (prefers-reduced-motion: reduce) { transform: none; }
+  }
+}
+
+.home .home-hero__title {
+  font-size: var(--text-hero);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  margin-top: 0;
+  margin-bottom: var(--space-xs);
+}
+
+.home-subtitle {
+  margin-bottom: var(--space-lg);
+}
+
+.home-subtitle p {
+  margin: 0;
+  font-size: var(--text-lead);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  @include text-secondary;
+}
+
+.home-hero__social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-2xl);
+  .social-icons {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+}
+
+.home-hero__cta {
+  margin: 0 0 var(--space-xl);
+}
+
+.cta-resume {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: var(--touch-target);
+  padding: var(--space-sm) var(--space-lg);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: $dark-background;
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba($accent, 0.25);
+  @include transition-with-reduced-motion(
+    (background 0.2s var(--ease-out-quart), color 0.2s var(--ease-out-quart), border-color 0.2s var(--ease-out-quart), transform 0.15s var(--ease-out-quart), box-shadow 0.2s var(--ease-out-quart)),
+    (background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease)
+  );
+
+  svg {
+    transition: transform 0.2s var(--ease-out-quart);
+  }
+
+  &:hover,
+  &:focus {
+    background: transparent;
+    color: var(--color-accent);
+    transform: scale(1.02);
+    box-shadow: 0 4px 16px rgba($accent, 0.35);
+    svg {
+      transform: translateX(3px);
+    }
+    @media (prefers-reduced-motion: reduce) { 
+      transform: none; 
+      svg { transform: none; }
+    }
+  }
+
+  &:active {
+    transform: translateY(1px) scale(1.02);
+    box-shadow: 0 2px 4px rgba($accent, 0.2);
+    @media (prefers-reduced-motion: reduce) { transform: none; }
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
 .home-bio {
   text-align: left;
   max-width: 65ch;
+  margin-left: 0;
+  margin-top: 0;
+  margin-bottom: var(--space-2xl);
 
   p {
     line-height: 1.7;
-    margin-bottom: 1.2rem;
+    margin-bottom: var(--space-sm);
+  }
+  p:first-child {
+    font-size: var(--text-lead);
+    font-weight: 500;
+  }
+  p:last-child {
+    margin-bottom: 0;
   }
 }
 
-// === Social icons ===
+@keyframes homeReveal {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes homeRevealPortrait {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.home__inner > * {
+  animation: homeReveal 0.4s var(--ease-out-quint) both;
+  @media (prefers-reduced-motion: reduce) { animation: none; }
+}
+
+.home__inner > .home-hero__portrait {
+  animation-name: homeRevealPortrait;
+  animation-duration: 0.45s;
+  animation-delay: 0s;
+}
+
+.home__inner > .home-hero__title {
+  animation-delay: 0.08s;
+}
+
+.home__inner > .home-subtitle {
+  animation-delay: 0.14s;
+}
+
+.home__inner > .home-hero__social {
+  animation-delay: 0.2s;
+}
+
+.home__inner > .home-bio {
+  animation-delay: 0.26s;
+}
+
+.home__inner > .home-hero__cta {
+  animation-delay: 0.32s;
+}
+
+.home__inner > .home-recent {
+  animation-delay: 0.38s;
+}
+
+.social-icons a {
+  display: inline-block;
+  @include transition-with-reduced-motion(
+    (color 0.2s ease, opacity 0.2s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1)),
+    (color 0.2s ease, opacity 0.2s ease)
+  );
+}
 .social-icons a:hover {
-  color: #f59e0b;
+  color: var(--color-accent);
   opacity: 1;
+  transform: scale(1.1);
+  @media (prefers-reduced-motion: reduce) { transform: none; }
 }
 
-// === Vim syntax highlight ===
 .vim-hl {
-  color: #98c379;
+  color: $logo-cursor;
 }
 
-// === Mobile home padding ===
 @media #{$media-size-phone} {
-  .home-inner {
-    padding: 0 1.25rem;
+  .home__inner {
+    padding: var(--space-2xl) var(--space-md) var(--space-2xl);
+  }
+  .home .home-hero__title {
+    font-size: var(--text-hero-sm);
+  }
+  .home-bio {
+    padding-left: var(--space-md);
   }
 }
 
-// === Post list date in mono ===
 .post-day {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
+  font-size: var(--text-meta);
+}
+
+blockquote {
+  border-left-color: var(--color-accent);
+}
+
+pre code {
+  color: $light-color-secondary;
+  @include dark-theme { color: inherit; }
+}
+
+.home-recent {
+  margin-top: var(--space-3xl);
+  padding-top: var(--space-2xl);
+  border-top: 1px solid $light-border-color;
+  @include dark-theme { border-top-color: $dark-border-color; }
+}
+
+.home-recent__title {
+  font-size: var(--text-lead);
+  font-weight: 600;
+  margin: 0 0 var(--space-md) 0;
+  @include text-secondary;
+}
+
+.home-recent__list {
+  list-style: none;
+  margin: 0 0 var(--space-lg) 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-recent__item {
+  &:not(:last-child) {
+    margin-bottom: var(--space-xs);
+  }
+}
+
+.home-recent__link {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  margin: 0 calc(var(--space-md) * -1);
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  border-radius: var(--radius-sm);
+  @include transition-with-reduced-motion(color 0.2s var(--ease-out-quart), background-color 0.2s var(--ease-out-quart));
+  &:hover {
+    color: var(--color-link);
+    background: transparentize($accent, $opacity-surface-hover);
+    @include dark-theme { background: transparentize($accent, $opacity-surface-hover); }
+  }
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.home-recent__post-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: var(--text-base);
+}
+
+.home-recent__date {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: var(--text-small);
+  @include text-secondary;
+  flex-shrink: 0;
+  padding: 2px 6px;
+  background: rgba($accent, 0.08);
+  border-radius: var(--radius-sm);
+  @include dark-theme {
+    background: rgba($accent, 0.12);
+  }
+}
+
+.home-recent__more {
+  margin: 0;
+  font-size: var(--text-sm);
+  @include text-secondary;
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover { color: var(--color-link); }
+    &:focus-visible { @include focus-ring; }
+  }
+}
+
+.posts {
+  padding: var(--space-xl) var(--space-lg);
+  margin: var(--space-xl) auto;
+}
+.posts > h1 {
+  margin-bottom: var(--space-xl);
+}
+.posts .posts-group {
+  margin-bottom: var(--space-2xl);
+}
+.posts .post-item {
+  border-bottom: 1px dashed $light-border-color;
+  @include dark-theme { border-bottom-color: $dark-border-color; }
+}
+.posts .post-item-inner {
+  padding: var(--space-sm) 0;
+  min-width: 0;
+  @include transition-with-reduced-motion(
+    (color 0.2s var(--ease-out-quart), background-color 0.2s var(--ease-out-quart)),
+    (color 0.2s ease)
+  );
+  &:hover {
+    background-color: rgba($accent, 0.06);
+    @include dark-theme { background-color: rgba($accent, 0.08); }
+  }
+}
+.posts .post-year {
+  margin-right: var(--space-lg);
+}
+
+.post-excerpt {
+  @include text-secondary;
+}
+
+.post-info a:hover {
+  border-bottom-color: $light-color-variant;
+  @include dark-theme { border-bottom-color: $dark-color-variant; }
+}
+
+.screen-reader-text:focus {
+  background-color: $light-background-header;
+  color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent);
+  @include dark-theme {
+    background-color: $dark-background-header;
+  }
+}
+
+.logo__cursor {
+  background-color: $logo-cursor;
+}
+
+a:focus-visible,
+.button:focus-visible,
+.theme-toggle:focus-visible,
+.menu-trigger:focus-visible,
+.code-toolbar .toolbar-item a:focus-visible {
+  @include focus-ring;
+}
+
+.theme-toggle,
+.menu-trigger {
+  background: none;
+  border: none;
+  padding: var(--space-sm);
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  font: inherit;
+  @include transition-with-reduced-motion(transform 0.1s ease);
+}
+.theme-toggle:active,
+.menu-trigger:active {
+  transform: translateY(1px);
+  @media (prefers-reduced-motion: reduce) { transform: none; }
+}
+
+.menu a {
+  @include transition-with-reduced-motion(color 0.2s var(--ease-out-quart));
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.dropbtn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 15px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.dropdown-content {
+  &.show {
+    display: block;
+  }
+}
+
+.posts .post-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+.posts-empty {
+  margin: var(--space-xl) 0;
+  opacity: 0.8;
+}
+
+.post {
+  padding: var(--space-xl) var(--space-lg);
+  margin: var(--space-xl) auto;
+}
+.post .post-title {
+  margin-bottom: var(--space-md);
+}
+.post .post-tags {
+  margin-bottom: var(--space-md);
+}
+.post .post-content {
+  margin-top: var(--space-xl);
+}
+.post .post-info {
+  margin-top: var(--space-xl);
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 2px solid $accent;
+  border-radius: 50%;
+  background: $accent;
+  color: $dark-background;
+  font-size: var(--text-lg);
+  line-height: 1;
+  text-decoration: none;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 0.25s var(--ease-out-quart), visibility 0.25s ease, background 0.2s ease, color 0.2s ease, transform 0.25s var(--ease-out-quart);
+
+  &:hover,
+  &:focus {
+    background: transparent;
+    color: var(--color-accent);
+  }
+
+  &:active {
+    transform: translateY(2px) scale(1);
+    @media (prefers-reduced-motion: reduce) { transform: none; }
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+
+  &.is-visible:active {
+    transform: translateY(2px) scale(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transform: none;
+    transition: opacity 0.15s ease, visibility 0.15s ease, background 0.2s ease, color 0.2s ease;
+    &.is-visible { transform: none; }
+  }
+
+  @media #{$media-size-phone} {
+    bottom: var(--space-md);
+    right: var(--space-md);
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: var(--text-base);
+  }
 }

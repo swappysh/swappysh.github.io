@@ -1,11 +1,11 @@
-I am an AI/ML engineer focused on building production LLM systems, multi-agent architectures, and evaluation infrastructure.
+I build production LLM systems, multi-agent architectures, and evaluation infrastructure.
 
-I am currently a Senior Research Engineer at <span class="vim-hl">Aleph</span>, where I work on a semi-autonomous FP&A agent that helps finance teams reason over financial data, surface recommendations, and take actions with human approval workflows. My work spans agent capabilities, LLM-as-a-judge evaluations, and production reliability/performance improvements.
+**Now:** Senior Research Engineer at <span class="vim-hl">Aleph</span> — semi-autonomous FP&A agent for finance teams; agent capabilities, evaluations, production reliability.
 
-Before that, I was an AI Engineer / Senior AI Engineer at <span class="vim-hl">HippocraticAI</span>, where I was part of the founding team and helped build the Polaris multi-agent system for safety-critical patient conversations. I worked on specialist agents, RAG/tool-calling, evaluation frameworks, and LLM fine-tuning, and helped scale the platform to 1M+ patient calls per week.
+**Before:** <span class="vim-hl">HippocraticAI</span> (founding) — Polaris multi-agent for patient conversations, 1M+ calls/week. <span class="vim-hl">Microsoft</span> (Codex), <span class="vim-hl">Nference</span> (biomedical NLP), <span class="vim-hl">Zeta</span> (payments). MS from <span class="vim-hl">NYU</span>; code generation and bias research.
 
-Earlier, I worked at <span class="vim-hl">Microsoft</span> on code generation for JavaScript unit tests using OpenAI Codex, at <span class="vim-hl">Nference</span> on biomedical search and NLP systems, and at <span class="vim-hl">Zeta (Directi)</span> on high-throughput payments infrastructure.
-
-I completed my MS in Computer Science at <span class="vim-hl">NYU</span>, where I worked on code generation and bias evaluation research with publications on arXiv.
-
-Outside of work I am building: <span class="vim-hl"><a href="https://lekh.space">lekh.space</a></span> — a private encrypted writing vault; an MBTI-aware voice journaling app on LiveKit and Gemini; and Beacon, an emoji-only messenger.
+**Side projects:**
+- [lekh.space](https://lekh.space) — Private, encrypted writing vault; no email, no account recovery. Only you can read what you save.
+- [Mixmake](https://www.mixmake.com/) — Edit audio by editing text: upload, transcribe, delete words, re-render and download. MCP server for agents.
+- [Beacon](https://testflight.apple.com/join/umQPEZpQ) — Emoji-only messenger for close friends; DMs and groups, no text in chat.
+- **JournallingCompanion** — Guided journaling keyed to your MBTI; prompts and conversation by voice or text.
