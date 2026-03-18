@@ -19,7 +19,7 @@ $light-table-color:          #e2e0dc;
 $accent:                     #f59e0b;
 $accent-light:               #b45309;
 $accent-secondary:           #0d9488;
-$logo-cursor:                #fe5186;
+$logo-cursor:                #f59e0b;
 $tweet-color:                #1d9bf0;
 $video-color:                #ff4444;
 $article-color:              #14b8a6;
@@ -242,7 +242,7 @@ main.home {
       content: "";
       position: absolute;
       inset: -10% 0 30% 0;
-      background: radial-gradient(ellipse 80% 60% at 50% -5%, rgba($accent, 0.03), transparent 50%);
+      background: radial-gradient(ellipse 80% 60% at 50% -5%, rgba($accent, 0.05), transparent 50%);
       pointer-events: none;
       z-index: -1;
     }
