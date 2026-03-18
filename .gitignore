@@ -4,6 +4,9 @@ public/
 docs/
 resources/
 
+# Sass cache
+.sass-cache/
+
 # macOS
 .DS_Store
 
