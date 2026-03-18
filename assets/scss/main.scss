@@ -1,33 +1,37 @@
-// === Design tokens (color overrides) ===
 $dark-background:            #0d0d0d;
 $dark-background-secondary:  #161616;
 $dark-background-header:     #0d0d0d;
 $dark-color:                 #e6e6e6;
 $dark-color-variant:         #ffffff;
-$dark-color-secondary:       #888888;
-$dark-border-color:          #2a2a2a;
-$dark-table-color:           #2a2a2a;
+$dark-color-secondary:       #9a9996;
+$dark-border-color:          #363534;
+$dark-table-color:           #363534;
 
-$light-background:           #fff;
-$light-background-secondary: #eaeaea;
-$light-background-header:    #fafafa;
-$light-color:                #222;
-$light-color-variant:        black;
-$light-color-secondary:      #999;
-$light-border-color:         #dcdcdc;
-$light-table-color:          #dcdcdc;
+$light-background:           #fcfbf9;
+$light-background-secondary: #f0eeeb;
+$light-background-header:    #f8f6f3;
+$light-color:                #1e1d1c;
+$light-color-variant:        #0f0e0d;
+$light-color-secondary:      #6f6e6b;
+$light-border-color:         #e2e0dc;
+$light-table-color:          #e2e0dc;
 
-// Accent
 $accent:                     #f59e0b;
-// Logo cursor
+$accent-secondary:           #0d9488;
 $logo-cursor:                #fe5186;
-// Vim-style highlight (inline content)
+$tweet-color:                #1d9bf0;
+$video-color:                #ff4444;
+$article-color:              #14b8a6;
 $vim-hl:                     #98c379;
+
+$opacity-surface-subtle:     0.97;
+$opacity-surface-strong:     0.85;
+$opacity-surface-hover:      0.95;
+$opacity-surface-mid:        0.88;
 
 $media-size-phone:  "(max-width: 684px)";
 $media-size-tablet: "(max-width: 900px)";
 
-// Dark theme (system or data-theme)
 @mixin dark-theme {
   @media (prefers-color-scheme: dark) {
     @content;
@@ -37,15 +41,115 @@ $media-size-tablet: "(max-width: 900px)";
   }
 }
 
+@mixin focus-ring {
+  outline: 2px solid $accent;
+  outline-offset: 2px;
+}
+@mixin border-default {
+  border: 1px solid $light-border-color;
+  @include dark-theme { border-color: $dark-border-color; }
+}
+@mixin text-secondary {
+  color: $light-color-secondary;
+  @include dark-theme { color: $dark-color-secondary; }
+}
+
+@mixin transition-with-reduced-motion($default, $reduced: none) {
+  transition: $default;
+  @media (prefers-reduced-motion: reduce) {
+    @if $reduced != none {
+      transition: $reduced;
+    } @else {
+      transition: none;
+    }
+  }
+}
+
 :root {
   --phoneWidth:  (max-width: 684px);
   --tabletWidth: (max-width: 900px);
   --accent:      #{$accent};
+  --accent-secondary: #{$accent-secondary};
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --space-2xs: 0.25rem;
+  --space-xs:  0.5rem;
+  --space-sm:  0.75rem;
+  --space-md:  1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  --radius-sm: 0.5rem;
+  --radius-full: 9999px;
+
+  --text-caption: 0.7rem;
+  --text-meta: 0.8rem;
+  --text-small: 0.85rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lead: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-section: 2.625rem;
+  --text-section-sm: 2rem;
+  --text-hero: 4.5rem;
+  --text-hero-sm: 2.25rem;
+
+  --touch-target: 44px;
+
+  --color-bg:             #{$light-background};
+  --color-bg-secondary:   #{$light-background-secondary};
+  --color-text:           #{$light-color};
+  --color-text-variant:   #{$light-color-variant};
+  --color-text-secondary: #{$light-color-secondary};
+  --color-link:           #{$accent};
+  --color-accent:         #{$accent};
+  --color-border:         #{$light-border-color};
+
+  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --leading-tight: 1.2;
+  --leading-snug: 1.3;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.7;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.02em;
+  --tracking-wider: 0.05em;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-bg:             #{$dark-background};
+    --color-bg-secondary:   #{$dark-background-secondary};
+    --color-text:           #{$dark-color};
+    --color-text-variant:   #{$dark-color-variant};
+    --color-text-secondary: #{$dark-color-secondary};
+    --color-link:           #{$accent};
+    --color-accent:         #{$accent};
+    --color-border:         #{$dark-border-color};
+  }
+}
+
+[data-theme="dark"] {
+  --color-bg:             #{$dark-background};
+  --color-bg-secondary:   #{$dark-background-secondary};
+  --color-text:           #{$dark-color};
+  --color-text-variant:   #{$dark-color-variant};
+  --color-text-secondary: #{$dark-color-secondary};
+  --color-link:           #{$accent};
+  --color-accent:         #{$accent};
+  --color-border:         #{$dark-border-color};
 }
 
 $max-width: 860px;
 
-// Theme imports — skip "fonts" (IBM Plex Sans loaded via <link> in head.html)
 @import "normalize";
 @import "prism";
 @import "flag-icons";
@@ -63,91 +167,180 @@ $max-width: 860px;
 @import "404";
 @import "saves";
 
-// === Font family ===
+.error-404 .img-404 {
+  margin-bottom: var(--space-lg);
+}
+.error-404 .banner-404 h1 {
+  margin-bottom: var(--space-sm);
+}
+.error-404 .error-404__message {
+  margin-bottom: var(--space-md);
+}
+.btn-404 a {
+  margin: 0 var(--space-md);
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+.btn-404 svg {
+  margin-right: var(--space-xs);
+}
+
 body {
   font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: $light-background;
+  @include dark-theme { background-color: $dark-background; }
 }
 
 code, pre {
   font-family: 'JetBrains Mono', Consolas, monospace;
 }
 
-// === Accent (design token) ===
+a {
+  @include transition-with-reduced-motion(color 0.2s var(--ease-out-quart));
+}
 a:hover, a:focus {
   color: $accent;
 }
 
-// === Home: hero ===
-.home .home-hero__title {
-  font-size: 3.5rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  margin-top: 0.5rem;
-  margin-bottom: 0.25rem;
-}
-.home-subtitle {
-  margin-bottom: 1.5rem;
-  p {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: $light-color-secondary;
-    @include dark-theme { color: $dark-color-secondary; }
-  }
-}
-.home-hero__social {
-  margin-bottom: 2rem;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
-// === Home: bio ===
+main.home {
+  width: 100%;
+  max-width: 100%;
+}
+
+.home__inner {
+  padding: var(--space-3xl) var(--space-lg) 0;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  position: relative;
+  @include dark-theme {
+    &::before {
+      content: "";
+      position: absolute;
+      inset: -20% 0 40% 0;
+      background: radial-gradient(ellipse 90% 70% at 50% -10%, rgba($accent, 0.07), transparent 55%);
+      pointer-events: none;
+      z-index: -1;
+    }
+  }
+}
+
+.home__inner .home-hero__portrait {
+  margin-bottom: var(--space-md);
+  border: 2px solid rgba($accent, 0.35);
+  box-sizing: border-box;
+  @include dark-theme { border-color: rgba($accent, 0.4); }
+}
+
+.home .home-hero__title {
+  font-size: var(--text-hero);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  margin-top: 0;
+  margin-bottom: var(--space-xs);
+}
+
+.home-subtitle {
+  margin-bottom: var(--space-lg);
+}
+
+.home-subtitle p {
+  margin: 0;
+  font-size: var(--text-lead);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  @include text-secondary;
+}
+
+.home-hero__social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-2xl);
+  .social-icons {
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+}
+
+.home-hero__cta {
+  margin: 0 0 var(--space-xl);
+}
+
+.cta-resume {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--touch-target);
+  padding: var(--space-sm) var(--space-lg);
+  border: 2px solid $accent;
+  border-radius: var(--radius-full);
+  background: $accent;
+  color: $dark-background;
+  font-size: var(--text-base);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  @include transition-with-reduced-motion(
+    (background 0.2s var(--ease-out-quart), color 0.2s var(--ease-out-quart), border-color 0.2s var(--ease-out-quart), transform 0.15s var(--ease-out-quart)),
+    (background 0.2s ease, color 0.2s ease, border-color 0.2s ease)
+  );
+
+  &:hover,
+  &:focus {
+    background: transparent;
+    color: $accent;
+  }
+
+  &:active {
+    transform: translateY(1px);
+    @media (prefers-reduced-motion: reduce) { transform: none; }
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
 .home-bio {
   text-align: left;
   max-width: 65ch;
-  border-left: 3px solid $accent;
-  padding-left: 1.25rem;
+  border-left: var(--space-2xs) solid $accent;
+  padding-left: var(--space-md);
   margin-left: 0;
+  margin-top: 0;
+  margin-bottom: var(--space-2xl);
 
   p {
     line-height: 1.7;
-    margin-bottom: 1.2rem;
+    margin-bottom: var(--space-sm);
+  }
+  p:last-child {
+    margin-bottom: 0;
   }
 }
 
-// === Home: primary CTA ===
-.home-cta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 2.5rem;
-  justify-content: flex-start;
-}
-.home-cta__link {
-  font-weight: 500;
-  text-decoration: none;
-  padding: 0.5rem 0;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-  &:hover, &:focus {
-    color: $accent;
-    border-bottom-color: $accent;
-  }
-}
-.home-cta__link--primary {
-  font-weight: 700;
-  color: $accent;
-  padding: 0.6rem 1.25rem;
-  border: 2px solid $accent;
-  border-radius: 4px;
-  background: transparent;
-  &:hover, &:focus {
-    background: $accent;
-    color: $dark-background;
-    border-bottom-color: $accent;
-  }
-}
-
-// === Home: staggered reveal ===
 @keyframes homeReveal {
   from {
     opacity: 0;
@@ -158,48 +351,46 @@ a:hover, a:focus {
     transform: translateY(0);
   }
 }
-.home-inner > * {
-  animation: homeReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-  @for $i from 1 through 10 {
-    &:nth-child(#{$i}) { animation-delay: #{($i - 1) * 50}ms; }
-  }
+.home__inner > * {
+  animation: homeReveal 0.4s var(--ease-out-quint) 0.1s both;
   @media (prefers-reduced-motion: reduce) { animation: none; }
 }
 
-// === Social icons ===
+.social-icons a {
+  display: inline-block;
+  @include transition-with-reduced-motion(
+    (color 0.2s ease, opacity 0.2s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1)),
+    (color 0.2s ease, opacity 0.2s ease)
+  );
+}
 .social-icons a:hover {
   color: $accent;
   opacity: 1;
+  transform: translateY(-2px);
+  @media (prefers-reduced-motion: reduce) { transform: none; }
 }
 
-// === Vim syntax highlight ===
 .vim-hl {
-  color: $vim-hl;
+  color: $logo-cursor;
 }
 
-// === Mobile home: hero scale and spacing ===
 @media #{$media-size-phone} {
-  .home-inner {
-    padding: 0 1.25rem;
+  .home__inner {
+    padding: var(--space-2xl) var(--space-md) var(--space-2xl);
   }
   .home .home-hero__title {
-    font-size: 2.25rem;
-  }
-  .home-cta {
-    margin-top: 2rem;
+    font-size: var(--text-hero-sm);
   }
   .home-bio {
-    padding-left: 1rem;
+    padding-left: var(--space-md);
   }
 }
 
-// === Post list date in mono ===
 .post-day {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
+  font-size: var(--text-meta);
 }
 
-// === Theme token overrides ===
 blockquote {
   border-left-color: $accent;
 }
@@ -209,14 +400,107 @@ pre code {
   @include dark-theme { color: inherit; }
 }
 
-.posts .post-item {
+.home-recent {
+  margin-top: var(--space-3xl);
+  padding-top: var(--space-2xl);
+  border-top: 1px solid $light-border-color;
+  @include dark-theme { border-top-color: $dark-border-color; }
+}
+
+.home-recent__title {
+  font-size: var(--text-lead);
+  font-weight: 600;
+  margin: 0 0 var(--space-md) 0;
+  @include text-secondary;
+}
+
+.home-recent__list {
+  list-style: none;
+  margin: 0 0 var(--space-md) 0;
+  padding: 0;
+}
+
+.home-recent__item {
   border-bottom: 1px dashed $light-border-color;
   @include dark-theme { border-bottom-color: $dark-border-color; }
 }
 
+.home-recent__link {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+  @include transition-with-reduced-motion(color 0.2s var(--ease-out-quart), background-color 0.2s var(--ease-out-quart));
+  &:hover {
+    color: $accent;
+  }
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.home-recent__post-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-recent__date {
+  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-size: var(--text-meta);
+  flex-shrink: 0;
+  @include text-secondary;
+}
+
+.home-recent__more {
+  margin: 0;
+  font-size: var(--text-sm);
+  @include text-secondary;
+  a {
+    color: inherit;
+    text-decoration: none;
+    &:hover { color: $accent; }
+    &:focus-visible { @include focus-ring; }
+  }
+}
+
+.posts {
+  padding: var(--space-xl) var(--space-lg);
+  margin: var(--space-xl) auto;
+}
+.posts > h1 {
+  margin-bottom: var(--space-xl);
+}
+.posts .posts-group {
+  margin-bottom: var(--space-2xl);
+}
+.posts .post-item {
+  border-bottom: 1px dashed $light-border-color;
+  @include dark-theme { border-bottom-color: $dark-border-color; }
+}
+.posts .post-item-inner {
+  padding: var(--space-sm) 0;
+  min-width: 0;
+  @include transition-with-reduced-motion(
+    (color 0.2s var(--ease-out-quart), background-color 0.2s var(--ease-out-quart)),
+    (color 0.2s ease)
+  );
+  &:hover {
+    background-color: rgba($accent, 0.06);
+    @include dark-theme { background-color: rgba($accent, 0.08); }
+  }
+}
+.posts .post-year {
+  margin-right: var(--space-lg);
+}
+
 .post-excerpt {
-  color: $light-color-secondary;
-  @include dark-theme { color: $dark-color-secondary; }
+  @include text-secondary;
 }
 
 .post-info a:hover {
@@ -238,39 +522,67 @@ pre code {
   background-color: $logo-cursor;
 }
 
-// === Accessibility: focus, touch targets, truncation ===
-
-// Visible focus
 a:focus-visible,
 .button:focus-visible,
 .theme-toggle:focus-visible,
 .menu-trigger:focus-visible,
-.code-toolbar .toolbar-item a:focus-visible,
-.home-cta__link:focus-visible {
-  outline: 2px solid $accent;
-  outline-offset: 2px;
+.code-toolbar .toolbar-item a:focus-visible {
+  @include focus-ring;
 }
 
-// Theme toggle, menu trigger
 .theme-toggle,
 .menu-trigger {
   background: none;
   border: none;
-  padding: 10px;
-  min-width: 44px;
-  min-height: 44px;
+  padding: var(--space-sm);
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: inherit;
   font: inherit;
+  @include transition-with-reduced-motion(transform 0.1s ease);
+}
+.theme-toggle:active,
+.menu-trigger:active {
+  transform: translateY(1px);
+  @media (prefers-reduced-motion: reduce) { transform: none; }
 }
 
-// Post list truncation
-.posts .post-item-inner {
-  min-width: 0;
+.menu a {
+  @include transition-with-reduced-motion(color 0.2s var(--ease-out-quart));
+
+  &:hover {
+    text-decoration: none;
+  }
 }
+
+.dropbtn {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  margin-right: 15px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.dropdown-content {
+  &.show {
+    display: block;
+  }
+}
+
 .posts .post-title {
   min-width: 0;
   overflow: hidden;
@@ -278,24 +590,38 @@ a:focus-visible,
   white-space: nowrap;
 }
 
-// Reduced motion
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 }
 
-// Posts empty state
 .posts-empty {
-  margin: 2rem 0;
+  margin: var(--space-xl) 0;
   opacity: 0.8;
 }
 
-// === Back to top ===
+.post {
+  padding: var(--space-xl) var(--space-lg);
+  margin: var(--space-xl) auto;
+}
+.post .post-title {
+  margin-bottom: var(--space-md);
+}
+.post .post-tags {
+  margin-bottom: var(--space-md);
+}
+.post .post-content {
+  margin-top: var(--space-xl);
+}
+.post .post-info {
+  margin-top: var(--space-xl);
+}
+
 .back-to-top {
   position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
   z-index: 100;
   display: flex;
   align-items: center;
@@ -307,13 +633,14 @@ a:focus-visible,
   border-radius: 50%;
   background: $accent;
   color: $dark-background;
-  font-size: 1.25rem;
+  font-size: var(--text-lg);
   line-height: 1;
   text-decoration: none;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.2s ease, visibility 0.2s ease, background 0.2s ease, color 0.2s ease;
+  transform: translateY(8px) scale(0.98);
+  transition: opacity 0.25s var(--ease-out-quart), visibility 0.25s ease, background 0.2s ease, color 0.2s ease, transform 0.25s var(--ease-out-quart);
 
   &:hover,
   &:focus {
@@ -321,26 +648,37 @@ a:focus-visible,
     color: $accent;
   }
 
+  &:active {
+    transform: translateY(2px) scale(1);
+    @media (prefers-reduced-motion: reduce) { transform: none; }
+  }
+
   &:focus-visible {
-    outline: 2px solid $accent;
-    outline-offset: 2px;
+    @include focus-ring;
   }
 
   &.is-visible {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+    transform: translateY(0) scale(1);
+  }
+
+  &.is-visible:active {
+    transform: translateY(2px) scale(1);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    transition: none;
+    transform: none;
+    transition: opacity 0.15s ease, visibility 0.15s ease, background 0.2s ease, color 0.2s ease;
+    &.is-visible { transform: none; }
   }
 
   @media #{$media-size-phone} {
-    bottom: 1rem;
-    right: 1rem;
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 1.1rem;
+    bottom: var(--space-md);
+    right: var(--space-md);
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: var(--text-base);
   }
 }

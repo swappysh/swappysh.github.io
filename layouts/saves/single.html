@@ -6,26 +6,35 @@
   </header>
 
   <div class="saves-toolbar" id="saves-toolbar">
-    <div class="saves-toolbar-row">
-      <button class="filter-btn active" data-filter="all">All</button>
-      <button class="filter-btn" data-filter="tweet">Tweets</button>
-      <button class="filter-btn" data-filter="article">Articles</button>
-      <button class="filter-btn" data-filter="video">Videos</button>
-      <button class="shuffle-btn" id="shuffle-btn">⇄ Shuffle</button>
+    <div class="saves-toolbar-row" role="toolbar" aria-label="Saves filters">
+      <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+      <button class="filter-btn" data-filter="tweet" aria-pressed="false">Tweets</button>
+      <button class="filter-btn" data-filter="article" aria-pressed="false">Articles</button>
+      <button class="filter-btn" data-filter="video" aria-pressed="false">Videos</button>
+      <button class="shuffle-btn" id="shuffle-btn" disabled aria-label="Shuffle order">Shuffle</button>
     </div>
-    <input class="search-input" id="search-input" type="text" placeholder="Search..." aria-label="Search saves">
+    <input class="search-input" id="search-input" type="text" placeholder="Search saves" aria-label="Search saves" disabled>
   </div>
 
-  <div class="saves-count" id="saves-count"></div>
-  <div class="saves-grid" id="saves-grid">
-    <div class="saves-empty">Loading...</div>
+  <div class="saves-count" id="saves-count" aria-live="polite"></div>
+  <div class="saves-grid" id="saves-grid" aria-live="polite">
+    <div class="saves-empty">Loading saves…</div>
   </div>
 </article>
 
 <script>
 (function () {
   const WORKER_URL = 'https://saves-worker.swappysh.workers.dev';
-  const READ_TOKEN = '{{ site.Params.savesreadtoken }}';
+  const READ_TOKEN = '{{ .Site.Params.savesreadtoken }}';
+
+  const countEl = document.getElementById('saves-count');
+  const gridEl = document.getElementById('saves-grid');
+  const toolbarEl = document.getElementById('saves-toolbar');
+  const filterBtns = toolbarEl ? Array.from(toolbarEl.querySelectorAll('.filter-btn')) : [];
+  const shuffleBtn = document.getElementById('shuffle-btn');
+  const searchInput = document.getElementById('search-input');
+
+  if (!gridEl || !countEl) return;
 
   let allItems = [];
   let displayItems = [];
@@ -34,68 +43,89 @@
   let isShuffled = false;
 
   function esc(str) {
-    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  function safeStr(val) {
+    return (val != null ? String(val) : '').trim();
   }
 
   function formatDate(iso) {
+    if (iso == null || iso === '') return '';
     const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    if (Number.isNaN(d.getTime())) return '';
+    const locale = document.documentElement.lang || 'en-US';
+    return d.toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
   function hostname(url) {
-    try { return new URL(url).hostname.replace('www.', ''); } catch { return ''; }
+    try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return ''; }
   }
 
   function tweetTitle(url) {
     try {
       const parts = new URL(url).pathname.split('/').filter(Boolean);
-      return parts[0] ? `@${parts[0]}` : url;
-    } catch { return url; }
+      return parts[0] ? `@${parts[0]}` : (url || '');
+    } catch { return url || ''; }
   }
 
   function renderCard(item) {
-    const title = item.type === 'tweet' ? tweetTitle(item.url) : item.title;
-    const badge = `<span class="type-badge type-${item.type}">${item.type}</span>`;
-    const excerpt = item.excerpt.trim()
-      ? `<div class="save-excerpt">${esc(item.excerpt.trim())}</div>`
-      : '';
+    const url = item.url || '#';
+    const type = item.type || 'other';
+    const title = type === 'tweet' ? tweetTitle(url) : (item.title || url || 'Untitled');
+    const excerptStr = safeStr(item.excerpt);
+    const metaHost = hostname(url);
     return `
-      <div class="save-card" data-type="${item.type}">
+      <div class="save-card" data-type="${type}">
         <div class="save-card-top">
-          <a class="save-title" href="${esc(item.url)}" target="_blank" rel="noopener noreferrer">
-            ${esc(title)}
-          </a>
-          ${badge}
+          <a class="save-title" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a>
+          <span class="type-badge type-${type}">${esc(type)}</span>
         </div>
         <div class="save-meta">
-          <span>${hostname(item.url)}</span>
-          <span>&middot;</span>
-          <span>${formatDate(item.created_at)}</span>
+          <span class="save-meta__hostname" title="${esc(metaHost)}">${esc(metaHost)}</span>
+          <span aria-hidden="true">&middot;</span>
+          <span class="save-meta__date">${esc(formatDate(item.created_at))}</span>
         </div>
-        ${excerpt}
+        ${excerptStr ? `<div class="save-excerpt">${esc(excerptStr)}</div>` : ''}
       </div>`;
   }
 
+  function matchesSearch(item, q) {
+    return [item.title, item.url, item.excerpt].some(field => safeStr(field).toLowerCase().includes(q));
+  }
+
+  function setFilter(filter) {
+    activeFilter = filter;
+    filterBtns.forEach(b => {
+      const isActive = b.dataset.filter === activeFilter;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-pressed', isActive);
+    });
+    render();
+  }
+
   function getVisible() {
-    let items = activeFilter === 'all' ? displayItems : displayItems.filter(i => i.type === activeFilter);
+    let items = activeFilter === 'all' ? displayItems : displayItems.filter(i => (i.type || '') === activeFilter);
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      items = items.filter(i =>
-        i.title.toLowerCase().includes(q) ||
-        i.url.toLowerCase().includes(q) ||
-        (i.excerpt || '').toLowerCase().includes(q)
-      );
+      items = items.filter(i => matchesSearch(i, q));
     }
     return items;
   }
 
   function render() {
     const visible = getVisible();
-    document.getElementById('saves-count').textContent =
-      `${visible.length} of ${allItems.length}`;
-    const emptyMsg = searchQuery ? `No results for "${esc(searchQuery)}"` : 'Nothing here yet.';
-    document.getElementById('saves-grid').innerHTML =
-      visible.length ? visible.map(renderCard).join('') : `<div class="saves-empty">${emptyMsg}</div>`;
+    countEl.textContent = allItems.length ? `${visible.length} of ${allItems.length} saves` : '0 saves';
+    const emptyMsg = searchQuery ? `No results for "${esc(searchQuery)}"` : 'No saves yet. <a href="https://github.com/swappysh/saves-worker" target="_blank" rel="noopener">Install the extension</a> to start saving.';
+    gridEl.innerHTML = visible.length ? visible.map(renderCard).join('') : `<div class="saves-empty">${emptyMsg}</div>`;
+  }
+
+  function setLoading(loading) {
+    filterBtns.forEach(btn => { btn.disabled = loading; });
+    if (shuffleBtn) shuffleBtn.disabled = loading;
+    if (searchInput) searchInput.disabled = loading;
+    gridEl.setAttribute('aria-busy', loading ? 'true' : 'false');
+    if (loading) countEl.textContent = 'Loading saves…';
   }
 
   function shuffled(arr) {
@@ -107,43 +137,69 @@
     return copy;
   }
 
+  function errorMessage(err) {
+    if (!err) return 'Unable to load saves. Try again.';
+    if (err.name === 'AbortError') return 'Request timed out. Check your connection and try again.';
+    if (err.message === 'Failed to fetch' || err.name === 'TypeError') return 'Unable to load saves. Check your internet connection and try again.';
+    if (err.message === 'Invalid response') return 'Unable to load saves. Try again.';
+    const status = /^\d+$/.test(err.message || '') ? parseInt(err.message, 10) : 0;
+    if (status === 401 || status === 403) return 'Unable to load saves. Check your saves setup.';
+    if (status === 404) return 'Saves not found. Install the extension to get started.';
+    if (status >= 500) return 'Service temporarily unavailable. Try again in a few minutes.';
+    return 'Unable to load saves. Try again.';
+  }
+
   async function load() {
+    setLoading(true);
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
       const res = await fetch(`${WORKER_URL}/api/list?limit=200`, {
         headers: { Authorization: `Bearer ${READ_TOKEN}` },
+        signal: controller.signal,
       });
-      if (!res.ok) throw new Error(`${res.status}`);
-      const data = await res.json();
-      allItems = data.items || [];
-      displayItems = allItems;
-      document.getElementById('saves-toolbar').style.display = allItems.length ? 'flex' : 'none';
+      clearTimeout(timeoutId);
+      if (!res.ok) throw new Error(String(res.status));
+      let data;
+      try {
+        data = await res.json();
+      } catch (_) {
+        throw new Error('Invalid response');
+      }
+      const items = data?.items;
+      allItems = Array.isArray(items) ? items : [];
+      displayItems = allItems.slice();
       render();
     } catch (err) {
-      document.getElementById('saves-grid').innerHTML =
-        '<div class="saves-error">Could not load saves. Try again later.</div>';
+      countEl.textContent = '';
+      gridEl.innerHTML = '<div class="saves-error">' + errorMessage(err) + ' <button type="button" class="retry-btn">Retry</button></div>';
+    } finally {
+      setLoading(false);
     }
   }
 
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      activeFilter = btn.dataset.filter;
-      document.querySelectorAll('.filter-btn').forEach(b =>
-        b.classList.toggle('active', b.dataset.filter === activeFilter)
-      );
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => setFilter(btn.dataset.filter));
+  });
+
+  if (shuffleBtn) {
+    shuffleBtn.addEventListener('click', () => {
+      isShuffled = !isShuffled;
+      displayItems = isShuffled ? shuffled(allItems) : allItems;
+      shuffleBtn.textContent = isShuffled ? 'By date' : 'Shuffle';
       render();
     });
-  });
+  }
 
-  document.getElementById('shuffle-btn').addEventListener('click', () => {
-    isShuffled = !isShuffled;
-    displayItems = isShuffled ? shuffled(allItems) : allItems;
-    document.getElementById('shuffle-btn').textContent = isShuffled ? '↕ Date' : '⇄ Shuffle';
-    render();
-  });
+  if (searchInput) {
+    searchInput.addEventListener('input', e => {
+      searchQuery = e.target.value.trim();
+      render();
+    });
+  }
 
-  document.getElementById('search-input').addEventListener('input', e => {
-    searchQuery = e.target.value.trim();
-    render();
+  gridEl.addEventListener('click', e => {
+    if (e.target.classList.contains('retry-btn')) load();
   });
 
   load();

@@ -1,35 +1,31 @@
-# Override theme strings for clearer, more helpful copy.
 # See https://gohugo.io/content-management/multilingual/#translation-of-strings
 
-# 404 page — explain what happened and what to do next
 [notFound]
 other = "This page doesn't exist or was moved. Go home or browse all posts."
 
-# 404 actions — "Archives" is vague; "All posts" tells users what they'll see
 [archives]
 other = "All posts"
+
+[recentPosts]
+other = "Recent posts"
 
 [home]
 other = "Home"
 
-# Post metadata — "X minutes" is standard; "min read" is scannable
 [readingTime]
 one   = "1 min read"
 other = "{{ .Count }} min read"
 
-# Word count — lowercase "words", consistent with reading time
 [wordCount]
 one   = "1 word"
 other = "{{ .Count }} words"
 
-# Table of contents — keep clear
 [tableOfContents]
 other = "On this page"
 
 [lastModified]
 other = "Updated"
 
-# List pagination — "Newer" / "Older" are clear for blog flow
 [pagination]
 newerPosts = "Newer posts"
 olderPosts = "Older posts"

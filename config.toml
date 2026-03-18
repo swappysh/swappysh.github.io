@@ -18,10 +18,14 @@ theme        = "hello-friend-ng"
   disableReadOtherPosts  = false
   enableSharingButtons   = false
   enableGlobalLanguageMenu = false
+  EnableThemeToggle      = true
+  themeColor             = "#0d0d0d"
 
   description = "Swapnil Sharma — engineer, researcher, writer."
   keywords    = "engineering, machine learning, blog"
   images      = ["/profile.png"]
+
+  customCSS = ["/css/typography.css"]
 
   footerLeft  = "Powered by <a href=\"https://gohugo.io\">Hugo</a>"
   footerRight = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'

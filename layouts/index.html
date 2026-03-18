@@ -1,36 +1,62 @@
 {{ define "body" }}
-    <body class="{{ if .Site.Params.backgroundImage }} background-image" style="background-image: url('{{ .Site.Params.backgroundImage }}');" {{ else }}"{{ end }}>
+    <body {{ if .Site.Params.backgroundImage }}class="background-image" style="background-image: url('{{ .Site.Params.backgroundImage }}');"{{ end }}>
 {{ end }}
 
 {{ define "main" }}
+    {{ $posts := where .Site.RegularPages "Section" "posts" }}
+    {{ $recent := first 5 $posts }}
     <main class="home">
-        <div class="home-inner">
-            {{ if .Site.Params.Portrait.Path }}
-               <img src="{{ .Site.Params.Portrait.Path }}" class="circle home-hero__portrait" alt="{{ .Site.Params.Portrait.Alt }}" style="max-width:{{ .Site.Params.Portrait.MaxWidth }}" />
+        <div class="home__inner">
+            {{ if .Site.Params.portrait.Path }}
+               <img src="{{ .Site.Params.portrait.Path }}" class="circle home-hero__portrait" alt="{{ .Site.Params.portrait.Alt }}" width="200" height="200" decoding="async" fetchpriority="high" style="max-width:{{ .Site.Params.portrait.MaxWidth }}" />
             {{ end }}
 
             <h1 class="home-hero__title">{{ .Site.Title }}</h1>
 
             <div class="home-subtitle">{{ partial "subtitle.html" . }}</div>
 
-            {{- with .Site.Params.social }}
-                <div class="social-icons home-hero__social">
+            <div class="home-hero__social" aria-label="Links">
+                {{- with .Site.Params.social }}
+                <span class="social-icons">
                     {{ partial "social-icons.html" . }}
-                </div>
-            {{- end }}
+                </span>
+                {{- end }}
+            </div>
 
             {{- if .Content }}
                 <div class="home-bio">{{ .Content }}</div>
             {{- end }}
 
-            <nav class="home-cta" aria-label="Primary actions">
-                <a href="/posts/" class="home-cta__link home-cta__link--primary">Read posts</a>
-                {{- range .Site.Menus.main }}
-                    {{- if eq .Identifier "resume" }}
-                <a href="{{ .URL | relLangURL }}" class="home-cta__link">{{ .Name }}</a>
-                    {{- end }}
+            {{- range .Site.Menus.main }}
+                {{- if eq .Identifier "resume" }}
+            <p class="home-hero__cta">
+                <a href="{{ .URL | relLangURL }}" class="cta-resume" rel="noopener">{{ .Name }}</a>
+            </p>
                 {{- end }}
-            </nav>
+            {{- end }}
+
+            {{- if $posts }}
+            <section class="home-recent" aria-label="{{ i18n "recentPosts" }}">
+                <h2 class="home-recent__title">{{ i18n "recentPosts" }}</h2>
+                {{ if $recent }}
+                <ul class="home-recent__list">
+                    {{ range $recent }}
+                    <li class="home-recent__item">
+                        <a href="{{ .Permalink }}" class="home-recent__link">
+                            <span class="home-recent__post-title">{{ .Title }}</span>
+                            <span class="home-recent__date">
+                                {{ if .Site.Params.dateformShort }}{{ .Date.Format .Site.Params.dateformShort }}{{ else }}{{ .Date.Format "Jan 2" }}{{ end }}
+                            </span>
+                        </a>
+                    </li>
+                    {{ end }}
+                </ul>
+                {{ end }}
+                <p class="home-recent__more">
+                    <a href="{{ "posts" | absLangURL }}">{{ i18n "archives" }} →</a>
+                </p>
+            </section>
+            {{- end }}
         </div>
     </main>
 {{ end }}
