@@ -15,7 +15,7 @@ excalidraw*.log
 *.excalidraw
 
 # Worker
-worker/node_modules/
+node_modules/
 worker/.wrangler/
 worker/.dev.vars
 .wrangler/
