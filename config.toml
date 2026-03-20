@@ -18,8 +18,8 @@ theme        = "hello-friend-ng"
   disableReadOtherPosts  = false
   enableSharingButtons   = false
   enableGlobalLanguageMenu = false
-  EnableThemeToggle      = true
-  themeColor             = "#0d0d0d"
+  EnableThemeToggle      = false
+  themeColor             = "#f6f2ea"
 
   description = "Swapnil Sharma — engineer, researcher, writer."
   keywords    = "engineering, machine learning, blog"

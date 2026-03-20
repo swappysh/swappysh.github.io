@@ -7,57 +7,73 @@
     {{ $recent := first 5 $posts }}
     <main class="home">
         <div class="home__inner">
-            {{ if .Site.Params.portrait.Path }}
-               <img src="{{ .Site.Params.portrait.Path }}" class="circle home-hero__portrait" alt="{{ .Site.Params.portrait.Alt }}" width="200" height="200" decoding="async" fetchpriority="high" style="max-width:{{ .Site.Params.portrait.MaxWidth }}" />
-            {{ end }}
+            <!-- Hero Section -->
+            <div class="home-hero">
+                {{ if .Site.Params.portrait.Path }}
+                   <img src="{{ .Site.Params.portrait.Path }}" class="circle home-hero__portrait" alt="{{ .Site.Params.portrait.Alt }}" width="200" height="200" decoding="async" fetchpriority="high" style="max-width:{{ .Site.Params.portrait.MaxWidth }}" />
+                {{ end }}
 
-            <h1 class="home-hero__title">{{ .Site.Title }}</h1>
+                <h1 class="home-hero__title">{{ .Site.Title }}</h1>
 
-            <div class="home-subtitle">{{ partial "subtitle.html" . }}</div>
+                <div class="home-hero__subtitle">{{ partial "subtitle.html" . }}</div>
 
-            <div class="home-hero__social" aria-label="Links">
-                {{- with .Site.Params.social }}
-                <span class="social-icons">
-                    {{ partial "social-icons.html" . }}
-                </span>
-                {{- end }}
+                <div class="home-hero__social" aria-label="Links">
+                    {{- with .Site.Params.social }}
+                    <span class="social-icons">
+                        {{ partial "social-icons.html" . }}
+                    </span>
+                    {{- end }}
+                </div>
             </div>
 
+            <!-- Bio Section -->
             {{- if .Content }}
-                <div class="home-bio">{{ .Content }}</div>
+                <section class="home-bio-section">
+                    <div class="home-bio">{{ .Content }}</div>
+                </section>
             {{- end }}
 
+            <!-- Resume CTA Section -->
             {{- range .Site.Menus.main }}
                 {{- if eq .Identifier "resume" }}
-            <p class="home-hero__cta">
-                <a href="{{ .URL | relLangURL }}" class="cta-resume" rel="noopener">
-                    <span>{{ .Name }}</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </a>
-            </p>
+            <section class="home-cta-section">
+                <p class="home-hero__cta">
+                    <a href="{{ .URL | relLangURL }}" class="cta-resume" rel="noopener">
+                        <span>{{ .Name }}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </a>
+                </p>
+            </section>
                 {{- end }}
             {{- end }}
 
+            <!-- Recent Posts Section -->
             {{- if $posts }}
             <section class="home-recent" aria-label="{{ i18n "recentPosts" }}">
-                <h2 class="home-recent__title">{{ i18n "recentPosts" }}</h2>
+                <div class="home-recent__header">
+                    <h2 class="home-recent__title">{{ i18n "recentPosts" }}</h2>
+                </div>
                 {{ if $recent }}
                 <ul class="home-recent__list">
                     {{ range $recent }}
                     <li class="home-recent__item">
                         <a href="{{ .Permalink }}" class="home-recent__link">
-                            <span class="home-recent__post-title">{{ .Title }}</span>
-                            <span class="home-recent__date">
+                            <div class="home-recent__content">
+                                <span class="home-recent__post-title">{{ .Title }}</span>
+                            </div>
+                            <time class="home-recent__date" datetime="{{ .Date.Format "2006-01-02" }}">
                                 {{ if .Site.Params.dateformShort }}{{ .Date.Format .Site.Params.dateformShort }}{{ else }}{{ .Date.Format "Jan 2" }}{{ end }}
-                            </span>
+                            </time>
                         </a>
                     </li>
                     {{ end }}
                 </ul>
                 {{ end }}
-                <p class="home-recent__more">
-                    <a href="{{ "posts" | absLangURL }}">{{ i18n "archives" }} →</a>
-                </p>
+                <div class="home-recent__footer">
+                    <p class="home-recent__more">
+                        <a href="{{ "posts" | absLangURL }}">{{ i18n "archives" }} →</a>
+                    </p>
+                </div>
             </section>
             {{- end }}
         </div>

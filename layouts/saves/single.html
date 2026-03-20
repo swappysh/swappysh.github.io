@@ -1,5 +1,5 @@
 {{ define "main" }}
-<article class="post">
+<article class="post saves-container">
   <header class="saves-header">
     <h1>Saves</h1>
     <p>Links worth keeping.</p>
@@ -14,7 +14,7 @@
       <button class="filter-btn" data-filter="video" aria-pressed="false">Videos</button>
       <button class="shuffle-btn" id="shuffle-btn" disabled aria-label="Shuffle order">Shuffle</button>
     </div>
-    <input class="search-input" id="search-input" type="text" placeholder="Search saves" aria-label="Search saves" disabled>
+    <input class="search-input" id="search-input" type="text" placeholder="search saves..." aria-label="Search saves" disabled>
   </div>
 
   <div class="saves-count" id="saves-count" aria-live="polite">Loading…</div>
