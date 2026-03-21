@@ -386,11 +386,11 @@ pre code {
 }
 
 .home-recent__date {
-  font-family: 'Space Mono', Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: var(--text-small);
   @include text-secondary;
   flex-shrink: 0;
-  padding: 2px 6px;
+  padding: var(--space-2xs) var(--space-xs);
   background: color-mix(in srgb, var(--color-accent), transparent 92%);
   border-radius: 0;
 }
@@ -498,7 +498,7 @@ a:focus-visible,
   color: inherit;
   cursor: pointer;
   padding: 0;
-  margin-right: 15px;
+  margin-right: var(--space-lg);
 
   &:hover {
     text-decoration: underline;
