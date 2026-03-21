@@ -355,13 +355,19 @@ pre {
   }
 }
 
-// Links should use ink by default, peach on hover (maintains readability)
+// Links: ink color, underline + weight on hover (typography-first interaction)
 a {
   color: var(--color-text) !important;
+  text-decoration: none;
+  @include transition-with-reduced-motion(
+    (font-weight 0.2s var(--ease-out-quart)),
+    (font-weight 0.2s ease)
+  );
 
   &:hover,
   &:focus {
-    color: $accent-tertiary !important;
+    text-decoration: underline;
+    font-weight: 600;
   }
 }
 
