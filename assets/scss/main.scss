@@ -412,18 +412,28 @@ a {
   background: $light-background-header !important;
 }
 
-// Menu trigger (hamburger) SVG needs visible fill
+// Menu trigger (hamburger) SVG - stroke instead of fill for proper appearance
 .menu-trigger {
   color: $light-color !important;
+
+  svg {
+    stroke: $light-color !important;
+    fill: none !important;
+  }
+
   svg path {
-    fill: $light-color !important;
+    stroke: $light-color !important;
+    fill: none !important;
   }
 }
 
-// Accent text (like company names)
+// Company names - bold dark text instead of unreadable green
 .vim-hl {
-  color: var(--color-accent) !important;
-  font-weight: 600;
+  color: var(--color-text) !important;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--color-accent), transparent 85%);
+  padding: 0 4px;
+  border-radius: 2px;
 }
 
 @media #{$media-size-phone} {
