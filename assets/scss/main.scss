@@ -300,36 +300,79 @@ main.home {
   @media (prefers-reduced-motion: reduce) { transform: none; }
 }
 
-// Override theme white text for light mode - targeted selectors only
+// ============================================
+// CRITICAL: Override theme's white text
+// ============================================
+
+// Force dark text on all content areas
+body {
+  color: var(--color-text) !important;
+}
+
+// Override theme's .content selector (causes white text)
+.content {
+  color: var(--color-text) !important;
+}
+
+// Override all text in main content areas
 main,
 article,
 .post,
 .posts,
 .error-404,
-.home-bio {
-  color: var(--color-text);
+.home-bio,
+.save-card,
+.saves-container {
+  color: var(--color-text) !important;
+
+  * {
+    color: var(--color-text) !important;
+  }
+}
+
+// Override paragraph text
+p {
+  color: var(--color-text) !important;
+}
+
+// Override list items
+li {
+  color: var(--color-text) !important;
 }
 
 // Code syntax highlighting - ensure readability
 code {
-  color: var(--color-text);
+  color: var(--color-text) !important;
 }
 
-pre code {
-  color: var(--color-text);
-}
+pre {
+  color: var(--color-text) !important;
 
-// Links should use ink by default, not accent
-a {
-  color: var(--color-text);
-
-  &:hover {
-    color: var(--color-accent);
+  code {
+    color: var(--color-text) !important;
   }
 }
 
+// Links should use ink by default, acid on hover
+a {
+  color: var(--color-text) !important;
+
+  &:hover,
+  &:focus {
+    color: var(--color-accent) !important;
+  }
+}
+
+// Special cases - preserve header colors
+.header,
+.logo,
+.menu {
+  color: inherit !important;
+}
+
+// Accent text (like company names)
 .vim-hl {
-  color: var(--color-accent);
+  color: var(--color-accent) !important;
   font-weight: 600;
 }
 
