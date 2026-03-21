@@ -300,11 +300,14 @@ main.home {
   @media (prefers-reduced-motion: reduce) { transform: none; }
 }
 
-// Override theme white text for light mode
-* {
-  &:not(button):not(.cta-resume) {
-    color: var(--color-text, $light-color);
-  }
+// Override theme white text for light mode - targeted selectors only
+main,
+article,
+.post,
+.posts,
+.error-404,
+.home-bio {
+  color: var(--color-text);
 }
 
 // Code syntax highlighting - ensure readability
