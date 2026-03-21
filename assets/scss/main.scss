@@ -281,6 +281,14 @@ main.home {
   p:last-child {
     margin-bottom: 0;
   }
+
+  a {
+    text-decoration: none;
+  }
+
+  a[href^="http"]::after {
+    content: ' →';
+  }
 }
 
 
