@@ -113,6 +113,7 @@ $max-width: 860px;
 body {
   font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: $light-background;
+  color: $light-color;
 }
 
 code, pre {
@@ -561,9 +562,9 @@ a:focus-visible,
   height: 2.75rem;
   padding: 0;
   border: 2px solid $accent;
-  border-radius: 50%;
+  border-radius: 0;
   background: $accent;
-  color: $dark-background;
+  color: $light-color;
   font-size: var(--text-lg);
   line-height: 1;
   text-decoration: none;
