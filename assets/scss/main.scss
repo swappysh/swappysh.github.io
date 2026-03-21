@@ -412,18 +412,16 @@ a {
   background: $light-background-header !important;
 }
 
-// Menu trigger (hamburger) SVG - stroke instead of fill for proper appearance
+// Menu trigger (hamburger) SVG - fill-based icon
 .menu-trigger {
   color: $light-color !important;
 
   svg {
-    stroke: $light-color !important;
-    fill: none !important;
+    fill: $light-color !important;
   }
 
   svg path {
-    stroke: $light-color !important;
-    fill: none !important;
+    fill: $light-color !important;
   }
 }
 
