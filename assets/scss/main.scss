@@ -363,26 +363,60 @@ a {
   }
 }
 
-// Header elements need explicit dark text for sand background
+// Header: force light-mode appearance regardless of OS color scheme
+// The theme's _header.scss and _menu.scss use @media (prefers-color-scheme: dark)
+// to swap backgrounds to $dark-background-header (#0d0d0d). Combined with our
+// dark text overrides, this makes text invisible on OS dark mode. Fix: force
+// light background and dark text everywhere.
 .header {
-  color: #1c1c1c !important;
+  background: $light-background-header !important;
+  color: $light-color !important;
 }
 
 .logo {
-  color: #1c1c1c !important;
+  color: $light-color !important;
+
+  a, &__mark, &__text {
+    color: $light-color !important;
+  }
 }
 
-.menu {
-  color: #1c1c1c !important;
-}
-
-// Menu links within the menu
-.menu a {
-  color: #1c1c1c !important;
+// The wrapping <a> around .logo inherits from the global `a` rule,
+// but we need to be explicit for the header context
+.header a {
+  color: $light-color !important;
 
   &:hover,
   &:focus {
     color: var(--color-accent) !important;
+  }
+}
+
+.menu {
+  background: $light-background-header !important;
+  color: $light-color !important;
+}
+
+.menu a {
+  color: $light-color !important;
+
+  &:hover,
+  &:focus {
+    color: var(--color-accent) !important;
+  }
+}
+
+.submenu,
+.submenu .dropdown-content,
+.submenu .dropdown-content a:hover {
+  background: $light-background-header !important;
+}
+
+// Menu trigger (hamburger) SVG needs visible fill
+.menu-trigger {
+  color: $light-color !important;
+  svg path {
+    fill: $light-color !important;
   }
 }
 
