@@ -1,18 +1,18 @@
 .saves-container {
-  background: #f6f2ea;
-  color: #1c1c1c;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 .saves-header {
   margin-bottom: var(--space-2xl);
   padding-bottom: var(--space-lg);
-  border-bottom: 2px solid #1c1c1c;
+  border-bottom: 2px solid var(--color-text);
 
   h1 {
     margin: 0 0 var(--space-xs);
     font-size: var(--text-section);
     font-weight: 700;
-    color: #1c1c1c;
+    color: var(--color-text);
     @media #{$media-size-phone} {
       font-size: var(--text-section-sm);
     }
@@ -21,7 +21,7 @@
   p {
     margin: 0;
     font-size: var(--text-base);
-    color: #1c1c1c;
+    color: var(--color-text);
     opacity: 0.75;
   }
 }
@@ -50,10 +50,12 @@
   font-size: var(--text-sm);
   font-weight: 600;
   margin-right: var(--space-xs);
-  color: #1c1c1c;
-  font-family: 'Space Mono', monospace;
+  color: var(--color-text);
+  font-family: var(--font-mono);
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  font-size: var(--text-sm);
 
   @media #{$media-size-phone} {
     display: none;
@@ -64,10 +66,10 @@
 .shuffle-btn {
   padding: var(--space-xs) var(--space-sm);
   border-radius: 0;
-  border: 2px solid #1c1c1c;
+  border: 2px solid var(--color-text);
   font-size: var(--text-sm);
   font-weight: 600;
-  font-family: 'Space Mono', monospace;
+  font-family: var(--font-mono);
   cursor: pointer;
   background: transparent;
   color: #1c1c1c;
@@ -115,7 +117,7 @@
   width: 100%;
   padding: var(--space-sm) var(--space-md);
   border-radius: 0;
-  border: 2px solid #1c1c1c;
+  border: 2px solid var(--color-text);
   background: #f6f2ea;
   color: #1c1c1c;
   font-size: var(--text-base);
@@ -128,9 +130,9 @@
   box-sizing: border-box;
 
   &::placeholder {
-    color: #1c1c1c;
+    color: var(--color-text);
     opacity: 0.6;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-mono);
   }
 
   &:focus {
@@ -152,7 +154,7 @@
 .save-card {
   border-radius: 0;
   padding: var(--space-lg);
-  border: 2px solid #1c1c1c;
+  border: 2px solid var(--color-text);
   background: #ffffff;
   @include transition-with-reduced-motion(
     (box-shadow 0.2s var(--ease-out-quart), background 0.2s var(--ease-out-quart)),
@@ -202,7 +204,7 @@
   font-size: var(--text-meta);
   color: #1c1c1c;
   opacity: 0.7;
-  font-family: 'Space Mono', monospace;
+  font-family: var(--font-mono);
   min-width: 0;
 }
 
@@ -236,7 +238,7 @@
   border: 1px solid #1c1c1c;
   font-size: var(--text-caption);
   font-weight: 600;
-  font-family: 'Space Mono', monospace;
+  font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   white-space: nowrap;
@@ -305,12 +307,12 @@
 
 .retry-btn {
   background: transparent;
-  border: 2px solid #1c1c1c;
+  border: 2px solid var(--color-text);
   color: #1c1c1c;
   padding: var(--space-xs) var(--space-md);
   border-radius: 0;
   cursor: pointer;
-  font-family: 'Space Mono', monospace;
+  font-family: var(--font-mono);
   font-size: var(--text-small);
   font-weight: 600;
   text-transform: uppercase;
@@ -337,7 +339,7 @@
   margin-bottom: var(--space-lg);
   color: #1c1c1c;
   opacity: 0.75;
-  font-family: 'Space Mono', monospace;
+  font-family: var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
