@@ -363,11 +363,27 @@ a {
   }
 }
 
-// Special cases - preserve header colors
-.header,
-.logo,
+// Header elements need explicit dark text for sand background
+.header {
+  color: #1c1c1c !important;
+}
+
+.logo {
+  color: #1c1c1c !important;
+}
+
 .menu {
-  color: inherit !important;
+  color: #1c1c1c !important;
+}
+
+// Menu links within the menu
+.menu a {
+  color: #1c1c1c !important;
+
+  &:hover,
+  &:focus {
+    color: var(--color-accent) !important;
+  }
 }
 
 // Accent text (like company names)
