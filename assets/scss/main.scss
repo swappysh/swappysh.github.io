@@ -72,6 +72,7 @@ $max-width: 860px;
 
 @import "normalize";
 @import "prism";
+@import "syntax";
 @import "flag-icons";
 @import "buttons";
 @import "header";
@@ -299,8 +300,34 @@ main.home {
   @media (prefers-reduced-motion: reduce) { transform: none; }
 }
 
+// Override theme white text for light mode
+* {
+  &:not(button):not(.cta-resume) {
+    color: var(--color-text, $light-color);
+  }
+}
+
+// Code syntax highlighting - ensure readability
+code {
+  color: var(--color-text);
+}
+
+pre code {
+  color: var(--color-text);
+}
+
+// Links should use ink by default, not accent
+a {
+  color: var(--color-text);
+
+  &:hover {
+    color: var(--color-accent);
+  }
+}
+
 .vim-hl {
-  color: $logo-cursor;
+  color: var(--color-accent);
+  font-weight: 600;
 }
 
 @media #{$media-size-phone} {

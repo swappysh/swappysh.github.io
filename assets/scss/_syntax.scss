@@ -1,0 +1,93 @@
+// Light mode syntax highlighting for code blocks
+// Override theme's dark mode prism styles
+
+.code-toolbar,
+pre[class*="language-"],
+code[class*="language-"] {
+  background: var(--color-bg) !important;
+  color: var(--color-text) !important;
+}
+
+// Prism token colors for light mode
+.token {
+  &.comment,
+  &.prolog,
+  &.doctype,
+  &.cdata {
+    color: var(--color-text-secondary);
+  }
+
+  &.punctuation {
+    color: var(--color-text);
+  }
+
+  &.property,
+  &.tag,
+  &.constant,
+  &.symbol,
+  &.deleted {
+    color: var(--color-text);
+  }
+
+  &.boolean,
+  &.number {
+    color: var(--color-accent);
+  }
+
+  &.selector,
+  &.attr-name,
+  &.string,
+  &.char,
+  &.builtin,
+  &.inserted {
+    color: var(--color-text);
+  }
+
+  &.operator,
+  &.entity,
+  &.url,
+  &.language-css .string,
+  &.style .string {
+    color: var(--color-text);
+  }
+
+  &.atrule,
+  &.keyword {
+    color: var(--color-text);
+  }
+
+  &.function,
+  &.class-name {
+    color: var(--color-text);
+  }
+
+  &.regex,
+  &.important,
+  &.variable {
+    color: var(--color-text);
+  }
+}
+
+// Code block styling
+pre {
+  background: var(--color-bg-secondary) !important;
+  border: 2px solid var(--color-border);
+  color: var(--color-text) !important;
+  padding: var(--space-lg);
+  border-radius: 0;
+  overflow-x: auto;
+
+  code {
+    color: var(--color-text) !important;
+    background: transparent !important;
+  }
+}
+
+// Inline code
+code:not([class*="language-"]) {
+  background: color-mix(in srgb, var(--color-border), transparent 50%);
+  color: var(--color-text);
+  padding: 2px 6px;
+  border-radius: 0;
+  font-family: var(--font-mono);
+}
