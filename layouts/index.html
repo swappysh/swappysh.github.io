@@ -47,35 +47,6 @@
                 {{- end }}
             {{- end }}
 
-            <!-- Recent Posts Section -->
-            {{- if $posts }}
-            <section class="home-recent" aria-label="{{ i18n "recentPosts" }}">
-                <div class="home-recent__header">
-                    <h2 class="home-recent__title">{{ i18n "recentPosts" }}</h2>
-                </div>
-                {{ if $recent }}
-                <ul class="home-recent__list">
-                    {{ range $recent }}
-                    <li class="home-recent__item">
-                        <a href="{{ .Permalink }}" class="home-recent__link">
-                            <div class="home-recent__content">
-                                <span class="home-recent__post-title">{{ .Title }}</span>
-                            </div>
-                            <time class="home-recent__date" datetime="{{ .Date.Format "2006-01-02" }}">
-                                {{ if .Site.Params.dateformShort }}{{ .Date.Format .Site.Params.dateformShort }}{{ else }}{{ .Date.Format "Jan 2" }}{{ end }}
-                            </time>
-                        </a>
-                    </li>
-                    {{ end }}
-                </ul>
-                {{ end }}
-                <div class="home-recent__footer">
-                    <p class="home-recent__more">
-                        <a href="{{ "posts" | absLangURL }}">{{ i18n "archives" }} →</a>
-                    </p>
-                </div>
-            </section>
-            {{- end }}
         </div>
     </main>
 {{ end }}
