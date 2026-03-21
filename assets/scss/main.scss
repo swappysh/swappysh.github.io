@@ -241,10 +241,8 @@ main.home {
 
   &:hover,
   &:focus {
-    background: $light-background;
-    color: $light-color;
     transform: translate(2px, 2px);
-    box-shadow: 4px 4px 0px rgba(15, 23, 42, 0.15);
+    box-shadow: 2px 2px 0px rgba(15, 23, 42, 0.75);
     svg {
       transform: translateX(3px);
     }
