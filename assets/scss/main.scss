@@ -412,15 +412,11 @@ a {
   background: $light-background-header !important;
 }
 
-// Menu trigger (hamburger) SVG - fill-based icon
+// Menu trigger (hamburger) SVG
 .menu-trigger {
   color: $light-color !important;
 
-  svg {
-    fill: $light-color !important;
-  }
-
-  svg path {
+  svg path:nth-of-type(2) {
     fill: $light-color !important;
   }
 }
