@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Point</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 800px; margin: 0 auto; padding: 2rem; line-height: 1.6; }
+    h1, h2, h3 { margin-top: 1.5em; }
+    a { color: #0066cc; }
+  </style>
+</head>
+<body>
+  <h1>Privacy Policy — Point (Chrome Extension)</h1>
+  <p><strong>Last updated:</strong> March 23, 2026</p>
+
+  <p><strong>Operator:</strong> Swapnil Sharma ("we", "us").<br>
+  <strong>Contact:</strong> swapnil@point-extension.dev</p>
+
+  <p>This policy describes how the <strong>Point</strong> browser extension ("Point", "the extension") and its associated online services handle information when you use Point. Point lets you highlight text on web pages, add comments, connect with friends, and receive notifications when others share content with you.</p>
+
+  <h2>Summary</h2>
+  <p>Point works with a <strong>backend service</strong> hosted on <strong>Convex</strong> (a third-party cloud provider). When you use Point, we process account data, content you create (highlights and comments), friend relationships, and notification data as described below. The extension also stores a small amount of data <strong>locally in your browser</strong>.</p>
+
+  <h2>Information we collect and process</h2>
+
+  <h3>Account and authentication</h3>
+  <ul>
+    <li><strong>Username and password</strong> are submitted when you sign in or create an account. Passwords are processed using industry-standard hashing on the server; we do not store plaintext passwords in a recoverable form.</li>
+    <li><strong>Session token</strong> issued by the server after login is stored <strong>locally</strong> in the extension (<code>chrome.storage.local</code>, key <code>pointAuth</code>) so you stay signed in until you log out.</li>
+  </ul>
+
+  <h3>Content and activity on web pages</h3>
+  <ul>
+    <li><strong>Highlights</strong> include the <strong>page URL</strong>, <strong>page title</strong> (when available), the <strong>selected text</strong>, and <strong>DOM location data</strong> (XPath and offsets) so highlights can be shown in the correct place.</li>
+    <li><strong>Comments</strong> are text you attach to a highlight; they are stored with your account on the backend.</li>
+    <li><strong>"Points" (notifications)</strong> may include <strong>preview text</strong>, <strong>source URL</strong>, <strong>sender identity</strong>, and related metadata.</li>
+  </ul>
+
+  <h3>Friends and social features</h3>
+  <p>We process <strong>friend requests</strong>, <strong>accept/reject</strong> actions, <strong>friend lists</strong>, and <strong>identifiers</strong> needed to connect accounts.</p>
+
+  <h3>Optional local-only data in your browser</h3>
+  <ul>
+    <li><strong>API base URL override</strong>: If set, stored under <code>pointApiBase</code> in <code>chrome.storage.local</code>.</li>
+    <li><strong>UI preferences</strong>: Panel position and similar settings in <code>localStorage</code>.</li>
+  </ul>
+
+  <p>We do <strong>not</strong> sell your personal information.</p>
+
+  <h2>Where data is stored</h2>
+  <ul>
+    <li><strong>Convex (third-party processor):</strong> User accounts, authentication tokens, highlights, comments, friend relationships, and notification records are stored and processed in our Convex deployment.</li>
+    <li><strong>Your device:</strong> Session and settings in <code>chrome.storage.local</code>, and optional <code>localStorage</code> keys.</li>
+  </ul>
+
+  <h2>How we use information</h2>
+  <ul>
+    <li>To authenticate you and keep your session.</li>
+    <li>To store and display highlights and comments you create.</li>
+    <li>To operate friend requests, friend lists, and notifications.</li>
+    <li>To troubleshoot, secure the service, and comply with law when required.</li>
+  </ul>
+
+  <h2>Sharing</h2>
+  <ul>
+    <li>We use <strong>Convex</strong> to host backend data and HTTP APIs.</li>
+    <li><strong>Highlights and comments</strong> are visible to other users according to application rules.</li>
+    <li>We may disclose information if required by law or to protect rights and safety.</li>
+  </ul>
+
+  <h2>Data retention and deletion</h2>
+  <p>You may request deletion or export of personal data by contacting <strong>swapnil@point-extension.dev</strong>. Clearing extension data in Chrome or logging out removes <strong>local</strong> storage.</p>
+
+  <h2>Security</h2>
+  <p>We use HTTPS for API traffic and protect passwords with hashing on the server.</p>
+
+  <h2>Children</h2>
+  <p>Point is not directed at children under 13. We do not knowingly collect personal information from children.</p>
+
+  <h2>International users</h2>
+  <p>Data may be processed in the United States or other regions where Convex operates.</p>
+
+  <h2>Changes</h2>
+  <p>We may update this policy from time to time. Changes will be posted with a new "Last updated" date.</p>
+
+  <h2>Contact</h2>
+  <p>Questions: <a href="mailto:swapnil@point-extension.dev">swapnil@point-extension.dev</a></p>
+
+  <hr>
+  <p><em>This privacy policy is provided for Chrome Web Store compliance. Review with qualified counsel before publication if needed.</em></p>
+</body>
+</html>
