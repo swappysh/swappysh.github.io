@@ -21,3 +21,7 @@ worker/.dev.vars
 .wrangler/
 
 .env
+
+# Python
+__pycache__/
+*.pyc
