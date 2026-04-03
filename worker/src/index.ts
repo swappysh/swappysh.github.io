@@ -22,6 +22,11 @@ interface SaveBody {
   timestamp?: string;
 }
 
+interface UpdateSaveBody {
+  title?: string;
+  excerpt?: string;
+}
+
 interface ListResponse {
   items: SaveItem[];
   total: number;
@@ -44,7 +49,7 @@ function corsHeaders(): Record<string, string> {
   return {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Authorization, Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, PATCH, DELETE, OPTIONS',
   };
 }
 
@@ -177,12 +182,52 @@ export default {
       return json(response, 200, cors);
     }
 
-    // DELETE /api/item/:id
-    const deleteMatch = url.pathname.match(/^\/api\/item\/([a-zA-Z0-9]+)$/);
-    if (request.method === 'DELETE' && deleteMatch) {
+    // PATCH /api/item/:id
+    const itemMatch = url.pathname.match(/^\/api\/item\/([a-zA-Z0-9]+)$/);
+    if (request.method === 'PATCH' && itemMatch) {
       if (token !== env.WRITE_SECRET) return unauthorized(cors);
 
-      const id = deleteMatch[1];
+      let body: UpdateSaveBody;
+      try {
+        body = (await request.json()) as UpdateSaveBody;
+      } catch {
+        return json({ error: 'Invalid JSON' }, 400, cors);
+      }
+
+      const hasTitle = 'title' in body;
+      const hasExcerpt = 'excerpt' in body;
+      if (!hasTitle && !hasExcerpt) {
+        return json({ error: 'title or excerpt is required' }, 400, cors);
+      }
+
+      if ((hasTitle && typeof body.title !== 'string') || (hasExcerpt && typeof body.excerpt !== 'string')) {
+        return json({ error: 'title and excerpt must be strings' }, 400, cors);
+      }
+
+      const id = itemMatch[1];
+      const existing = await env.saves.get(`item:${id}`, 'json') as SaveItem | null;
+      if (!existing) return json({ error: 'Not found' }, 404, cors);
+
+      const newTitle = hasTitle ? body.title!.trim() : existing.title;
+      if (!newTitle) {
+        return json({ error: 'title cannot be empty' }, 400, cors);
+      }
+
+      const item: SaveItem = {
+        ...existing,
+        title: newTitle,
+        ...(hasExcerpt ? { excerpt: body.excerpt! } : {}),
+      };
+
+      await env.saves.put(`item:${id}`, JSON.stringify(item));
+      return json(item, 200, cors);
+    }
+
+    // DELETE /api/item/:id
+    if (request.method === 'DELETE' && itemMatch) {
+      if (token !== env.WRITE_SECRET) return unauthorized(cors);
+
+      const id = itemMatch[1];
       const itemRaw = await env.saves.get(`item:${id}`, 'json') as SaveItem | null;
       if (itemRaw) {
         const hash = await urlHash(itemRaw.url);
