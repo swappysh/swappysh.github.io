@@ -25,3 +25,4 @@ worker/.dev.vars
 # Python
 __pycache__/
 *.pyc
+scripts/.venv/

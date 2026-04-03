@@ -1,0 +1,6 @@
+[project]
+name = "saves-scripts"
+version = "0.1.0"
+description = "CLI tools for managing saved links"
+requires-python = ">=3.12"
+dependencies = []

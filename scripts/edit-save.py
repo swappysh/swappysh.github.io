@@ -76,15 +76,19 @@ def main() -> None:
         while lines and (lines[0].startswith("#") or not lines[0].strip()):
             lines.pop(0)
 
-        if len(lines) < 3 or lines[0] != "title:" or lines[2] != "excerpt:":
+        if (
+            len(lines) < 3
+            or not lines[0].startswith("title:")
+            or not lines[2].startswith("excerpt:")
+        ):
             print(
-                "Expected format:\n  title:\n  <title>\n  excerpt:\n  <excerpt>",
+                "Expected format:\n  title:<title>\n  excerpt:<excerpt>",
                 file=sys.stderr,
             )
             sys.exit(1)
 
-        new_title = lines[1].strip()
-        new_excerpt = "\n".join(lines[3:]).rstrip("\n")
+        new_title = lines[0].removeprefix("title:").strip()
+        new_excerpt = "\n".join(lines[2:]).removeprefix("excerpt:").rstrip("\n")
         patch_body = {"title": new_title, "excerpt": new_excerpt}
 
         if json.dumps(patch_body, ensure_ascii=True) == before:
