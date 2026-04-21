@@ -1,16 +1,8 @@
 .footer {
   padding: var(--space-xl) 0;
   flex-grow: 0;
-  color: $light-color-secondary;
-  border-top: 1px solid $light-border-color;
-
-  @media (prefers-color-scheme: dark) {
-    border-top-color: $dark-border-color;
-  }
-
-  [data-theme="dark"] & {
-    border-top-color: $dark-border-color;
-  }
+  color: var(--color-text-secondary);
+  border-top: 1px solid var(--color-border);
 
   &__inner {
     display: flex;
@@ -30,7 +22,7 @@
     flex-direction: row;
     align-items: center;
     font-size: 1rem;
-    color: $light-color-secondary;
+    color: var(--color-text-secondary);
 
     @media #{$media-size-tablet} {
       flex-direction: column;

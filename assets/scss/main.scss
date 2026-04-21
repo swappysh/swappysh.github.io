@@ -1,76 +1,14 @@
-$dark-background:            #0d0d0d;
-$dark-background-secondary:  #161616;
-$dark-background-header:     #0d0d0d;
-$dark-color:                 #e6e6e6;
-$dark-color-variant:         #ffffff;
-$dark-color-secondary:       #9a9996;
-$dark-border-color:          #363534;
-$dark-table-color:           #363534;
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 
-$light-background:           #fcfbf9;
-$light-background-secondary: #f0eeeb;
-$light-background-header:    #f8f6f3;
-$light-color:                #1e1d1c;
-$light-color-variant:        #0f0e0d;
-$light-color-secondary:      #6f6e6b;
-$light-border-color:         #e2e0dc;
-$light-table-color:          #e2e0dc;
-
-$accent:                     #f59e0b;
-$accent-light:               #b45309;
-$accent-secondary:           #0d9488;
-$logo-cursor:                #f59e0b;
-$tweet-color:                #1d9bf0;
-$video-color:                #ff4444;
-$article-color:              #14b8a6;
-$vim-hl:                     #98c379;
-
-$opacity-surface-subtle:     0.97;
-$opacity-surface-strong:     0.85;
-$opacity-surface-hover:      0.95;
-$opacity-surface-mid:        0.88;
-
-$media-size-phone:  "(max-width: 684px)";
-$media-size-tablet: "(max-width: 900px)";
-
-@mixin dark-theme {
-  @media (prefers-color-scheme: dark) {
-    @content;
-  }
-  [data-theme="dark"] & {
-    @content;
-  }
-}
-
-@mixin focus-ring {
-  outline: 2px solid var(--color-accent);
-  outline-offset: 2px;
-}
-@mixin border-default {
-  border: 1px solid $light-border-color;
-  @include dark-theme { border-color: $dark-border-color; }
-}
-@mixin text-secondary {
-  color: $light-color-secondary;
-  @include dark-theme { color: $dark-color-secondary; }
-}
-
-@mixin transition-with-reduced-motion($default, $reduced: none) {
-  transition: $default;
-  @media (prefers-reduced-motion: reduce) {
-    @if $reduced != none {
-      transition: $reduced;
-    } @else {
-      transition: none;
-    }
-  }
-}
+@import "tokens";
+@import "mixins";
 
 :root {
   --phoneWidth:  (max-width: 684px);
   --tabletWidth: (max-width: 900px);
   --accent:      #{$accent};
   --accent-secondary: #{$accent-secondary};
+  --accent-tertiary: #{$accent-tertiary};
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -85,6 +23,11 @@ $media-size-tablet: "(max-width: 900px)";
 
   --radius-sm: 0.5rem;
   --radius-full: 9999px;
+
+  --opacity-surface-subtle: 0.97;
+  --opacity-surface-strong: 0.85;
+  --opacity-surface-hover: 0.95;
+  --opacity-surface-mid: 0.88;
 
   --text-caption: 0.7rem;
   --text-meta: 0.8rem;
@@ -105,12 +48,12 @@ $media-size-tablet: "(max-width: 900px)";
   --color-text:           #{$light-color};
   --color-text-variant:   #{$light-color-variant};
   --color-text-secondary: #{$light-color-secondary};
-  --color-link:           #{$accent-light};
-  --color-accent:         #{$accent-light};
+  --color-link:           #{$accent};
+  --color-accent:         #{$accent};
   --color-border:         #{$light-border-color};
 
-  --font-sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  --font-sans: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Space Mono', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
   --font-normal: 400;
   --font-medium: 500;
   --font-semibold: 600;
@@ -125,36 +68,12 @@ $media-size-tablet: "(max-width: 900px)";
   --tracking-wider: 0.05em;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --color-bg:             #{$dark-background};
-    --color-bg-secondary:   #{$dark-background-secondary};
-    --color-text:           #{$dark-color};
-    --color-text-variant:   #{$dark-color-variant};
-    --color-text-secondary: #{$dark-color-secondary};
-    --color-link:           #{$accent};
-    --color-accent:         #{$accent};
-    --color-border:         #{$dark-border-color};
-  }
-}
-
-[data-theme="dark"] {
-  --color-bg:             #{$dark-background};
-  --color-bg-secondary:   #{$dark-background-secondary};
-  --color-text:           #{$dark-color};
-  --color-text-variant:   #{$dark-color-variant};
-  --color-text-secondary: #{$dark-color-secondary};
-  --color-link:           #{$accent};
-  --color-accent:         #{$accent};
-  --color-border:         #{$dark-border-color};
-}
-
 $max-width: 860px;
 
 @import "normalize";
 @import "prism";
+@import "syntax";
 @import "flag-icons";
-@import "mixins";
 @import "buttons";
 @import "header";
 @import "logo";
@@ -193,13 +112,13 @@ $max-width: 860px;
 }
 
 body {
-  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: $light-background;
-  @include dark-theme { background-color: $dark-background; }
+  color: $light-color;
 }
 
 code, pre {
-  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-family: 'Space Mono', Consolas, monospace;
 }
 
 a {
@@ -234,46 +153,22 @@ main.home {
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: var(--space-2xl);
   position: relative;
-
-  &:not([data-theme="dark"]):not([data-theme="dark="]) {
-    &::before {
-      content: "";
-      position: absolute;
-      inset: -10% 0 30% 0;
-      background: radial-gradient(ellipse 80% 60% at 50% -5%, rgba($accent, 0.05), transparent 50%);
-      pointer-events: none;
-      z-index: -1;
-    }
-  }
-
-  @include dark-theme {
-    &::before {
-      content: "";
-      position: absolute;
-      inset: -20% 0 40% 0;
-      background: radial-gradient(ellipse 90% 70% at 50% -10%, rgba($accent, 0.07), transparent 55%);
-      pointer-events: none;
-      z-index: -1;
-    }
-  }
 }
 
 .home__inner .home-hero__portrait {
   margin-left: 0;
   margin-right: auto;
   margin-bottom: var(--space-md);
-  border: 2px solid rgba($accent, 0.35);
+  border: 2px solid var(--color-border);
   box-sizing: border-box;
-  @include dark-theme { border-color: rgba($accent, 0.4); }
   @include transition-with-reduced-motion(
     (transform 0.3s var(--ease-out-quart), box-shadow 0.3s var(--ease-out-quart)),
     (transform 0.3s ease, box-shadow 0.3s ease)
   );
   &:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 0 4px rgba($accent, 0.15);
+    box-shadow: 8px 8px 0px rgba(15, 23, 42, 0.15);
     @media (prefers-reduced-motion: reduce) { transform: none; }
   }
 }
@@ -293,10 +188,12 @@ main.home {
 
 .home-subtitle p {
   margin: 0;
-  font-size: var(--text-lead);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  @include text-secondary;
+  font-size: var(--text-sm);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
 }
 
 .home-hero__social {
@@ -309,7 +206,7 @@ main.home {
     display: inline-flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 0;
+    gap: var(--space-xs);
   }
 }
 
@@ -324,15 +221,15 @@ main.home {
   gap: var(--space-xs);
   min-height: var(--touch-target);
   padding: var(--space-sm) var(--space-lg);
-  border: 2px solid var(--color-accent);
-  border-radius: var(--radius-full);
+  border: 2px solid var(--color-text);
+  border-radius: 0;
   background: var(--color-accent);
-  color: $dark-background;
+  color: var(--color-text);
   font-size: var(--text-base);
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.02em;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba($accent, 0.25);
+  box-shadow: 8px 8px 0px rgba(15, 23, 42, 0.15);
   @include transition-with-reduced-motion(
     (background 0.2s var(--ease-out-quart), color 0.2s var(--ease-out-quart), border-color 0.2s var(--ease-out-quart), transform 0.15s var(--ease-out-quart), box-shadow 0.2s var(--ease-out-quart)),
     (background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease)
@@ -344,22 +241,20 @@ main.home {
 
   &:hover,
   &:focus {
-    background: transparent;
-    color: var(--color-accent);
-    transform: scale(1.02);
-    box-shadow: 0 4px 16px rgba($accent, 0.35);
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0px rgba(15, 23, 42, 0.75);
     svg {
       transform: translateX(3px);
     }
-    @media (prefers-reduced-motion: reduce) { 
-      transform: none; 
+    @media (prefers-reduced-motion: reduce) {
+      transform: none;
       svg { transform: none; }
     }
   }
 
   &:active {
-    transform: translateY(1px) scale(1.02);
-    box-shadow: 0 2px 4px rgba($accent, 0.2);
+    transform: translate(2px, 2px);
+    box-shadow: 4px 4px 0px rgba(15, 23, 42, 0.15);
     @media (prefers-reduced-motion: reduce) { transform: none; }
   }
 
@@ -386,64 +281,12 @@ main.home {
   p:last-child {
     margin-bottom: 0;
   }
-}
 
-@keyframes homeReveal {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  a {
+    text-decoration: none;
   }
 }
 
-@keyframes homeRevealPortrait {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.home__inner > * {
-  animation: homeReveal 0.4s var(--ease-out-quint) both;
-  @media (prefers-reduced-motion: reduce) { animation: none; }
-}
-
-.home__inner > .home-hero__portrait {
-  animation-name: homeRevealPortrait;
-  animation-duration: 0.45s;
-  animation-delay: 0s;
-}
-
-.home__inner > .home-hero__title {
-  animation-delay: 0.08s;
-}
-
-.home__inner > .home-subtitle {
-  animation-delay: 0.14s;
-}
-
-.home__inner > .home-hero__social {
-  animation-delay: 0.2s;
-}
-
-.home__inner > .home-bio {
-  animation-delay: 0.26s;
-}
-
-.home__inner > .home-hero__cta {
-  animation-delay: 0.32s;
-}
-
-.home__inner > .home-recent {
-  animation-delay: 0.38s;
-}
 
 .social-icons a {
   display: inline-block;
@@ -459,8 +302,140 @@ main.home {
   @media (prefers-reduced-motion: reduce) { transform: none; }
 }
 
+// ============================================
+// CRITICAL: Override theme's white text
+// ============================================
+
+// Force dark text on all content areas
+body {
+  color: var(--color-text) !important;
+}
+
+// Override theme's .content selector (causes white text)
+.content {
+  color: var(--color-text) !important;
+}
+
+// Override all text in main content areas
+main,
+article,
+.post,
+.posts,
+.error-404,
+.home-bio,
+.save-card,
+.saves-container {
+  color: var(--color-text) !important;
+
+  * {
+    color: var(--color-text) !important;
+  }
+}
+
+// Override paragraph text
+p {
+  color: var(--color-text) !important;
+}
+
+// Override list items
+li {
+  color: var(--color-text) !important;
+}
+
+// Code syntax highlighting - ensure readability
+code {
+  color: var(--color-text) !important;
+}
+
+pre {
+  color: var(--color-text) !important;
+
+  code {
+    color: var(--color-text) !important;
+  }
+}
+
+// Links: ink color, underline + weight on hover (typography-first interaction)
+a {
+  color: var(--color-text) !important;
+  text-decoration: none;
+  @include transition-with-reduced-motion(
+    (font-weight 0.2s var(--ease-out-quart)),
+    (font-weight 0.2s ease)
+  );
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+    font-weight: 600;
+  }
+}
+
+// Header: force light-mode appearance regardless of OS color scheme
+// The theme's _header.scss and _menu.scss use @media (prefers-color-scheme: dark)
+// to swap backgrounds to $dark-background-header (#0d0d0d). Combined with our
+// dark text overrides, this makes text invisible on OS dark mode. Fix: force
+// light background and dark text everywhere.
+.header {
+  background: $light-background-header !important;
+  color: $light-color !important;
+}
+
+.logo {
+  color: $light-color !important;
+
+  a, &__mark, &__text {
+    color: $light-color !important;
+  }
+}
+
+// The wrapping <a> around .logo inherits from the global `a` rule,
+// but we need to be explicit for the header context
+.header a {
+  color: $light-color !important;
+
+  &:hover,
+  &:focus {
+    color: var(--color-accent) !important;
+  }
+}
+
+.menu {
+  background: $light-background-header !important;
+  color: $light-color !important;
+}
+
+.menu a {
+  color: $light-color !important;
+
+  &:hover,
+  &:focus {
+    color: var(--color-accent) !important;
+  }
+}
+
+.submenu,
+.submenu .dropdown-content,
+.submenu .dropdown-content a:hover {
+  background: $light-background-header !important;
+}
+
+// Menu trigger (hamburger) SVG
+.menu-trigger {
+  color: $light-color !important;
+
+  svg path:nth-of-type(2) {
+    fill: $light-color !important;
+  }
+}
+
+// Company names - bold dark text instead of unreadable green
 .vim-hl {
-  color: $logo-cursor;
+  color: var(--color-text) !important;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--color-accent), transparent 85%);
+  padding: 0 4px;
+  border-radius: 2px;
 }
 
 @media #{$media-size-phone} {
@@ -476,7 +451,7 @@ main.home {
 }
 
 .post-day {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-mono);
   font-size: var(--text-meta);
 }
 
@@ -486,14 +461,12 @@ blockquote {
 
 pre code {
   color: $light-color-secondary;
-  @include dark-theme { color: inherit; }
 }
 
 .home-recent {
   margin-top: var(--space-3xl);
   padding-top: var(--space-2xl);
-  border-top: 1px solid $light-border-color;
-  @include dark-theme { border-top-color: $dark-border-color; }
+  border-top: 1px solid var(--color-border);
 }
 
 .home-recent__title {
@@ -531,8 +504,7 @@ pre code {
   @include transition-with-reduced-motion(color 0.2s var(--ease-out-quart), background-color 0.2s var(--ease-out-quart));
   &:hover {
     color: var(--color-link);
-    background: transparentize($accent, $opacity-surface-hover);
-    @include dark-theme { background: transparentize($accent, $opacity-surface-hover); }
+    background: color-mix(in srgb, var(--color-accent), transparent 95%);
   }
   &:focus-visible {
     @include focus-ring;
@@ -549,16 +521,13 @@ pre code {
 }
 
 .home-recent__date {
-  font-family: 'JetBrains Mono', Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: var(--text-small);
   @include text-secondary;
   flex-shrink: 0;
-  padding: 2px 6px;
-  background: rgba($accent, 0.08);
-  border-radius: var(--radius-sm);
-  @include dark-theme {
-    background: rgba($accent, 0.12);
-  }
+  padding: var(--space-2xs) var(--space-xs);
+  background: color-mix(in srgb, var(--color-accent), transparent 92%);
+  border-radius: 0;
 }
 
 .home-recent__more {
@@ -568,8 +537,12 @@ pre code {
   a {
     color: inherit;
     text-decoration: none;
-    &:hover { color: var(--color-link); }
-    &:focus-visible { @include focus-ring; }
+    &:hover {
+      color: var(--color-link);
+    }
+    &:focus-visible {
+      @include focus-ring;
+    }
   }
 }
 
@@ -584,8 +557,7 @@ pre code {
   margin-bottom: var(--space-2xl);
 }
 .posts .post-item {
-  border-bottom: 1px dashed $light-border-color;
-  @include dark-theme { border-bottom-color: $dark-border-color; }
+  border-bottom: 1px dashed var(--color-border);
 }
 .posts .post-item-inner {
   padding: var(--space-sm) 0;
@@ -595,8 +567,7 @@ pre code {
     (color 0.2s ease)
   );
   &:hover {
-    background-color: rgba($accent, 0.06);
-    @include dark-theme { background-color: rgba($accent, 0.08); }
+    background-color: color-mix(in srgb, var(--color-accent), transparent 94%);
   }
 }
 .posts .post-year {
@@ -609,16 +580,12 @@ pre code {
 
 .post-info a:hover {
   border-bottom-color: $light-color-variant;
-  @include dark-theme { border-bottom-color: $dark-color-variant; }
 }
 
 .screen-reader-text:focus {
   background-color: $light-background-header;
   color: var(--color-accent);
   box-shadow: 0 0 0 2px var(--color-accent);
-  @include dark-theme {
-    background-color: $dark-background-header;
-  }
 }
 
 .logo__cursor {
@@ -627,13 +594,11 @@ pre code {
 
 a:focus-visible,
 .button:focus-visible,
-.theme-toggle:focus-visible,
 .menu-trigger:focus-visible,
 .code-toolbar .toolbar-item a:focus-visible {
   @include focus-ring;
 }
 
-.theme-toggle,
 .menu-trigger {
   background: none;
   border: none;
@@ -648,7 +613,6 @@ a:focus-visible,
   font: inherit;
   @include transition-with-reduced-motion(transform 0.1s ease);
 }
-.theme-toggle:active,
 .menu-trigger:active {
   transform: translateY(1px);
   @media (prefers-reduced-motion: reduce) { transform: none; }
@@ -669,7 +633,7 @@ a:focus-visible,
   color: inherit;
   cursor: pointer;
   padding: 0;
-  margin-right: 15px;
+  margin-right: var(--space-lg);
 
   &:hover {
     text-decoration: underline;
@@ -733,9 +697,9 @@ a:focus-visible,
   height: 2.75rem;
   padding: 0;
   border: 2px solid $accent;
-  border-radius: 50%;
+  border-radius: 0;
   background: $accent;
-  color: $dark-background;
+  color: $light-color;
   font-size: var(--text-lg);
   line-height: 1;
   text-decoration: none;
