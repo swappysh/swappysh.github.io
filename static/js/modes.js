@@ -1,7 +1,7 @@
 (function () {
-  const MODES = ['night', 'day', 'summer', 'art'];
+  const MODES = ['night', 'day', 'summer'];
   const STORAGE_KEY = 'site-mode';
-  const KEY_TO_MODE = { n: 'night', d: 'day', s: 'summer', a: 'art' };
+  const KEY_TO_MODE = { n: 'night', d: 'day', s: 'summer' };
 
   let currentMode = localStorage.getItem(STORAGE_KEY) || 'night';
 

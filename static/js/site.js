@@ -19,13 +19,17 @@
 
   var menuTrigger = document.querySelector('.menu-trigger');
   var col1 = document.querySelector('.site-col-1');
+  var setMenuOpen = function(open) {
+    document.body.classList.toggle('col1-open', open);
+    if (menuTrigger) menuTrigger.setAttribute('aria-expanded', open.toString());
+  };
   if (menuTrigger && col1) {
     menuTrigger.addEventListener('click', function() {
-      document.body.classList.toggle('col1-open');
+      setMenuOpen(!document.body.classList.contains('col1-open'));
     });
     document.addEventListener('click', function(e) {
       if (!col1.contains(e.target) && !menuTrigger.contains(e.target)) {
-        document.body.classList.remove('col1-open');
+        setMenuOpen(false);
       }
     });
   }
@@ -33,7 +37,7 @@
   var col1CloseBtn = document.getElementById('col1-close-btn');
   if (col1CloseBtn) {
     col1CloseBtn.addEventListener('click', function() {
-      document.body.classList.remove('col1-open');
+      setMenuOpen(false);
     });
   }
 })();

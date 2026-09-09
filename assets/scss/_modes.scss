@@ -9,10 +9,6 @@
   --line: #dbd8d2;
   --hi:   #000000;
 
-  .site-logo {
-    filter: invert(1);
-  }
-
   a {
     text-decoration-color: #b0b0b0;
     &:hover {
@@ -20,5 +16,3 @@
     }
   }
 }
-
-// Art mode needs no color overrides: the tegaki overlay provides the backdrop.

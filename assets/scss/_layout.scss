@@ -125,10 +125,6 @@
 @media (max-width: 768px) {
   .site-col-1 {
     display: none;
-
-    &.col1-visible {
-      display: block;
-    }
   }
 
   body.col1-open .site-col-1 {
