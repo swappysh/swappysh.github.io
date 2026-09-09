@@ -14,15 +14,15 @@
                     <div class="post-year">{{ .Key }}</div>
 
                     <ul class="posts-list">
-                        {{ range .Pages }}
-                            <li class="post-item">
-                                <a href="{{ .Permalink }}" class="post-item-inner">
-                                    <span class="post-title">{{ .Title }}</span>
-                                    <span class="post-day">
+                        {{ range $index, $page := .Pages }}
+                            <li class="post-item reveal" data-stagger="{{ $index }}">
+                                <a href="{{ $page.Permalink }}" class="post-item-inner">
+                                    <span class="post-title font-sans">{{ $page.Title }}</span>
+                                    <span class="post-day meta">
                                         {{ if .Site.Params.dateformShort }}
-                                            {{ time.Format .Site.Params.dateformShort .Date }}
+                                            {{ time.Format .Site.Params.dateformShort $page.Date }}
                                         {{ else }}
-                                            {{ time.Format "Jan 2" .Date }}
+                                            {{ time.Format "Jan 2" $page.Date }}
                                         {{ end }}
                                     </span>
                                 </a>

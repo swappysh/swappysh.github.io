@@ -1,0 +1,45 @@
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  // transition applied via JS when .visible is added
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 520ms var(--ease-out), transform 520ms var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    opacity: 1;
+    transform: none;
+
+    &.visible {
+      transition: none;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cursor {
+  0%   { opacity: 0; }
+  50%  { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes typewriter-mark {
+  from { opacity: 0; transform: translateX(-2px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes hintFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

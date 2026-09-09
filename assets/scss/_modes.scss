@@ -1,0 +1,18 @@
+// Night mode (default) is set in :root in _tokens.scss, no override needed here.
+// Day and summer share the same light palette; summer additionally activates
+// the leaves overlay (see _leaves.scss).
+.mode-day,
+.mode-summer {
+  --bg:   #FAF8F5;
+  --text: #1c1c1c;
+  --mid:  #888888;
+  --line: #dbd8d2;
+  --hi:   #000000;
+
+  a {
+    text-decoration-color: #b0b0b0;
+    &:hover {
+      color: #000;
+    }
+  }
+}
