@@ -28,9 +28,12 @@ jobs:
           hugo-version: "0.146.0"
           extended: true
 
+      - name: Setup Dart Sass
+        run: npm install -g sass
+
       - name: Build
         env:
-          # READ_SECRET injected at build time — baked into static HTML.
+          # READ_SECRET injected at build time: baked into static HTML.
           # Accepted trade-off: visible in page source, read-only blast radius.
           # Set SAVES_READ_TOKEN in GitHub repo Settings > Secrets > Actions.
           HUGO_PARAMS_SAVESREADTOKEN: ${{ secrets.SAVES_READ_TOKEN }}
