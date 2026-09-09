@@ -1,12 +1,11 @@
 {{ define "main" }}
 <article class="post">
-  <header class="saves-header">
+  <header class="saves-header reveal" data-stagger="0">
     <h1>Saves</h1>
     <p>Links worth keeping.</p>
   </header>
 
   <div class="saves-toolbar" id="saves-toolbar">
-    <span class="saves-toolbar-label">Filter</span>
     <div class="saves-toolbar-row" role="toolbar" aria-label="Filter saves by type">
       <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
       <button class="filter-btn" data-filter="tweet" aria-pressed="false">Tweets</button>
@@ -14,11 +13,11 @@
       <button class="filter-btn" data-filter="video" aria-pressed="false">Videos</button>
       <button class="shuffle-btn" id="shuffle-btn" disabled aria-label="Shuffle order">Shuffle</button>
     </div>
-    <input class="search-input" id="search-input" type="text" placeholder="Search saves" aria-label="Search saves" disabled>
+    <input class="saves-search" id="search-input" type="text" placeholder="Search saves" aria-label="Search saves" disabled>
   </div>
 
   <div class="saves-count" id="saves-count" aria-live="polite">Loading…</div>
-  <div class="saves-grid" id="saves-grid" aria-live="polite">
+  <div class="saves-list" id="saves-grid" aria-live="polite">
     <div class="saves-loading">
       <div class="saves-spinner"></div>
       <span>Loading your saves…</span>
@@ -81,16 +80,14 @@
     const metaHost = hostname(url);
     return `
       <div class="save-card" data-type="${type}">
-        <div class="save-card-top">
-          <a class="save-title" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a>
-          <span class="type-badge type-${type}">${esc(type)}</span>
-        </div>
-        <div class="save-meta">
+        <a class="save-card__title" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a>
+        <span class="type-badge type-badge--${type}">${esc(type)}</span>
+        <div class="save-card__meta">
           <span class="save-meta__hostname" title="${esc(metaHost)}">${esc(metaHost)}</span>
           <span aria-hidden="true">&middot;</span>
           <span class="save-meta__date">${esc(formatDate(item.created_at))}</span>
         </div>
-        ${excerptStr ? `<div class="save-excerpt">${esc(excerptStr)}</div>` : ''}
+        ${excerptStr ? `<div class="save-card__excerpt">${esc(excerptStr)}</div>` : ''}
       </div>`;
   }
 

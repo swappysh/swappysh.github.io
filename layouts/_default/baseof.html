@@ -1,27 +1,54 @@
 <!DOCTYPE html>
 <html lang="{{ .Site.Language }}">
-    <head>
-        {{ partial "head.html" . }}
-    </head>
+<head>
+    {{ partial "head.html" . }}
+</head>
 
-    {{ block "body" . }}
-        <body>
-    {{ end }}
-        <a href="#main" class="skip-link screen-reader-text">Skip to main content</a>
-        <div class="container">
-            {{ partial "header.html" . }}
+<body class="mode-night">
 
-            <div class="content" id="main">
-                {{ block "main" . }}{{ end }}
-            </div>
+<a href="#main" class="skip-link screen-reader-text">Skip to main content</a>
 
-            {{ block "footer" . }}
-                {{ partial "footer.html" . }}
-            {{ end }}
-        </div>
+<video id="leaves-overlay" autoplay muted loop playsinline aria-hidden="true">
+  <source src="/video/leaves-wall.mp4" type="video/mp4">
+</video>
 
-        <a href="#" class="back-to-top" aria-label="Back to top" title="Back to top">↑</a>
+<audio id="forest-audio" muted preload="auto" loop style="display:none">
+  <source src="/audio/forest.webm" type="audio/webm">
+  <source src="/audio/forest.mp3" type="audio/mpeg">
+</audio>
 
-        {{ partial "javascript.html" . }}
-    </body>
+<div class="container">
+    {{ partial "header.html" . }}
+
+    <div class="site-grid">
+        <aside class="site-col-1">
+            {{ partial "col1.html" . }}
+        </aside>
+
+        <main class="site-col-2" id="main">
+            {{ block "main" . }}{{ end }}
+        </main>
+    </div>
+
+    {{ partial "footer.html" . }}
+</div>
+
+<a href="#" class="back-to-top" aria-label="Back to top">↑</a>
+
+<script src="/js/modes.js" defer></script>
+<script src="/js/reveals.js" defer></script>
+<script src="/js/leaves.js" defer></script>
+<script src="/js/audio.js" defer></script>
+<script src="/js/tegaki-init.js" defer></script>
+<script src="/js/site.js" defer></script>
+
+<script type="importmap">
+{
+  "imports": {
+    "tegaki": "https://esm.sh/tegaki@0.10.0"
+  }
+}
+</script>
+
+</body>
 </html>

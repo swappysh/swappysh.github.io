@@ -1,9 +1,13 @@
 <footer class="footer">
     <div class="footer__inner">
         <div class="footer__content">
-            {{- with .Site.Params.footerLeft }}<span>{{ . | safeHTML }}</span>{{ end }}
-            {{- with .Site.Params.footerRight }}<span>{{ . | safeHTML }}</span>{{ end }}
+            <span>made with curiosity.</span>
+            <span>
+                {{- with .Site.Params.social }}
+                    {{ partial "social-icons.html" . }}
+                {{- end }}
+            </span>
         </div>
+        <span>coded by me.</span>
     </div>
 </footer>
-<script src="/js/site.js" defer></script>
