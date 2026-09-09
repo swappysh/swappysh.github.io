@@ -13,7 +13,7 @@ theme        = "hello-friend-ng"
   dateformNumTime = "2006-01-02 15:04"
   lastModDisplay = "Updated:"
 
-  homeSubtitle = "Founding Engineer · AI Voice Agents"
+  homeSubtitle = "AI, minds, language, and connection"
 
   disableReadOtherPosts  = false
   enableSharingButtons   = false
@@ -21,7 +21,7 @@ theme        = "hello-friend-ng"
   EnableThemeToggle      = true
   themeColor             = "#0d0d0d"
 
-  description = "Swapnil Sharma: engineer, researcher, writer."
+  description = "Swapnil Sharma's experiments and writing on AI, minds, language, and connection."
   keywords    = "engineering, machine learning, blog"
   images      = ["/profile.png"]
 
@@ -43,7 +43,7 @@ theme        = "hello-friend-ng"
 [languages]
   [languages.en]
     title    = "Swapnil Sharma"
-    subtitle = "Founding Engineer · AI Voice Agents"
+    subtitle = "AI, minds, language, and connection"
     keywords = ""
     copyright = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
     readOtherPosts = "More posts"
@@ -88,4 +88,3 @@ theme        = "hello-friend-ng"
       identifier = "now"
       name       = "Now"
       url        = "/now/"
-
