@@ -354,6 +354,11 @@
     return { block: activeBlock, range: range.cloneRange() };
   }
 
+  document.addEventListener('selectionchange', function () {
+    var selection = captureLinkSelection();
+    if (selection) linkSelection = selection;
+  });
+
   function applyInternalLink(path) {
     if (!linkSelection || !linkSelection.block.isConnected) return;
     var block = linkSelection.block;
@@ -626,9 +631,13 @@
         label.textContent = path;
         openButton.append(kind, label);
         openButton.addEventListener('click', function () {
-          pagesDialog.close();
-          if (choosingLink) applyInternalLink(path);
-          else openPage(path);
+          if (choosingLink) {
+            applyInternalLink(path);
+            pagesDialog.close();
+          } else {
+            pagesDialog.close();
+            openPage(path);
+          }
         });
         copyButton.type = 'button';
         copyButton.className = 'editor-button editor-button--quiet editor-pages__copy';
@@ -773,13 +782,6 @@
     if (action === 'lock') lockEditor();
   });
 
-  bar.addEventListener('pointerdown', function (event) {
-    var button = event.target.closest('[data-editor-action="link"]');
-    if (!button) return;
-    linkSelection = captureLinkSelection();
-    if (linkSelection) event.preventDefault();
-  });
-
   document.getElementById('editor-page-save').addEventListener('click', savePageDialog);
   document.getElementById('editor-page-copy').addEventListener('click', function () {
     if (pageDialogFile) copyUrlForPath(pageDialogFile.path, document.getElementById('editor-page-status'));
@@ -807,6 +809,10 @@
     dialog.addEventListener('click', function (event) {
       if (event.target === dialog) dialog.close();
     });
+  });
+
+  pagesDialog.addEventListener('close', function () {
+    linkSelection = null;
   });
 
   window.addEventListener('beforeunload', function (event) {
