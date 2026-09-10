@@ -49,7 +49,6 @@
 
   async function request(path, options) {
     var init = options || {};
-    init.credentials = 'include';
     init.headers = Object.assign({ Accept: 'application/json' }, init.headers || {});
     if (sessionToken) init.headers.Authorization = 'Session ' + sessionToken;
     if (init.body && !init.headers['Content-Type']) init.headers['Content-Type'] = 'application/json';
