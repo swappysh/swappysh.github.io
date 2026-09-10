@@ -27,6 +27,10 @@ theme        = "hello-friend-ng"
 
   customCSS = ["/css/typography.css"]
 
+  # Owner-only live editor. The Worker URL is public; GitHub authentication
+  # and the server-side owner ID check protect every content operation.
+  editorApiURL = "https://site-editor.swappysh.workers.dev"
+
   footerLeft  = "Powered by <a href=\"https://gohugo.io\">Hugo</a>"
   footerRight = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
 

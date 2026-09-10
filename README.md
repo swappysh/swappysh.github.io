@@ -1,5 +1,12 @@
 # swappysh.github.io
 
+## Owner-only live editing
+
+Type `:edit` on any page, or press and hold the `$ bash ./swapnil.sh` logo on a touch device, to
+enter the hidden live editor. GitHub authenticates the owner before the site exposes editing controls.
+See [editor-worker/README.md](editor-worker/README.md) for the one-time GitHub App and Cloudflare
+setup.
+
 This repository contains the source code for my personal blog and website, hosted using GitHub Pages.
 
 ## Technology

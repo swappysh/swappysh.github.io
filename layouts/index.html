@@ -16,7 +16,7 @@
             <p class="home-subtitle">{{ .Site.Params.homeSubtitle }}</p>
         </div>
         {{- if .Content }}
-            <div class="home-bio prose reveal" data-stagger="2">{{ .Content }}</div>
+            <div class="home-bio prose reveal" data-stagger="2" data-editor-content>{{ .Content }}</div>
         {{- end }}
     </section>
 

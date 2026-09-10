@@ -18,6 +18,8 @@ excalidraw*.log
 node_modules/
 worker/.wrangler/
 worker/.dev.vars
+editor-worker/.dev.vars*
+editor-worker/.wrangler/
 .wrangler/
 
 .env

@@ -4,7 +4,13 @@
     {{ partial "head.html" . }}
 </head>
 
-<body class="mode-night">
+{{- $editorSource := "" -}}
+{{- with .File -}}
+  {{- $editorSource = printf "content/%s" .Path -}}
+{{- end -}}
+<body class="mode-night"
+      data-editor-api="{{ .Site.Params.editorApiURL }}"
+      {{ with $editorSource }}data-editor-source="{{ . }}"{{ end }}>
 
 <a href="#main" class="skip-link screen-reader-text">Skip to main content</a>
 
@@ -35,11 +41,14 @@
 
 <a href="#" class="back-to-top" aria-label="Back to top">↑</a>
 
+{{ partial "editor.html" . }}
+
 <script src="/js/modes.js" defer></script>
 <script src="/js/reveals.js" defer></script>
 <script src="/js/leaves.js" defer></script>
 <script src="/js/audio.js" defer></script>
 <script src="/js/site.js" defer></script>
+<script src="/js/editor.js" defer></script>
 
 </body>
 </html>

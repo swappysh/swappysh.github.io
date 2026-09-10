@@ -1,0 +1,28 @@
+name = "site-editor"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+
+[vars]
+SITE_ORIGINS = "https://swappysh.github.io"
+GITHUB_OWNER = "swappysh"
+GITHUB_REPO = "swappysh.github.io"
+GITHUB_BRANCH = "master"
+OWNER_GITHUB_ID = "7112252"
+GITHUB_REPOSITORY_ID = "55292565"
+
+[[kv_namespaces]]
+binding = "SESSIONS"
+id = "0c959aa720a640aa93e178ea7f6daa2e"
+preview_id = "c08047784d4e4d309feabec75e6e845c"
+
+[env.development.vars]
+SITE_ORIGINS = "http://localhost:1313"
+GITHUB_OWNER = "swappysh"
+GITHUB_REPO = "swappysh.github.io"
+GITHUB_BRANCH = "master"
+OWNER_GITHUB_ID = "7112252"
+GITHUB_REPOSITORY_ID = "55292565"
+
+[[env.development.kv_namespaces]]
+binding = "SESSIONS"
+id = "c08047784d4e4d309feabec75e6e845c"

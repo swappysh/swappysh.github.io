@@ -1,0 +1,85 @@
+<div class="editor-gateway" id="editor-gateway" hidden aria-live="polite">
+  <div class="editor-gateway__prompt">
+    <span class="editor-gateway__command">$ ssh owner@swapnil.sh</span>
+    <span class="editor-gateway__message" id="editor-gateway-message">checking key…</span>
+  </div>
+</div>
+
+<aside class="editor-bar" id="editor-bar" hidden aria-label="Live editor controls">
+  <span class="editor-bar__mode">-- INSERT --</span>
+  <span class="editor-bar__path" id="editor-path"></span>
+  <span class="editor-bar__status" id="editor-status" aria-live="polite">ready</span>
+  <div class="editor-bar__actions">
+    <button type="button" data-editor-action="save" class="editor-button editor-button--primary">Save</button>
+    <button type="button" data-editor-action="source" class="editor-button">Page</button>
+    <button type="button" data-editor-action="pages" class="editor-button">Pages</button>
+    <button type="button" data-editor-action="new" class="editor-button">+ New</button>
+    <button type="button" data-editor-action="exit" class="editor-button">Exit</button>
+    <button type="button" data-editor-action="lock" class="editor-button editor-button--quiet">Lock</button>
+  </div>
+</aside>
+
+<dialog class="editor-dialog" id="editor-page-dialog" aria-labelledby="editor-page-title">
+  <div class="editor-dialog__shell editor-dialog__shell--wide">
+    <header class="editor-dialog__header">
+      <div>
+        <span class="editor-dialog__eyebrow">PAGE</span>
+        <h2 id="editor-page-title">Edit page</h2>
+        <span class="editor-dialog__path" id="editor-page-path"></span>
+      </div>
+      <button type="button" class="editor-dialog__close" data-dialog-close="editor-page-dialog" aria-label="Close">×</button>
+    </header>
+    <div class="editor-page-form">
+      <div class="editor-page-form__meta" id="editor-page-meta">
+        <label>Title<input type="text" id="editor-field-title" autocomplete="off"></label>
+        <label>Description<textarea id="editor-field-description" rows="3"></textarea></label>
+        <label class="editor-check"><input type="checkbox" id="editor-field-draft"> Keep as draft</label>
+      </div>
+      <label class="editor-page-form__body">Content<textarea id="editor-field-body" spellcheck="true"></textarea></label>
+    </div>
+    <footer class="editor-dialog__footer">
+      <span id="editor-page-status" aria-live="polite"></span>
+      <button type="button" class="editor-button" data-dialog-close="editor-page-dialog">Cancel</button>
+      <button type="button" class="editor-button editor-button--primary" id="editor-page-save">Save page</button>
+    </footer>
+  </div>
+</dialog>
+
+<dialog class="editor-dialog" id="editor-pages-dialog" aria-labelledby="editor-pages-title">
+  <div class="editor-dialog__shell">
+    <header class="editor-dialog__header">
+      <div>
+        <span class="editor-dialog__eyebrow">CONTENT</span>
+        <h2 id="editor-pages-title">All pages</h2>
+      </div>
+      <button type="button" class="editor-dialog__close" data-dialog-close="editor-pages-dialog" aria-label="Close">×</button>
+    </header>
+    <div class="editor-pages" id="editor-pages-list"></div>
+  </div>
+</dialog>
+
+<dialog class="editor-dialog" id="editor-new-dialog" aria-labelledby="editor-new-title">
+  <div class="editor-dialog__shell editor-dialog__shell--wide">
+    <header class="editor-dialog__header">
+      <div>
+        <span class="editor-dialog__eyebrow">NEW</span>
+        <h2 id="editor-new-title">Create a page</h2>
+      </div>
+      <button type="button" class="editor-dialog__close" data-dialog-close="editor-new-dialog" aria-label="Close">×</button>
+    </header>
+    <div class="editor-new-form">
+      <label>Title<input type="text" id="editor-new-title-field" autocomplete="off"></label>
+      <label>URL slug<input type="text" id="editor-new-slug" inputmode="url" placeholder="my-new-page" autocomplete="off"></label>
+      <label>Kind<select id="editor-new-kind"><option value="page">Page</option><option value="post">Blog post</option></select></label>
+      <label>Description<textarea id="editor-new-description" rows="3"></textarea></label>
+      <label class="editor-check"><input type="checkbox" id="editor-new-menu"> Show in navigation</label>
+      <label class="editor-check"><input type="checkbox" id="editor-new-draft" checked> Keep as draft</label>
+      <label class="editor-new-form__body">Opening content<textarea id="editor-new-body" rows="9" spellcheck="true"></textarea></label>
+    </div>
+    <footer class="editor-dialog__footer">
+      <span id="editor-new-status" aria-live="polite"></span>
+      <button type="button" class="editor-button" data-dialog-close="editor-new-dialog">Cancel</button>
+      <button type="button" class="editor-button editor-button--primary" id="editor-new-create">Create</button>
+    </footer>
+  </div>
+</dialog>

@@ -16,7 +16,7 @@
   }
 
   document.addEventListener('keydown', function (e) {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
     const key = e.key.toLowerCase();
     if (KEY_TO_MODE[key]) {
       applyMode(KEY_TO_MODE[key]);
