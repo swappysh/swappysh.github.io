@@ -1,9 +1,10 @@
 +++
-title = "Susan Sontag's \"Against Interpretation\" (1964)"
+title = "Experiencing \"Against Interpretation\""
 date = 2026-09-10T19:49:20Z
 draft = false
 tags = []
 categories = []
+description = "My thoughts and feelings about Susan Sontag's \"Against Interpretation\""
 +++
 
 I was lucky to get to read "Against Interpretation" in the Native Reading Room on September 9, 2026. It was a very fun read overall. The author starts with the age-old philosophical discussion about art and its value: how Plato did not believe art to be anything particularly special, while his student Aristotle, whom I very often see in opposition to Plato’s values, believed that art has a deeply therapeutic effect. That really sets the tone for the essay.
