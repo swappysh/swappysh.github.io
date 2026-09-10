@@ -92,3 +92,8 @@ theme        = "hello-friend-ng"
       identifier = "now"
       name       = "Now"
       url        = "/now/"
+
+    [[menu.main]]
+      identifier = "posts"
+      name       = "Posts"
+      url        = "/posts/"

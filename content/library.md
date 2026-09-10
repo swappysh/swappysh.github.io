@@ -18,7 +18,7 @@ Simone Weil, Albert Camus, David Foster Wallace, Cixin Liu, Scott Alexander, Hen
 - “This Is Water” by David Foster Wallace
 - “Attention and Will” by Simone Weil
 - “The Shortness of Life” by Seneca
-- Susan Sontag's "Against Interpretation" (1964)
+- Susan Sontag's "Against Interpretation" (1964) · [💭 my thoughts](/posts/susan-sontag-s-against-interpretation-1964/)
 
 **Want to read:**
 
