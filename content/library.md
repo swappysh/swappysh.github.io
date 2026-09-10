@@ -12,13 +12,16 @@ Simone Weil, Albert Camus, David Foster Wallace, Cixin Liu, Scott Alexander, Hen
 ## Essays
 
 **Read:**
-- ["When Facing a Complicated Problem, Don't Try to Solve It, Try to Understand It"](https://www.henrikkarlsson.xyz/p/problem-solving) by Henrik & Johanna Karlsson
-- ["Rest in Motion"](https://mindingourway.com/rest-in-motion/) by Nate Soares
-- "This Is Water" by David Foster Wallace
-- "Attention and Will" by Simone Weil
-- "The Shortness of Life" by Seneca
+
+- [“When Facing a Complicated Problem, Don’t Try to Solve It, Try to Understand It”](https://www.henrikkarlsson.xyz/p/problem-solving) by Henrik & Johanna Karlsson
+- [“Rest in Motion”](https://mindingourway.com/rest-in-motion/) by Nate Soares
+- “This Is Water” by David Foster Wallace
+- “Attention and Will” by Simone Weil
+- “The Shortness of Life” by Seneca
+- Susan Sontag's "Against Interpretation" (1964)
 
 **Want to read:**
+
 - "Meditations on Moloch" by Scott Alexander
 - "Trapped Priors As A Basic Problem Of Rationality" by Scott Alexander
 - "The Categories Were Made For Man, Not Man For The Categories" by Scott Alexander
