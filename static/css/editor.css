@@ -371,10 +371,19 @@ body.editor-active [contenteditable="true"]:focus {
   display: flex;
   width: 100%;
   align-items: center;
+  gap: 0.5rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.editor-pages__open {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
   gap: 1rem;
   padding: 0.8rem 0.75rem;
   border: 0;
-  border-bottom: 1px solid var(--line);
   background: transparent;
   color: var(--text);
   cursor: pointer;
@@ -382,11 +391,16 @@ body.editor-active [contenteditable="true"]:focus {
   font-family: var(--font-mono);
 }
 
-.editor-pages__item:hover,
-.editor-pages__item:focus-visible {
+.editor-pages__open:hover,
+.editor-pages__open:focus-visible {
   background: color-mix(in srgb, var(--accent) 6%, transparent);
   color: var(--hi);
   outline: none;
+}
+
+.editor-pages__copy {
+  flex: none;
+  margin-right: 0.5rem;
 }
 
 .editor-pages__kind {

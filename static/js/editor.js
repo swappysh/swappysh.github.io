@@ -23,6 +23,7 @@
   var editorActive = false;
   var pageDialogFile = null;
   var liveEditingPaused = false;
+  var linkSelection = null;
   var sessionToken = window.sessionStorage.getItem('site-editor-session') || '';
 
   var fragment = new URLSearchParams(window.location.hash.replace(/^#/, ''));
@@ -45,6 +46,51 @@
   function setDirty(next) {
     dirty = next;
     setStatus(next ? 'unsaved changes' : 'saved', next ? 'dirty' : '');
+  }
+
+  function publicPath(path) {
+    var name = path.replace(/^content\//, '').replace(/\.md$/, '');
+    if (name === '_index') return '/';
+    name = name.replace(/\/(?:_?index)$/, '');
+    return '/' + name.replace(/^\/+|\/+$/g, '') + '/';
+  }
+
+  function publicUrl(path) {
+    return new URL(publicPath(path), window.location.origin).toString();
+  }
+
+  async function copyText(value) {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(value);
+      return;
+    }
+    var field = document.createElement('textarea');
+    field.value = value;
+    field.setAttribute('readonly', '');
+    field.style.position = 'fixed';
+    field.style.opacity = '0';
+    document.body.appendChild(field);
+    field.select();
+    var copied = document.execCommand('copy');
+    field.remove();
+    if (!copied) throw new Error('Could not copy the URL.');
+  }
+
+  async function copyUrl(url, targetStatus) {
+    try {
+      await copyText(url);
+      if (targetStatus) targetStatus.textContent = 'URL copied';
+      else setStatus('URL copied');
+      return true;
+    } catch (error) {
+      if (targetStatus) targetStatus.textContent = error.message;
+      else setStatus(error.message, 'error');
+      return false;
+    }
+  }
+
+  function copyUrlForPath(path, targetStatus) {
+    return copyUrl(publicUrl(path), targetStatus);
   }
 
   async function request(path, options) {
@@ -300,6 +346,41 @@
     });
   }
 
+  function captureLinkSelection() {
+    var selection = window.getSelection();
+    if (!activeBlock || !selection || selection.rangeCount === 0 || selection.isCollapsed) return null;
+    var range = selection.getRangeAt(0);
+    if (!activeBlock.contains(range.commonAncestorContainer)) return null;
+    return { block: activeBlock, range: range.cloneRange() };
+  }
+
+  function applyInternalLink(path) {
+    if (!linkSelection || !linkSelection.block.isConnected) return;
+    var block = linkSelection.block;
+    var range = linkSelection.range;
+    var selection = window.getSelection();
+    var href = publicPath(path);
+    block.contentEditable = 'true';
+    block.focus({ preventScroll: true });
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    if (!document.execCommand('createLink', false, href)) {
+      var anchor = document.createElement('a');
+      anchor.setAttribute('href', href);
+      anchor.appendChild(range.extractContents());
+      range.insertNode(anchor);
+    }
+
+    block.contentEditable = 'false';
+    block.classList.remove('editor-block--active');
+    liveBlocks[Number(block.dataset.editorBlock)] = elementToMarkdown(block);
+    activeBlock = null;
+    linkSelection = null;
+    setDirty(true);
+    setStatus('linked to ' + href, 'dirty');
+  }
+
   function placeCaret(block, x, y) {
     var selection = window.getSelection();
     if (!selection) return;
@@ -521,29 +602,46 @@
     }
   }
 
-  async function openPages() {
+  async function openPages(mode) {
     var list = document.getElementById('editor-pages-list');
+    var choosingLink = mode === 'link';
+    document.getElementById('editor-pages-title').textContent = choosingLink ? 'Choose link target' : 'All pages';
     list.textContent = 'loading…';
     pagesDialog.showModal();
     try {
       var result = await request('/api/files');
       list.replaceChildren();
       result.files.forEach(function (path) {
-        var button = document.createElement('button');
+        var item = document.createElement('div');
+        var openButton = document.createElement('button');
         var kind = document.createElement('span');
         var label = document.createElement('span');
-        button.type = 'button';
-        button.className = 'editor-pages__item';
+        var copyButton = document.createElement('button');
+        item.className = 'editor-pages__item';
+        openButton.type = 'button';
+        openButton.className = 'editor-pages__open';
         kind.className = 'editor-pages__kind';
         kind.textContent = path.startsWith('content/posts/') ? 'post' : 'page';
         label.className = 'editor-pages__path';
         label.textContent = path;
-        button.append(kind, label);
-        button.addEventListener('click', function () {
+        openButton.append(kind, label);
+        openButton.addEventListener('click', function () {
           pagesDialog.close();
-          openPage(path);
+          if (choosingLink) applyInternalLink(path);
+          else openPage(path);
         });
-        list.appendChild(button);
+        copyButton.type = 'button';
+        copyButton.className = 'editor-button editor-button--quiet editor-pages__copy';
+        copyButton.textContent = 'Copy URL';
+        copyButton.title = publicUrl(path);
+        copyButton.addEventListener('click', async function () {
+          if (await copyUrlForPath(path)) {
+            copyButton.textContent = 'Copied';
+            window.setTimeout(function () { copyButton.textContent = 'Copy URL'; }, 1200);
+          }
+        });
+        item.append(openButton, copyButton);
+        list.appendChild(item);
       });
     } catch (error) {
       list.textContent = error.message;
@@ -653,6 +751,17 @@
     if (!button) return;
     var action = button.dataset.editorAction;
     if (action === 'save') saveLivePage();
+    if (action === 'link') {
+      if (!linkSelection) {
+        setStatus('select some text to link first', 'error');
+        return;
+      }
+      openPages('link');
+    }
+    if (action === 'copy-link') {
+      if (livePath) copyUrlForPath(livePath);
+      else copyUrl(window.location.origin + window.location.pathname);
+    }
     if (action === 'source' && livePath) openPage(livePath);
     if (action === 'pages') openPages();
     if (action === 'new') {
@@ -664,7 +773,17 @@
     if (action === 'lock') lockEditor();
   });
 
+  bar.addEventListener('pointerdown', function (event) {
+    var button = event.target.closest('[data-editor-action="link"]');
+    if (!button) return;
+    linkSelection = captureLinkSelection();
+    if (linkSelection) event.preventDefault();
+  });
+
   document.getElementById('editor-page-save').addEventListener('click', savePageDialog);
+  document.getElementById('editor-page-copy').addEventListener('click', function () {
+    if (pageDialogFile) copyUrlForPath(pageDialogFile.path, document.getElementById('editor-page-status'));
+  });
   document.getElementById('editor-new-create').addEventListener('click', createPage);
   document.getElementById('editor-new-title-field').addEventListener('input', function (event) {
     var slug = document.getElementById('editor-new-slug');

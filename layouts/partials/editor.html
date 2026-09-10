@@ -11,6 +11,8 @@
   <span class="editor-bar__status" id="editor-status" aria-live="polite">ready</span>
   <div class="editor-bar__actions">
     <button type="button" data-editor-action="save" class="editor-button editor-button--primary">Save</button>
+    <button type="button" data-editor-action="link" class="editor-button">Link</button>
+    <button type="button" data-editor-action="copy-link" class="editor-button">Copy URL</button>
     <button type="button" data-editor-action="source" class="editor-button">Page</button>
     <button type="button" data-editor-action="pages" class="editor-button">Pages</button>
     <button type="button" data-editor-action="new" class="editor-button">+ New</button>
@@ -39,6 +41,7 @@
     </div>
     <footer class="editor-dialog__footer">
       <span id="editor-page-status" aria-live="polite"></span>
+      <button type="button" class="editor-button" id="editor-page-copy">Copy URL</button>
       <button type="button" class="editor-button" data-dialog-close="editor-page-dialog">Cancel</button>
       <button type="button" class="editor-button editor-button--primary" id="editor-page-save">Save page</button>
     </footer>
