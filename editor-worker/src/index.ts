@@ -255,6 +255,11 @@ async function exchangeToken(
   });
   const token = await response.json() as GitHubTokenResponse;
   if (!response.ok || !token.access_token) {
+    console.error(JSON.stringify({
+      event: 'github_token_exchange_failed',
+      status: response.status,
+      code: token.error ?? 'missing_access_token',
+    }));
     throw new HttpError(401, token.error_description ?? token.error ?? 'GitHub sign-in failed.');
   }
   return token;
@@ -370,7 +375,13 @@ async function finishAuthentication(request: Request, env: Env): Promise<Respons
     await writeSession(env, id, sessionFromToken(token, user));
     returnTo.searchParams.set('edit', '1');
     returnTo.hash = new URLSearchParams({ editor_session: id }).toString();
-  } catch {
+  } catch (error) {
+    const reason = error instanceof HttpError
+      ? `http_${error.status}`
+      : error instanceof Error
+        ? error.name
+        : 'unknown';
+    console.error(JSON.stringify({ event: 'oauth_callback_failed', reason }));
     returnTo.searchParams.set('edit_error', 'access_denied');
   }
 
