@@ -14,4 +14,5 @@ description = "Frameworks I keep coming back to, and what I'm currently curious 
 ## Current threads
 
 - Fabric and texture: jacquard against printed knit, merino against cotton, a loud patchwork piece against a plain monochrome one, running the experiment instead of just having an opinion about it.
-- AI art: what it's actually good for versus where it's just novelty.
+- AI art: what it’s actually good for versus where it’s just novelty.
+- I have been recently thinking about going to forest raves - they have been some of the best and fun places. There is magic alive. Any recs would love to hear it. Mail me at mradul.master+reachout@gmail.com
