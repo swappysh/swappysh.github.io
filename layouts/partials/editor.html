@@ -33,7 +33,16 @@
     </header>
     <div class="editor-page-form">
       <div class="editor-page-form__meta" id="editor-page-meta">
-        <label>Title<input type="text" id="editor-field-title" autocomplete="off"></label>
+        <label>
+          <span id="editor-title-label">Page name</span>
+          <input type="text" id="editor-field-title" autocomplete="off" aria-labelledby="editor-title-label" aria-describedby="editor-title-help">
+          <span id="editor-title-help">Shown as the page heading and browser title. Your URL stays the same.</span>
+        </label>
+        <label>
+          <span id="editor-navigation-label">Navigation name</span>
+          <input type="text" id="editor-field-navigation" autocomplete="off" aria-labelledby="editor-navigation-label" aria-describedby="editor-navigation-help">
+          <span id="editor-navigation-help">Leave blank to use the default name. Applies when this page is in navigation.</span>
+        </label>
         <label>Description<textarea id="editor-field-description" rows="3"></textarea></label>
         <label class="editor-check"><input type="checkbox" id="editor-field-draft"> Keep as draft</label>
       </div>

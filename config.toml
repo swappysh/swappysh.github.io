@@ -86,14 +86,14 @@ theme        = "hello-friend-ng"
     [[menu.main]]
       identifier = "library"
       name       = "Library"
-      url        = "/library/"
+      pageRef    = "/library"
 
     [[menu.main]]
       identifier = "now"
       name       = "Now"
-      url        = "/now/"
+      pageRef    = "/now"
 
     [[menu.main]]
       identifier = "posts"
       name       = "Posts"
-      url        = "/posts/"
+      pageRef    = "/posts"

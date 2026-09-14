@@ -495,10 +495,12 @@
   }
 
   function frontMatterValue(doc, key) {
+    var frontMatter = doc.frontMatter;
+    if (doc.format === 'toml') frontMatter = frontMatter.split(/^\s*\[/m)[0];
     var expression = doc.format === 'toml'
       ? new RegExp('^' + key + '\\s*=\\s*(.+)$', 'm')
       : new RegExp('^' + key + '\\s*:\\s*(.+)$', 'm');
-    var match = doc.frontMatter.match(expression);
+    var match = frontMatter.match(expression);
     if (!match) return '';
     var value = match[1].trim();
     if ((value[0] === '"' && value[value.length - 1] === '"') ||
@@ -517,12 +519,18 @@
   }
 
   function setFrontMatterLine(frontMatter, format, key, value) {
+    var tableIndex = format === 'toml' ? frontMatter.search(/^\s*\[/m) : -1;
+    var tables = tableIndex === -1 ? '' : frontMatter.slice(tableIndex);
+    if (tableIndex !== -1) frontMatter = frontMatter.slice(0, tableIndex);
     var separator = format === 'toml' ? '\\s*=' : '\\s*:';
     var expression = new RegExp('^' + key + separator + '.*(?:\\n|$)', 'm');
     var line = value === null ? '' : key + (format === 'toml' ? ' = ' : ': ') + value + '\n';
-    if (expression.test(frontMatter)) return frontMatter.replace(expression, line).replace(/\n{3,}/g, '\n\n');
-    if (value === null) return frontMatter;
-    return frontMatter.replace(/\s+$/, '') + '\n' + line;
+    if (expression.test(frontMatter)) {
+      frontMatter = frontMatter.replace(expression, function () { return line; }).replace(/\n{3,}/g, '\n\n');
+    } else if (value !== null) {
+      frontMatter = frontMatter.replace(/\s+$/, '') + '\n' + line;
+    }
+    return frontMatter + tables;
   }
 
   function quoted(value, format) {
@@ -536,6 +544,7 @@
     if (doc.format === 'none') return assembleDocument(doc, bodyValue);
 
     var title = document.getElementById('editor-field-title').value.trim();
+    var navigationTitle = document.getElementById('editor-field-navigation').value.trim();
     var description = document.getElementById('editor-field-description').value.trim();
     var draft = document.getElementById('editor-field-draft').checked;
     var frontMatter = doc.frontMatter;
@@ -543,6 +552,7 @@
     if (!title) throw new Error('A page title is required.');
 
     frontMatter = setFrontMatterLine(frontMatter, doc.format, 'title', quoted(title, doc.format));
+    frontMatter = setFrontMatterLine(frontMatter, doc.format, 'navigationTitle', navigationTitle ? quoted(navigationTitle, doc.format) : null);
     frontMatter = setFrontMatterLine(frontMatter, doc.format, 'description', description ? quoted(description, doc.format) : null);
     frontMatter = setFrontMatterLine(frontMatter, doc.format, 'draft', String(draft));
     return assembleDocument({ format: doc.format, frontMatter: frontMatter }, bodyValue);
@@ -564,6 +574,12 @@
       pageDialogFile = file;
       document.getElementById('editor-page-path').textContent = path;
       document.getElementById('editor-field-title').value = frontMatterValue(file.document, 'title');
+      var navigationField = document.getElementById('editor-field-navigation');
+      navigationField.value = frontMatterValue(file.document, 'navigationTitle');
+      navigationField.placeholder = '';
+      document.querySelectorAll('[data-editor-nav-source]').forEach(function (link) {
+        if (link.dataset.editorNavSource === path) navigationField.placeholder = link.dataset.editorNavDefault;
+      });
       document.getElementById('editor-field-description').value = frontMatterValue(file.document, 'description');
       document.getElementById('editor-field-draft').checked = frontMatterBoolean(file.document, 'draft');
       document.getElementById('editor-field-body').value = file.document.body.replace(/\s+$/, '');
@@ -587,7 +603,13 @@
       pageDialogFile.sha = result.sha;
       pageDialogFile.content = content;
       pageDialogFile.document = parseDocument(content);
-      pageStatus.textContent = 'saved';
+      pageStatus.textContent = 'saved · deploy started';
+      var navigationTitle = frontMatterValue(pageDialogFile.document, 'navigationTitle');
+      document.querySelectorAll('[data-editor-nav-source]').forEach(function (link) {
+        if (link.dataset.editorNavSource === pageDialogFile.path) {
+          link.textContent = navigationTitle || link.dataset.editorNavDefault;
+        }
+      });
 
       if (pageDialogFile.path === livePath) {
         liveFile = pageDialogFile;

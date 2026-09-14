@@ -78,7 +78,8 @@ On any site page, type `:edit`. On a touch device, press and hold the `$ bash ./
 After GitHub verifies the owner account, click a paragraph, heading, or list to edit it in place.
 
 - **Save** commits the inline changes to `master`.
-- **Page** edits the current page's title, description, draft state, and Markdown.
+- **Page** edits the current page's name, navigation name, description, draft state, and Markdown.
+  Renaming a page keeps its URL unchanged. Leave the navigation name blank to use its default label.
 - **Pages** opens every Markdown file, including drafts.
 - **+ New** creates a page or blog post.
 - **Exit** closes insert mode while leaving the tab authenticated.

@@ -1,9 +1,14 @@
 <nav class="menu" id="main-menu">
     <ul class="menu__inner">
-        {{- $currentPage := . -}}
         {{ range sort .Site.Menus.main ".Identifier" -}}
             {{- if ne .Identifier "resume" -}}
-            <li><a href="{{ .URL | relLangURL }}">{{ .Name }}</a></li>
+            {{- $name := .Name -}}
+            {{- $source := "" -}}
+            {{- with .Page -}}
+                {{- with .Params.navigationTitle }}{{ $name = . }}{{ end -}}
+                {{- with .File }}{{ $source = printf "content/%s" .Path }}{{ end -}}
+            {{- end -}}
+            <li><a href="{{ .URL | relLangURL }}" {{ with $source }}data-editor-nav-source="{{ . }}"{{ end }} data-editor-nav-default="{{ .Name }}">{{ $name }}</a></li>
             {{- end -}}
         {{- end }}
 
