@@ -22,7 +22,7 @@
     --panel-hair: rgba(243, 236, 214, 0.18);
   }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
+    :root {
       --bg: #12180f;
       --card: #1a231a;
       --panel: #0f2419;
@@ -35,19 +35,6 @@
       --hair: #2c352a;
       --shadow: rgba(0, 0, 0, 0.4);
     }
-  }
-  :root[data-theme="dark"] {
-    --bg: #12180f;
-    --card: #1a231a;
-    --panel: #0f2419;
-    --panel-ink: #f3ecd6;
-    --brass: #d0a13f;
-    --brass-strong: #e6b95a;
-    --ink: #ece9df;
-    --muted: #9aa595;
-    --track: #2b3428;
-    --hair: #2c352a;
-    --shadow: rgba(0, 0, 0, 0.4);
   }
 
   * { box-sizing: border-box; }
@@ -572,11 +559,11 @@
   };
 
   var AXIS_MAP = {
-    ei: { slider: "e", low: "I", high: "E", lowVal: 20, highVal: 80 },
-    sn: { slider: "o", low: "S", high: "N", lowVal: 20, highVal: 80 },
-    tf: { slider: "a", low: "T", high: "F", lowVal: 20, highVal: 80 },
-    jp: { slider: "c", low: "P", high: "J", lowVal: 20, highVal: 80 },
-    at: { slider: "n", low: "A", high: "T", lowVal: 20, highVal: 80 }
+    ei: { slider: "e", high: "E", lowVal: 20, highVal: 80 },
+    sn: { slider: "o", high: "N", lowVal: 20, highVal: 80 },
+    tf: { slider: "a", high: "F", lowVal: 20, highVal: 80 },
+    jp: { slider: "c", high: "J", lowVal: 20, highVal: 80 },
+    at: { slider: "n", high: "T", lowVal: 20, highVal: 80 }
   };
   var AXIS_WORD = {
     ei: { E: "Extraverted", I: "Introverted" },
