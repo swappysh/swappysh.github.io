@@ -87,10 +87,6 @@
     gap: 20px;
     align-items: start;
   }
-  @media (max-width: 760px) {
-    .layout { grid-template-columns: 1fr; }
-  }
-
   .console {
     background: var(--card);
     border-radius: 14px;
@@ -203,6 +199,14 @@
     position: sticky;
     top: 16px;
     box-shadow: 0 10px 30px -16px var(--shadow);
+  }
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; }
+    .console { order: 1; }
+    .readout {
+      position: static;
+      order: 2;
+    }
   }
   .readout-eyebrow {
     font-family: 'IBM Plex Mono', monospace;
