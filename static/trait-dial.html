@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<title>Trait Dial</title>
+<meta name="description" content="Turn Big Five sliders, MBTI switches, or an Enneagram pick, and watch one shared profile update across all three. Folk-psychology mapping, not a validated instrument.">
+<style>
+  :root {
+    --bg: #eef1ea;
+    --card: #fbfbf6;
+    --panel: #1f3a2c;
+    --panel-ink: #f3ecd6;
+    --brass: #a9762c;
+    --brass-strong: #8a5e1f;
+    --ink: #1b241d;
+    --muted: #5c6b5e;
+    --track: #dfe3d6;
+    --hair: #d3d8c8;
+    --shadow: rgba(27, 36, 29, 0.14);
+    --panel-hair: rgba(243, 236, 214, 0.18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12180f;
+      --card: #1a231a;
+      --panel: #0f2419;
+      --panel-ink: #f3ecd6;
+      --brass: #d0a13f;
+      --brass-strong: #e6b95a;
+      --ink: #ece9df;
+      --muted: #9aa595;
+      --track: #2b3428;
+      --hair: #2c352a;
+      --shadow: rgba(0, 0, 0, 0.4);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12180f;
+    --card: #1a231a;
+    --panel: #0f2419;
+    --panel-ink: #f3ecd6;
+    --brass: #d0a13f;
+    --brass-strong: #e6b95a;
+    --ink: #ece9df;
+    --muted: #9aa595;
+    --track: #2b3428;
+    --hair: #2c352a;
+    --shadow: rgba(0, 0, 0, 0.4);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Work Sans', system-ui, sans-serif;
+    padding-inline: 20px;
+    padding-block: 28px;
+    max-width: 980px;
+    margin: 0 auto;
+  }
+  h1, h2, .code {
+    font-family: 'Arvo', Georgia, serif;
+  }
+  .mono, .val, .suffix-badge {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  header h1 {
+    font-size: clamp(1.6rem, 4vw, 2.1rem);
+    margin: 0;
+    text-wrap: balance;
+    letter-spacing: 0.01em;
+  }
+  header p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+    max-width: 60ch;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 20px;
+    align-items: start;
+  }
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .console {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 1px 0 var(--hair) inset, 0 8px 24px -18px var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .console-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    border-bottom: 1px solid var(--hair);
+    padding-bottom: 10px;
+  }
+  .console-head h2 {
+    font-size: 1rem;
+    margin: 0;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .console-actions { display: flex; gap: 8px; }
+  .btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.03em;
+    background: transparent;
+    border: 1px solid var(--brass);
+    color: var(--brass-strong);
+    border-radius: 999px;
+    padding: 5px 12px;
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--brass); color: var(--panel-ink); }
+  .btn:focus-visible, input:focus-visible { outline: 2px solid var(--brass-strong); outline-offset: 2px; }
+
+  .knob-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .knob-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.92rem;
+  }
+  .knob-label .name { font-weight: 600; }
+  .knob-label .abbr {
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-left: 6px;
+  }
+  .knob-label .val {
+    font-size: 0.95rem;
+    color: var(--brass-strong);
+  }
+  .knob-drives {
+    font-size: 0.76rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(to right, var(--brass) var(--pct, 50%), var(--track) var(--pct, 50%));
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--brass);
+    border: 3px solid var(--card);
+    box-shadow: 0 1px 4px var(--shadow);
+    margin-top: -1px;
+  }
+  input[type="range"]::-moz-range-track {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--track);
+  }
+  input[type="range"]::-moz-range-progress {
+    height: 6px;
+    border-radius: 999px;
+    background: var(--brass);
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--brass);
+    border: 3px solid var(--card);
+    box-shadow: 0 1px 4px var(--shadow);
+  }
+
+  .readout {
+    background: var(--panel);
+    color: var(--panel-ink);
+    border-radius: 14px;
+    padding: 24px 22px;
+    position: sticky;
+    top: 16px;
+    box-shadow: 0 10px 30px -16px var(--shadow);
+  }
+  .readout-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.65;
+    margin: 0 0 10px;
+  }
+  .code-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .code {
+    font-size: clamp(2.4rem, 8vw, 3.2rem);
+    letter-spacing: 0.02em;
+    color: var(--brass-strong);
+    margin: 0;
+    line-height: 1;
+  }
+  .suffix-badge {
+    font-size: 1.1rem;
+    border: 1px solid var(--brass-strong);
+    color: var(--brass-strong);
+    border-radius: 8px;
+    padding: 2px 8px;
+  }
+  .type-title {
+    font-size: 1.3rem;
+    margin: 12px 0 4px;
+    text-wrap: balance;
+  }
+  .type-blurb {
+    margin: 0 0 18px;
+    opacity: 0.88;
+    line-height: 1.5;
+  }
+  .breakdown {
+    list-style: none;
+    margin: 0;
+    padding: 14px 0 0;
+    border-top: 1px solid var(--panel-hair);
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .breakdown li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.82rem;
+  }
+  .breakdown .src { opacity: 0.75; }
+  .breakdown .dest {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--brass-strong);
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--panel-hair);
+    margin: 20px 0;
+  }
+  .ennea-sig {
+    opacity: 0.72;
+    font-size: 0.78rem;
+    margin: -10px 0 16px;
+  }
+  .ennea-rank {
+    list-style: none;
+    margin: 0;
+    padding: 14px 0 0;
+    border-top: 1px solid var(--panel-hair);
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+  .ennea-row-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    opacity: 0.9;
+  }
+  .ennea-row-top .pct {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--brass-strong);
+  }
+  .ennea-bar-track {
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(243, 236, 214, 0.15);
+    overflow: hidden;
+  }
+  .ennea-bar-fill {
+    height: 100%;
+    background: var(--brass-strong);
+    border-radius: 999px;
+  }
+
+  .console-sub {
+    padding-top: 4px;
+  }
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .toggle-name {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .seg {
+    display: flex;
+    border: 1px solid var(--hair);
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  .seg-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    padding: 6px 14px;
+    background: var(--card);
+    color: var(--muted);
+    border: none;
+    cursor: pointer;
+  }
+  .seg-btn + .seg-btn { border-left: 1px solid var(--hair); }
+  .seg-btn.active { background: var(--brass); color: #fff; }
+
+  .ennea-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .ennea-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 10px 4px;
+    border-radius: 10px;
+    border: 1px solid var(--hair);
+    background: var(--card);
+    cursor: pointer;
+  }
+  .ennea-btn .n {
+    font-family: 'Arvo', serif;
+    font-size: 1.2rem;
+    color: var(--ink);
+  }
+  .ennea-btn .label {
+    font-size: 0.66rem;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.15;
+  }
+  .ennea-btn.active {
+    background: var(--brass);
+    border-color: var(--brass);
+  }
+  .ennea-btn.active .n, .ennea-btn.active .label { color: #fff; }
+
+  footer {
+    margin-top: 22px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Trait Dial</h1>
+  <p>One underlying Big Five profile, three stereotype readouts. Turn the OCEAN sliders, flip an MBTI switch, or pick an Enneagram archetype: whichever knob you touch rewrites the profile, and the other two panels update to match. Folk-psychology mapping, not a validated instrument.</p>
+</header>
+
+<main class="layout">
+  <section class="readout" aria-live="polite">
+    <p class="readout-eyebrow">Resulting MBTI type</p>
+    <div class="code-row">
+      <p class="code" id="code">ENFJ</p>
+      <span class="suffix-badge mono" id="suffix">-A</span>
+    </div>
+    <h2 class="type-title" id="title">The Hype Man</h2>
+    <p class="type-blurb" id="blurb">Remembers your birthday, runs the group chat, cries at your graduation, and weirdly at peace about it.</p>
+    <ul class="breakdown" id="breakdown"></ul>
+
+    <hr class="divider">
+
+    <p class="readout-eyebrow">Closest Enneagram archetype</p>
+    <div class="code-row">
+      <p class="code" id="enneaNum">9</p>
+      <span class="suffix-badge mono" id="enneaMatch">85% match</span>
+    </div>
+    <h2 class="type-title" id="enneaTitle">The Human Beanbag</h2>
+    <p class="type-blurb" id="enneaBlurb">Agrees to whatever restaurant, secretly has opinions they'll never mention.</p>
+    <p class="ennea-sig" id="enneaSig">Signature: high Agreeableness, low Neuroticism</p>
+    <ol class="ennea-rank" id="enneaRank"></ol>
+  </section>
+
+  <section class="console">
+    <div class="console-head">
+      <h2>Instrument panel · Big Five</h2>
+      <div class="console-actions">
+        <button class="btn" id="reset">Reset</button>
+        <button class="btn" id="shuffle">Shuffle</button>
+      </div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob-label">
+        <span><span class="name">Openness</span><span class="abbr">O</span></span>
+        <span class="val mono" id="oVal">60</span>
+      </div>
+      <input type="range" id="o" min="0" max="100" value="60" aria-label="Openness">
+      <div class="knob-drives" id="oDrive">drives N / S</div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob-label">
+        <span><span class="name">Conscientiousness</span><span class="abbr">C</span></span>
+        <span class="val mono" id="cVal">55</span>
+      </div>
+      <input type="range" id="c" min="0" max="100" value="55" aria-label="Conscientiousness">
+      <div class="knob-drives" id="cDrive">drives J / P</div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob-label">
+        <span><span class="name">Extraversion</span><span class="abbr">E</span></span>
+        <span class="val mono" id="eVal">65</span>
+      </div>
+      <input type="range" id="e" min="0" max="100" value="65" aria-label="Extraversion">
+      <div class="knob-drives" id="eDrive">drives E / I</div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob-label">
+        <span><span class="name">Agreeableness</span><span class="abbr">A</span></span>
+        <span class="val mono" id="aVal">60</span>
+      </div>
+      <input type="range" id="a" min="0" max="100" value="60" aria-label="Agreeableness">
+      <div class="knob-drives" id="aDrive">drives F / T</div>
+    </div>
+
+    <div class="knob-row">
+      <div class="knob-label">
+        <span><span class="name">Neuroticism</span><span class="abbr">N</span></span>
+        <span class="val mono" id="nVal">45</span>
+      </div>
+      <input type="range" id="n" min="0" max="100" value="45" aria-label="Neuroticism">
+      <div class="knob-drives" id="nDrive">drives -A / -T suffix</div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="console-head">
+      <h2>Type switches · MBTI</h2>
+    </div>
+    <div class="console-sub" style="display:flex;flex-direction:column;gap:12px;">
+      <div class="toggle-row">
+        <span class="toggle-name">Extraversion axis</span>
+        <div class="seg">
+          <button type="button" class="seg-btn" data-axis="ei" data-side="I">I</button>
+          <button type="button" class="seg-btn" data-axis="ei" data-side="E">E</button>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-name">Intuition axis</span>
+        <div class="seg">
+          <button type="button" class="seg-btn" data-axis="sn" data-side="S">S</button>
+          <button type="button" class="seg-btn" data-axis="sn" data-side="N">N</button>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-name">Feeling axis</span>
+        <div class="seg">
+          <button type="button" class="seg-btn" data-axis="tf" data-side="T">T</button>
+          <button type="button" class="seg-btn" data-axis="tf" data-side="F">F</button>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-name">Judging axis</span>
+        <div class="seg">
+          <button type="button" class="seg-btn" data-axis="jp" data-side="P">P</button>
+          <button type="button" class="seg-btn" data-axis="jp" data-side="J">J</button>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <span class="toggle-name">Identity axis</span>
+        <div class="seg">
+          <button type="button" class="seg-btn" data-axis="at" data-side="A">-A</button>
+          <button type="button" class="seg-btn" data-axis="at" data-side="T">-T</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="console-head">
+      <h2>Archetype dial · Enneagram</h2>
+    </div>
+    <div class="ennea-grid" id="enneaGrid"></div>
+  </section>
+</main>
+
+<footer>Five sliders, sixteen MBTI stereotypes, nine Enneagram archetypes, zero clinical validity.</footer>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<script>
+(function () {
+  var TYPES = {
+    INTJ: { title: "The Mastermind", blurb: "Has a twelve-step plan for world domination and mild disdain for small talk" },
+    INTP: { title: "The Mad Scientist", blurb: "Reads philosophy papers for fun, forgets lunch exists" },
+    ENTJ: { title: "The CEO", blurb: "Has a five-year plan for you too, whether you asked or not" },
+    ENTP: { title: "The Devil's Advocate", blurb: "Will argue the opposite just to watch you squirm, loves it" },
+    INFJ: { title: "The Old Soul", blurb: "Gives advice that makes strangers cry, stays mysterious even to itself" },
+    INFP: { title: "The Daydreamer", blurb: "Forty half-finished poems, one great unfinished novel, deep love of musicals" },
+    ENFJ: { title: "The Hype Man", blurb: "Remembers your birthday, runs the group chat, cries at your graduation" },
+    ENFP: { title: "The Chaotic Good Friend", blurb: "Texts in all caps, books a flight at 2am, somehow it works out" },
+    ISTJ: { title: "The Rulebook", blurb: "Color-codes a spreadsheet nobody asked for, alphabetizes the spice rack" },
+    ISFJ: { title: "The Mom Friend", blurb: "Always has snacks, worries about you specifically, remembers everything" },
+    ESTJ: { title: "The Manager", blurb: "Was born holding a clipboard, has opinions about the meeting agenda" },
+    ESFJ: { title: "The Hostess", blurb: "Knows everyone's coffee order and their business, hosts the whole holiday" },
+    ISTP: { title: "The Garage Guy", blurb: "Fixes it silently, says four words, disappears immediately after" },
+    ISFP: { title: "The Free Spirit", blurb: "Has a playlist for every mood, hates being labeled, ironic given this page" },
+    ESTP: { title: "The Hype Beast", blurb: "Jumps first, reads instructions never, somehow lands on their feet" },
+    ESFP: { title: "The Main Character", blurb: "Turns a grocery run into a party, main-character energy at 8am" }
+  };
+  var SUFFIX_FLAVOR = {
+    A: "and weirdly at peace about it.",
+    T: "and quietly convinced it's all about to go wrong."
+  };
+
+  var ENNEA = {
+    1: { name: "The Perfectionist", blurb: "Alphabetizes the recycling, silently judges your Oxford comma usage.", sig: "High Conscientiousness, moderate Neuroticism", p: { o: 55, c: 88, e: 45, a: 55, n: 55 } },
+    2: { name: "The Giver", blurb: "Remembers your coffee order, shows up with soup, never asks for anything back (she says).", sig: "High Agreeableness + high Extraversion", p: { o: 60, c: 60, e: 80, a: 88, n: 60 } },
+    3: { name: "The Overachiever", blurb: "Has a LinkedIn post drafted before the promotion is even official.", sig: "High Conscientiousness + high Extraversion, low Neuroticism", p: { o: 55, c: 85, e: 78, a: 55, n: 35 } },
+    4: { name: "The Tortured Artist", blurb: "Feels everything at maximum volume, keeps a mood board for their emotions.", sig: "High Openness + high Neuroticism", p: { o: 90, c: 50, e: 45, a: 55, n: 80 } },
+    5: { name: "The Hermit", blurb: "Forty research tabs open, would rather text than ever call.", sig: "High Openness, low Extraversion", p: { o: 85, c: 60, e: 25, a: 40, n: 55 } },
+    6: { name: "The Worrier", blurb: "Three backup plans for the backup plan, spirals at 1am.", sig: "High Neuroticism", p: { o: 55, c: 65, e: 50, a: 65, n: 82 } },
+    7: { name: "The Life of the Party", blurb: "Already booked the next trip before finishing this one, fears stillness.", sig: "High Extraversion + high Openness, low Neuroticism", p: { o: 85, c: 40, e: 85, a: 60, n: 30 } },
+    8: { name: "The Bulldozer", blurb: "Says the thing everyone's thinking, allergic to being told what to do.", sig: "Low Agreeableness + high Extraversion", p: { o: 60, c: 65, e: 80, a: 30, n: 45 } },
+    9: { name: "The Human Beanbag", blurb: "Agrees to whatever restaurant, secretly has opinions they'll never mention.", sig: "High Agreeableness, low Neuroticism", p: { o: 55, c: 50, e: 45, a: 80, n: 30 } }
+  };
+
+  var AXIS_MAP = {
+    ei: { slider: "e", low: "I", high: "E", lowVal: 20, highVal: 80 },
+    sn: { slider: "o", low: "S", high: "N", lowVal: 20, highVal: 80 },
+    tf: { slider: "a", low: "T", high: "F", lowVal: 20, highVal: 80 },
+    jp: { slider: "c", low: "P", high: "J", lowVal: 20, highVal: 80 },
+    at: { slider: "n", low: "A", high: "T", lowVal: 20, highVal: 80 }
+  };
+  var AXIS_WORD = {
+    ei: { E: "Extraverted", I: "Introverted" },
+    sn: { N: "Intuitive", S: "Sensing" },
+    tf: { F: "Feeling", T: "Thinking" },
+    jp: { J: "Judging", P: "Perceiving" },
+    at: { T: "Turbulent", A: "Assertive" }
+  };
+
+  var ids = ["o", "c", "e", "a", "n"];
+  var els = {};
+  ids.forEach(function (id) {
+    els[id] = document.getElementById(id);
+  });
+  var DEFAULTS = { o: 60, c: 55, e: 65, a: 60, n: 45 };
+
+  var uiIds = [
+    "oVal", "cVal", "eVal", "aVal", "nVal",
+    "oDrive", "cDrive", "eDrive", "aDrive", "nDrive",
+    "code", "suffix", "title", "blurb", "breakdown",
+    "enneaNum", "enneaMatch", "enneaTitle", "enneaBlurb", "enneaSig", "enneaRank"
+  ];
+  var ui = {};
+  uiIds.forEach(function (id) {
+    ui[id] = document.getElementById(id);
+  });
+
+  function setTrackFill(input) {
+    input.style.setProperty("--pct", input.value + "%");
+  }
+
+  function render() {
+    var o = Number(els.o.value), c = Number(els.c.value), e = Number(els.e.value),
+        a = Number(els.a.value), n = Number(els.n.value);
+
+    ui.oVal.textContent = o;
+    ui.cVal.textContent = c;
+    ui.eVal.textContent = e;
+    ui.aVal.textContent = a;
+    ui.nVal.textContent = n;
+
+    var ei = e >= 50 ? "E" : "I";
+    var sn = o >= 50 ? "N" : "S";
+    var tf = a >= 50 ? "F" : "T";
+    var jp = c >= 50 ? "J" : "P";
+    var at = n >= 50 ? "T" : "A";
+
+    ui.eDrive.textContent = "→ " + AXIS_WORD.ei[ei];
+    ui.oDrive.textContent = "→ " + AXIS_WORD.sn[sn];
+    ui.aDrive.textContent = "→ " + AXIS_WORD.tf[tf];
+    ui.cDrive.textContent = "→ " + AXIS_WORD.jp[jp];
+    ui.nDrive.textContent = "→ " + AXIS_WORD.at[at] + " (-" + at + ")";
+
+    var code = ei + sn + tf + jp;
+    var t = TYPES[code];
+
+    ui.code.textContent = code;
+    ui.suffix.textContent = "-" + at;
+    ui.title.textContent = t.title;
+    ui.blurb.textContent = t.blurb + ", " + SUFFIX_FLAVOR[at];
+
+    var breakdown = ui.breakdown;
+    breakdown.innerHTML = "";
+    var rows = [
+      ["Openness " + o, sn + " (" + AXIS_WORD.sn[sn] + ")"],
+      ["Conscientiousness " + c, jp + " (" + AXIS_WORD.jp[jp] + ")"],
+      ["Extraversion " + e, ei + " (" + AXIS_WORD.ei[ei] + ")"],
+      ["Agreeableness " + a, tf + " (" + AXIS_WORD.tf[tf] + ")"],
+      ["Neuroticism " + n, "-" + at + " (" + AXIS_WORD.at[at] + ")"]
+    ];
+    rows.forEach(function (r) {
+      var li = document.createElement("li");
+      var src = document.createElement("span");
+      src.className = "src";
+      src.textContent = r[0];
+      var dest = document.createElement("span");
+      dest.className = "dest mono";
+      dest.textContent = r[1];
+      li.appendChild(src);
+      li.appendChild(dest);
+      breakdown.appendChild(li);
+    });
+
+    var sides = { ei: ei, sn: sn, tf: tf, jp: jp, at: at };
+    document.querySelectorAll(".seg-btn").forEach(function (btn) {
+      var axis = btn.getAttribute("data-axis");
+      btn.classList.toggle("active", btn.getAttribute("data-side") === sides[axis]);
+    });
+
+    var maxDist = Math.sqrt(5 * 100 * 100);
+    var scores = Object.keys(ENNEA).map(function (k) {
+      var pr = ENNEA[k].p;
+      var d = Math.sqrt(
+        Math.pow(o - pr.o, 2) + Math.pow(c - pr.c, 2) + Math.pow(e - pr.e, 2) +
+        Math.pow(a - pr.a, 2) + Math.pow(n - pr.n, 2)
+      );
+      return { num: k, match: Math.round(100 - (d / maxDist) * 100) };
+    });
+    scores.sort(function (x, y) { return y.match - x.match; });
+    var top = scores[0];
+    var topInfo = ENNEA[top.num];
+
+    ui.enneaNum.textContent = top.num;
+    ui.enneaMatch.textContent = top.match + "% match";
+    ui.enneaTitle.textContent = topInfo.name;
+    ui.enneaBlurb.textContent = topInfo.blurb;
+    ui.enneaSig.textContent = "Signature: " + topInfo.sig;
+
+    var rankList = ui.enneaRank;
+    rankList.innerHTML = "";
+    scores.forEach(function (s) {
+      var li = document.createElement("li");
+      var top2 = document.createElement("div");
+      top2.className = "ennea-row-top";
+      var label = document.createElement("span");
+      label.textContent = s.num + " · " + ENNEA[s.num].name;
+      var pct = document.createElement("span");
+      pct.className = "pct";
+      pct.textContent = s.match + "%";
+      top2.appendChild(label);
+      top2.appendChild(pct);
+      var track = document.createElement("div");
+      track.className = "ennea-bar-track";
+      var fill = document.createElement("div");
+      fill.className = "ennea-bar-fill";
+      fill.style.width = s.match + "%";
+      track.appendChild(fill);
+      li.appendChild(top2);
+      li.appendChild(track);
+      rankList.appendChild(li);
+    });
+
+    document.querySelectorAll(".ennea-btn").forEach(function (btn) {
+      btn.classList.toggle("active", btn.getAttribute("data-num") === String(top.num));
+    });
+  }
+
+  ids.forEach(function (id) {
+    setTrackFill(els[id]);
+    els[id].addEventListener("input", function () {
+      setTrackFill(els[id]);
+      render();
+    });
+  });
+
+  document.getElementById("reset").addEventListener("click", function () {
+    ids.forEach(function (id) {
+      els[id].value = DEFAULTS[id];
+      setTrackFill(els[id]);
+    });
+    render();
+  });
+
+  document.getElementById("shuffle").addEventListener("click", function () {
+    ids.forEach(function (id) {
+      els[id].value = Math.floor(Math.random() * 101);
+      setTrackFill(els[id]);
+    });
+    render();
+  });
+
+  document.querySelectorAll(".seg-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var axis = AXIS_MAP[btn.getAttribute("data-axis")];
+      var side = btn.getAttribute("data-side");
+      var target = els[axis.slider];
+      target.value = side === axis.high ? axis.highVal : axis.lowVal;
+      setTrackFill(target);
+      render();
+    });
+  });
+
+  var enneaGrid = document.getElementById("enneaGrid");
+  Object.keys(ENNEA).forEach(function (num) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "ennea-btn";
+    btn.setAttribute("data-num", num);
+    var n = document.createElement("span");
+    n.className = "n";
+    n.textContent = num;
+    var label = document.createElement("span");
+    label.className = "label";
+    label.textContent = ENNEA[num].name.replace("The ", "");
+    btn.appendChild(n);
+    btn.appendChild(label);
+    btn.addEventListener("click", function () {
+      var pr = ENNEA[num].p;
+      ids.forEach(function (id) {
+        els[id].value = pr[id];
+        setTrackFill(els[id]);
+      });
+      render();
+    });
+    enneaGrid.appendChild(btn);
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
