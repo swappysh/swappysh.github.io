@@ -97,7 +97,9 @@ def format_items(items: list[dict]) -> str:
         title = item.get("title", "").replace("\t", " ")
         url = item.get("url", "").replace("\t", " ")
         type_ = item.get("type", "other")
-        lines.append(f"{item['id']}\t[{type_}] {title}  \033[2m{url}\033[0m")
+        tags = " ".join(f"#{tag}" for tag in item.get("tags", []))
+        suffix = f"  {tags}" if tags else ""
+        lines.append(f"{item['id']}\t[{type_}] {title}{suffix}  \033[2m{url}\033[0m")
     return "\n".join(lines)
 
 

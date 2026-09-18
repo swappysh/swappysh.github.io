@@ -142,6 +142,7 @@
       showGateway('key accepted · loading ' + (livePath || 'backstage') + '…');
       editorActive = true;
       document.body.classList.add('editor-active');
+      document.dispatchEvent(new CustomEvent('site-editor:active'));
       bar.hidden = false;
       pathLabel.textContent = livePath || 'content';
 
@@ -737,6 +738,7 @@
     }
     editorActive = false;
     document.body.classList.remove('editor-active');
+    document.dispatchEvent(new CustomEvent('site-editor:inactive'));
     bar.hidden = true;
     contentRoot && contentRoot.querySelectorAll('[contenteditable="true"]').forEach(function (element) {
       element.contentEditable = 'false';
@@ -751,6 +753,7 @@
     } finally {
       window.sessionStorage.removeItem('site-editor-session');
       sessionToken = '';
+      document.dispatchEvent(new CustomEvent('site-editor:inactive'));
       window.location.reload();
     }
   }

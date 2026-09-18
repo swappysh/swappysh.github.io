@@ -9,6 +9,9 @@ interface Env {
   GITHUB_REPOSITORY_ID: string;
   OWNER_GITHUB_ID: string;
   SESSION_ENCRYPTION_KEY: string;
+  SAVES_WORKER_URL: string;
+  SAVES_READ_TOKEN: string;
+  SAVES_WRITE_TOKEN: string;
 }
 
 interface EditorSession {
@@ -239,6 +242,28 @@ async function github<T>(url: string, token: string, init: RequestInit = {}): Pr
   return data as T;
 }
 
+async function savesApi<T>(
+  env: Env,
+  path: string,
+  init: RequestInit = {},
+  write = false,
+): Promise<T> {
+  const response = await fetch(`${env.SAVES_WORKER_URL.replace(/\/$/, '')}${path}`, {
+    ...init,
+    headers: {
+      Authorization: `Bearer ${write ? env.SAVES_WRITE_TOKEN : env.SAVES_READ_TOKEN}`,
+      'Content-Type': 'application/json',
+      ...init.headers,
+    },
+  });
+  const data = await response.json().catch(() => ({})) as { error?: string };
+  if (!response.ok) {
+    const status = response.status >= 400 && response.status < 500 ? response.status : 502;
+    throw new HttpError(status, data.error ?? 'The saves service rejected the request.');
+  }
+  return data as T;
+}
+
 async function exchangeToken(
   env: Env,
   parameters: Record<string, string>,
@@ -411,6 +436,31 @@ async function handleApi(request: Request, env: Env): Promise<Response> {
   if (url.pathname === '/api/logout' && request.method === 'POST') {
     await env.SESSIONS.delete(`session:${authenticated.id}`);
     return json(request, env, { locked: true });
+  }
+
+  if (url.pathname === '/api/saves/tags' && request.method === 'GET') {
+    return json(request, env, await savesApi<{ tags: string[] }>(env, '/api/tags'));
+  }
+
+  if (url.pathname === '/api/saves/tags' && request.method === 'POST') {
+    const body = await request.text();
+    return json(request, env, await savesApi<{ tag: string }>(
+      env,
+      '/api/tags',
+      { method: 'POST', body },
+      true,
+    ), 201);
+  }
+
+  const saveItemMatch = url.pathname.match(/^\/api\/saves\/item\/([a-zA-Z0-9]+)$/);
+  if (saveItemMatch && request.method === 'PATCH') {
+    const body = await request.text();
+    return json(request, env, await savesApi<unknown>(
+      env,
+      `/api/item/${saveItemMatch[1]}`,
+      { method: 'PATCH', body },
+      true,
+    ));
   }
 
   if (url.pathname === '/api/files' && request.method === 'GET') {

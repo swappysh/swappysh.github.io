@@ -12,6 +12,9 @@ npx wrangler secret put READ_SECRET    # read key (must match GitHub secret)
 npx wrangler deploy
 ```
 
+The owner-only tag controls on `/saves/` proxy through `editor-worker`. Configure that Worker with
+`SAVES_WORKER_URL`, plus `SAVES_READ_TOKEN` and `SAVES_WRITE_TOKEN` secrets matching this Worker.
+
 KV namespace IDs are already in `wrangler.toml` — no need to recreate them.
 
 **Local dev**
@@ -32,3 +35,8 @@ Share Sheet → POST to `https://saves-worker.swappysh.workers.dev/api/save`
 **Arc extension (laptop)**
 Paste bookmarklet JS into https://sandbox.self.li/bookmarklet-to-extension, load unpacked in Arc.
 Bookmarklet JS is in `layouts/saves/single.html` — replace `fetch(...)` call with the standalone version and add your WRITE_SECRET.
+
+## Tags
+
+Saved items may include a `tags` array. Owners can type `:edit` on `/saves/`, sign in with GitHub, and
+then add tags or assign them to entries. Readers can filter by any tag currently assigned to an entry.

@@ -29,7 +29,8 @@
   flex-wrap: wrap;
 }
 
-.filter-btn {
+.filter-btn,
+.shuffle-btn {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
   padding: var(--space-2xs) var(--space-sm);
@@ -47,6 +48,26 @@
     border-color: var(--text);
     color: var(--text);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+}
+
+.saves-tag-filters {
+  padding-top: var(--space-2xs);
+}
+
+.saves-owner-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--mid);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+
+  &[hidden] { display: none; }
 }
 
 .saves-search {
@@ -98,6 +119,104 @@
   font-size: var(--text-base);
   color: var(--mid);
   line-height: 1.6;
+}
+
+.save-card__tags {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+
+.save-tag,
+.save-card__edit {
+  border: 0;
+  background: transparent;
+  color: var(--mid);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: 0;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--text);
+  }
+}
+
+.save-card__edit {
+  margin-left: auto;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+
+.save-tags-form {
+  display: grid;
+  gap: var(--space-md);
+  min-height: 0;
+  overflow: auto;
+  padding: var(--space-md);
+
+  fieldset {
+    border: 0;
+    min-width: 0;
+  }
+
+  legend,
+  label,
+  small {
+    color: var(--mid);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  > label {
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  input[type='text'] {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    background: transparent;
+    color: var(--text);
+    font: var(--text-base)/1.6 var(--font-mono);
+    padding: var(--space-xs) var(--space-sm);
+
+    &:focus {
+      border-color: var(--accent);
+      outline: none;
+    }
+  }
+}
+
+.save-tag-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.save-tag-option {
+  display: flex !important;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--text) !important;
+
+  input { accent-color: var(--accent); }
+}
+
+.save-tags-empty {
+  color: var(--mid);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
 }
 
 .type-badge {

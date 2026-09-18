@@ -9,6 +9,7 @@ GITHUB_REPO = "swappysh.github.io"
 GITHUB_BRANCH = "master"
 OWNER_GITHUB_ID = "7112252"
 GITHUB_REPOSITORY_ID = "55292565"
+SAVES_WORKER_URL = "https://saves-worker.swappysh.workers.dev"
 
 [[kv_namespaces]]
 binding = "SESSIONS"
@@ -22,6 +23,7 @@ GITHUB_REPO = "swappysh.github.io"
 GITHUB_BRANCH = "master"
 OWNER_GITHUB_ID = "7112252"
 GITHUB_REPOSITORY_ID = "55292565"
+SAVES_WORKER_URL = "http://localhost:8788"
 
 [[env.development.kv_namespaces]]
 binding = "SESSIONS"

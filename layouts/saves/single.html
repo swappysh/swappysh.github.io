@@ -13,6 +13,11 @@
       <button class="filter-btn" data-filter="video" aria-pressed="false">Videos</button>
       <button class="shuffle-btn" id="shuffle-btn" disabled aria-label="Shuffle order">Shuffle</button>
     </div>
+    <div class="saves-toolbar-row saves-tag-filters" id="tag-filter-row" role="toolbar" aria-label="Filter saves by tag" hidden></div>
+    <div class="saves-owner-controls" id="saves-owner-controls" hidden>
+      <span id="owner-tag-status" aria-live="polite">owner tools</span>
+      <button class="filter-btn" id="add-tag-btn" type="button">+ Add tag</button>
+    </div>
     <input class="saves-search" id="search-input" type="text" placeholder="Search saves" aria-label="Search saves" disabled>
   </div>
 
@@ -25,25 +30,65 @@
   </div>
 </article>
 
+<dialog class="editor-dialog" id="save-tags-dialog" aria-labelledby="save-tags-title">
+  <div class="editor-dialog__shell">
+    <header class="editor-dialog__header">
+      <div>
+        <span class="editor-dialog__eyebrow">SAVE</span>
+        <h2 id="save-tags-title">Edit tags</h2>
+        <span class="editor-dialog__path" id="save-tags-item-title"></span>
+      </div>
+      <button type="button" class="editor-dialog__close" id="save-tags-close" aria-label="Close">×</button>
+    </header>
+    <div class="save-tags-form">
+      <fieldset>
+        <legend>Tags</legend>
+        <div class="save-tag-options" id="save-tag-options"></div>
+      </fieldset>
+      <label>New tags <input type="text" id="save-new-tags" placeholder="ai, philosophy" autocomplete="off"></label>
+      <small>Separate multiple tags with commas.</small>
+    </div>
+    <footer class="editor-dialog__footer">
+      <span id="save-tags-status" aria-live="polite"></span>
+      <button type="button" class="editor-button" id="save-tags-cancel">Cancel</button>
+      <button type="button" class="editor-button editor-button--primary" id="save-tags-submit">Save tags</button>
+    </footer>
+  </div>
+</dialog>
+
 <script>
 (function () {
   const WORKER_URL = 'https://saves-worker.swappysh.workers.dev';
   const READ_TOKEN = '{{ .Site.Params.savesreadtoken }}';
+  const EDITOR_API = document.body.dataset.editorApi || '';
 
   const countEl = document.getElementById('saves-count');
   const gridEl = document.getElementById('saves-grid');
   const toolbarEl = document.getElementById('saves-toolbar');
-  const filterBtns = toolbarEl ? Array.from(toolbarEl.querySelectorAll('.filter-btn')) : [];
+  const typeFilterBtns = toolbarEl ? Array.from(toolbarEl.querySelectorAll('[data-filter]')) : [];
+  const tagFilterRow = document.getElementById('tag-filter-row');
+  const ownerControls = document.getElementById('saves-owner-controls');
+  const ownerTagStatus = document.getElementById('owner-tag-status');
+  const addTagBtn = document.getElementById('add-tag-btn');
   const shuffleBtn = document.getElementById('shuffle-btn');
   const searchInput = document.getElementById('search-input');
+  const tagDialog = document.getElementById('save-tags-dialog');
+  const tagOptions = document.getElementById('save-tag-options');
+  const newTagsInput = document.getElementById('save-new-tags');
+  const tagStatus = document.getElementById('save-tags-status');
+  const tagSubmit = document.getElementById('save-tags-submit');
 
   if (!gridEl || !countEl) return;
 
   let allItems = [];
   let displayItems = [];
+  let knownTags = [];
   let activeFilter = 'all';
+  let activeTag = '';
   let searchQuery = '';
+  let editingItemId = '';
   let isShuffled = false;
+  let ownerEnabled = false;
 
   function esc(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -51,6 +96,14 @@
 
   function safeStr(val) {
     return (val != null ? String(val) : '').trim();
+  }
+
+  function itemTags(item) {
+    return Array.isArray(item.tags) ? item.tags.map(safeStr).filter(Boolean) : [];
+  }
+
+  function normalizeTag(value) {
+    return safeStr(value).toLowerCase().replace(/^#+/, '').trim().replace(/\s+/g, ' ');
   }
 
   function formatDate(iso) {
@@ -78,6 +131,12 @@
     const title = type === 'tweet' ? tweetTitle(url) : (item.title || url || 'Untitled');
     const excerptStr = safeStr(item.excerpt);
     const metaHost = hostname(url);
+    const tags = itemTags(item);
+    const tagMarkup = tags.map(tag => `<button type="button" class="save-tag" data-filter-tag="${esc(tag)}">#${esc(tag)}</button>`).join('');
+    const editLabel = tags.length ? 'Edit tags' : '+ Tag';
+    const editMarkup = ownerEnabled
+      ? `<button type="button" class="save-card__edit" data-edit-tags="${esc(item.id)}">${editLabel}</button>`
+      : '';
     return `
       <div class="save-card" data-type="${type}">
         <a class="save-card__title" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a>
@@ -88,33 +147,57 @@
           <span class="save-meta__date">${esc(formatDate(item.created_at))}</span>
         </div>
         ${excerptStr ? `<div class="save-card__excerpt">${esc(excerptStr)}</div>` : ''}
+        ${(tagMarkup || editMarkup) ? `<div class="save-card__tags">${tagMarkup}${editMarkup}</div>` : ''}
       </div>`;
   }
 
   function matchesSearch(item, q) {
-    return [item.title, item.url, item.excerpt].some(field => safeStr(field).toLowerCase().includes(q));
+    return [item.title, item.url, item.excerpt, itemTags(item).join(' ')]
+      .some(field => safeStr(field).toLowerCase().includes(q));
+  }
+
+  function assignedTags() {
+    return [...new Set(allItems.flatMap(itemTags))].sort();
+  }
+
+  function renderTagFilters() {
+    if (!tagFilterRow) return;
+    const tags = assignedTags();
+    if (activeTag && !tags.includes(activeTag)) activeTag = '';
+    tagFilterRow.hidden = tags.length === 0;
+    tagFilterRow.innerHTML = tags.map(tag => {
+      const active = tag === activeTag;
+      return `<button class="filter-btn${active ? ' active' : ''}" type="button" data-tag="${esc(tag)}" aria-pressed="${active}">#${esc(tag)}</button>`;
+    }).join('');
   }
 
   function setFilter(filter) {
     activeFilter = filter;
-    filterBtns.forEach(b => {
-      const isActive = b.dataset.filter === activeFilter;
-      b.classList.toggle('active', isActive);
-      b.setAttribute('aria-pressed', isActive);
+    typeFilterBtns.forEach(button => {
+      const active = button.dataset.filter === activeFilter;
+      button.classList.toggle('active', active);
+      button.setAttribute('aria-pressed', active);
     });
     render();
   }
 
+  function setTagFilter(tag) {
+    activeTag = activeTag === tag ? '' : tag;
+    render();
+  }
+
   function getVisible() {
-    let items = activeFilter === 'all' ? displayItems : displayItems.filter(i => (i.type || '') === activeFilter);
+    let items = activeFilter === 'all' ? displayItems : displayItems.filter(item => (item.type || '') === activeFilter);
+    if (activeTag) items = items.filter(item => itemTags(item).includes(activeTag));
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
-      items = items.filter(i => matchesSearch(i, q));
+      items = items.filter(item => matchesSearch(item, q));
     }
     return items;
   }
 
   function render() {
+    renderTagFilters();
     const visible = getVisible();
     const total = allItems.length;
     const filtered = visible.length;
@@ -125,14 +208,17 @@
     } else {
       countEl.textContent = `${filtered} of ${total} saves`;
     }
-    const emptyMsg = searchQuery 
-      ? `No saves matching "${esc(searchQuery)}"` 
-      : 'Save links from the web and revisit them here. <a href="https://github.com/swappysh/saves-worker" target="_blank" rel="noopener">Install the browser extension</a> to start saving links from around the web.';
+    let emptyMsg = 'Save links from the web and revisit them here. <a href="https://github.com/swappysh/saves-worker" target="_blank" rel="noopener">Install the browser extension</a> to start saving links from around the web.';
+    if (searchQuery) {
+      emptyMsg = `No saves matching "${esc(searchQuery)}"`;
+    } else if (activeTag) {
+      emptyMsg = `No saves tagged #${esc(activeTag)}`;
+    }
     gridEl.innerHTML = visible.length ? visible.map(renderCard).join('') : `<div class="saves-empty">${emptyMsg}</div>`;
   }
 
   function setLoading(loading) {
-    filterBtns.forEach(btn => { btn.disabled = loading; });
+    typeFilterBtns.forEach(button => { button.disabled = loading; });
     if (shuffleBtn) shuffleBtn.disabled = loading;
     if (searchInput) {
       searchInput.disabled = loading;
@@ -195,8 +281,96 @@
     }
   }
 
-  filterBtns.forEach(btn => {
-    btn.addEventListener('click', () => setFilter(btn.dataset.filter));
+  async function ownerRequest(path, options = {}) {
+    const session = window.sessionStorage.getItem('site-editor-session') || '';
+    if (!EDITOR_API || !session) throw new Error('Open owner mode first.');
+    const headers = Object.assign({
+      Accept: 'application/json',
+      Authorization: `Session ${session}`,
+    }, options.headers || {});
+    if (options.body) headers['Content-Type'] = 'application/json';
+    const response = await fetch(EDITOR_API + path, Object.assign({}, options, { headers }));
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'Could not update saves.');
+    return data;
+  }
+
+  async function enableOwnerControls() {
+    try {
+      const data = await ownerRequest('/api/saves/tags');
+      knownTags = Array.isArray(data.tags) ? data.tags : [];
+      ownerEnabled = true;
+    } catch (_) {
+      ownerEnabled = false;
+    }
+    if (ownerControls) ownerControls.hidden = !ownerEnabled;
+    render();
+  }
+
+  function disableOwnerControls() {
+    ownerEnabled = false;
+    if (ownerControls) ownerControls.hidden = true;
+    if (tagDialog?.open) tagDialog.close();
+    render();
+  }
+
+  function openTagDialog(itemId) {
+    const item = allItems.find(candidate => candidate.id === itemId);
+    if (!item || !tagDialog || !tagOptions) return;
+    editingItemId = itemId;
+    document.getElementById('save-tags-item-title').textContent = item.title || item.url || 'Untitled';
+    const selected = new Set(itemTags(item));
+    const options = [...new Set([...knownTags, ...selected])].sort();
+    tagOptions.innerHTML = options.length
+      ? options.map(tag => `<label class="save-tag-option"><input type="checkbox" value="${esc(tag)}"${selected.has(tag) ? ' checked' : ''}><span>#${esc(tag)}</span></label>`).join('')
+      : '<span class="save-tags-empty">No tags yet. Add one below.</span>';
+    newTagsInput.value = '';
+    tagStatus.textContent = '';
+    tagDialog.showModal();
+  }
+
+  async function createTag(name) {
+    const data = await ownerRequest('/api/saves/tags', {
+      method: 'POST',
+      body: JSON.stringify({ name }),
+    });
+    if (data.tag && !knownTags.includes(data.tag)) knownTags.push(data.tag);
+    knownTags.sort();
+    return data.tag;
+  }
+
+  async function saveTags() {
+    const selected = Array.from(tagOptions.querySelectorAll('input:checked')).map(input => input.value);
+    const entered = newTagsInput.value.split(',').map(normalizeTag).filter(Boolean);
+    const requested = [...new Set([...selected, ...entered])];
+    tagSubmit.disabled = true;
+    tagStatus.textContent = 'saving…';
+    try {
+      const missing = requested.filter(tag => !knownTags.includes(tag));
+      await Promise.all(missing.map(createTag));
+      const tags = requested.sort();
+      const updated = await ownerRequest(`/api/saves/item/${editingItemId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ tags }),
+      });
+      allItems = allItems.map(item => item.id === editingItemId ? updated : item);
+      displayItems = displayItems.map(item => item.id === editingItemId ? updated : item);
+      tagDialog.close();
+      render();
+    } catch (error) {
+      tagStatus.textContent = error.message;
+    } finally {
+      tagSubmit.disabled = false;
+    }
+  }
+
+  typeFilterBtns.forEach(button => {
+    button.addEventListener('click', () => setFilter(button.dataset.filter));
+  });
+
+  tagFilterRow?.addEventListener('click', event => {
+    const button = event.target.closest('[data-tag]');
+    if (button) setTagFilter(button.dataset.tag);
   });
 
   if (shuffleBtn) {
@@ -208,16 +382,36 @@
     });
   }
 
-  if (searchInput) {
-    searchInput.addEventListener('input', e => {
-      searchQuery = e.target.value.trim();
-      render();
-    });
-  }
-
-  gridEl.addEventListener('click', e => {
-    if (e.target.classList.contains('retry-btn')) load();
+  searchInput?.addEventListener('input', event => {
+    searchQuery = event.target.value.trim();
+    render();
   });
+
+  gridEl.addEventListener('click', event => {
+    if (event.target.classList.contains('retry-btn')) load();
+    const tagButton = event.target.closest('[data-filter-tag]');
+    if (tagButton) setTagFilter(tagButton.dataset.filterTag);
+    const editButton = event.target.closest('[data-edit-tags]');
+    if (editButton) openTagDialog(editButton.dataset.editTags);
+  });
+
+  addTagBtn?.addEventListener('click', async () => {
+    const name = window.prompt('New tag name');
+    if (!name) return;
+    try {
+      const tag = await createTag(normalizeTag(name));
+      ownerTagStatus.textContent = `added #${tag}`;
+      window.setTimeout(() => { ownerTagStatus.textContent = 'owner tools'; }, 1800);
+    } catch (error) {
+      ownerTagStatus.textContent = error.message;
+    }
+  });
+
+  document.getElementById('save-tags-close')?.addEventListener('click', () => tagDialog.close());
+  document.getElementById('save-tags-cancel')?.addEventListener('click', () => tagDialog.close());
+  tagSubmit?.addEventListener('click', saveTags);
+  document.addEventListener('site-editor:active', enableOwnerControls);
+  document.addEventListener('site-editor:inactive', disableOwnerControls);
 
   load();
 })();

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""Interactive saves editor — fuzzy search, then edit title/excerpt in $EDITOR."""
+"""Interactive saves editor — fuzzy search, then edit title/excerpt/tags in $EDITOR."""
 
-import json
 import os
 import subprocess
 import sys
@@ -47,15 +46,15 @@ def main() -> None:
     item = next(i for i in items if i["id"] == item_id)
     title = item.get("title", "")
     excerpt = item.get("excerpt", "")
-    before = json.dumps({"title": title, "excerpt": excerpt}, ensure_ascii=True)
+    tags = item.get("tags", [])
+    before = {"title": title, "excerpt": excerpt, "tags": tags}
 
     editor_content = (
-        "# Edit title and excerpt, then save and close the editor.\n"
+        "# Edit title, excerpt, and comma-separated tags, then save and close.\n"
         "# Lines starting with # are ignored.\n"
-        "title:\n"
-        f"{title}\n"
-        "excerpt:\n"
-        f"{excerpt}\n"
+        f"title: {title}\n"
+        f"tags: {', '.join(tags)}\n"
+        f"excerpt: {excerpt}\n"
     )
     if excerpt and not excerpt.endswith("\n"):
         editor_content += "\n"
@@ -79,19 +78,29 @@ def main() -> None:
         if (
             len(lines) < 3
             or not lines[0].startswith("title:")
+            or not lines[1].startswith("tags:")
             or not lines[2].startswith("excerpt:")
         ):
             print(
-                "Expected format:\n  title:<title>\n  excerpt:<excerpt>",
+                "Expected format:\n  title: <title>\n  tags: tag, tag\n  excerpt: <excerpt>",
                 file=sys.stderr,
             )
             sys.exit(1)
 
         new_title = lines[0].removeprefix("title:").strip()
+        new_tags = []
+        for tag in lines[1].removeprefix("tags:").split(","):
+            normalized_tag = tag.strip().lower().lstrip("#").strip()
+            if normalized_tag:
+                new_tags.append(normalized_tag)
         new_excerpt = "\n".join(lines[2:]).removeprefix("excerpt:").rstrip("\n")
-        patch_body = {"title": new_title, "excerpt": new_excerpt}
+        patch_body = {
+            "title": new_title,
+            "excerpt": new_excerpt,
+            "tags": list(dict.fromkeys(new_tags)),
+        }
 
-        if json.dumps(patch_body, ensure_ascii=True) == before:
+        if patch_body == before:
             print("No changes made.", file=sys.stderr)
             return
 
