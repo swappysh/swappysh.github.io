@@ -5,6 +5,7 @@ interface SaveItem {
   excerpt: string;
   source: string;
   type: 'tweet' | 'video' | 'article' | 'other';
+  tags?: string[];
   created_at: string;
 }
 
@@ -20,11 +21,13 @@ interface SaveBody {
   title: string;
   source?: string;
   timestamp?: string;
+  tags?: unknown;
 }
 
 interface UpdateSaveBody {
   title?: string;
   excerpt?: string;
+  tags?: unknown;
 }
 
 interface ListResponse {
@@ -66,6 +69,33 @@ function unauthorized(cors: Record<string, string>): Response {
 
 function generateId(): string {
   return crypto.randomUUID().replace(/-/g, '').slice(0, 10);
+}
+
+function normalizeTag(value: unknown): string | null {
+  if (typeof value !== 'string') return null;
+  const tag = value.trim().toLowerCase().replace(/^#+/, '').trim().replace(/\s+/g, ' ');
+  if (!tag || tag.length > 40 || /[,\u0000-\u001f\u007f]/.test(tag)) return null;
+  return tag;
+}
+
+function normalizeTags(values: unknown): string[] | null {
+  if (!Array.isArray(values)) return null;
+  const tags: string[] = [];
+  for (const value of values) {
+    const tag = normalizeTag(value);
+    if (tag === null) return null;
+    tags.push(tag);
+  }
+  const unique = [...new Set(tags)];
+  return unique.length <= 20 ? unique : null;
+}
+
+async function addTagsToIndex(env: Env, tags: string[]): Promise<void> {
+  if (tags.length === 0) return;
+  const raw = await env.saves.get('index:tags');
+  const existing = raw ? (JSON.parse(raw) as string[]) : [];
+  const next = [...new Set([...existing, ...tags])].sort();
+  await env.saves.put('index:tags', JSON.stringify(next));
 }
 
 async function urlHash(url: string): Promise<string> {
@@ -133,6 +163,11 @@ export default {
         return json({ error: 'url and title are required' }, 400, cors);
       }
 
+      const tags = body.tags === undefined ? [] : normalizeTags(body.tags);
+      if (tags === null) {
+        return json({ error: 'tags must be an array of valid tag names' }, 400, cors);
+      }
+
       const hash = await urlHash(body.url);
       const existingId = await env.saves.get(`url-idx:${hash}`);
       if (existingId) return json({ error: 'Already saved', id: existingId }, 409, cors);
@@ -146,6 +181,7 @@ export default {
         excerpt: type === 'tweet' ? await fetchTweetExcerpt(body.url) : '',
         source: body.source ?? 'shortcut',
         type,
+        tags,
         created_at: body.timestamp ?? new Date().toISOString(),
       };
 
@@ -157,6 +193,7 @@ export default {
       const index: string[] = raw ? (JSON.parse(raw) as string[]) : [];
       index.unshift(id);
       await env.saves.put('index:all', JSON.stringify(index));
+      await addTagsToIndex(env, tags);
 
       return json(item, 201, cors);
     }
@@ -182,6 +219,29 @@ export default {
       return json(response, 200, cors);
     }
 
+    // GET /api/tags
+    if (request.method === 'GET' && url.pathname === '/api/tags') {
+      if (token !== env.READ_SECRET && token !== env.WRITE_SECRET) return unauthorized(cors);
+      const raw = await env.saves.get('index:tags');
+      const tags: string[] = raw ? (JSON.parse(raw) as string[]) : [];
+      return json({ tags }, 200, cors);
+    }
+
+    // POST /api/tags
+    if (request.method === 'POST' && url.pathname === '/api/tags') {
+      if (token !== env.WRITE_SECRET) return unauthorized(cors);
+      let body: { name?: unknown };
+      try {
+        body = (await request.json()) as { name?: unknown };
+      } catch {
+        return json({ error: 'Invalid JSON' }, 400, cors);
+      }
+      const tag = normalizeTag(body.name);
+      if (!tag) return json({ error: 'name must be a valid tag' }, 400, cors);
+      await addTagsToIndex(env, [tag]);
+      return json({ tag }, 201, cors);
+    }
+
     // PATCH /api/item/:id
     const itemMatch = url.pathname.match(/^\/api\/item\/([a-zA-Z0-9]+)$/);
     if (request.method === 'PATCH' && itemMatch) {
@@ -196,19 +256,24 @@ export default {
 
       const hasTitle = 'title' in body;
       const hasExcerpt = 'excerpt' in body;
-      if (!hasTitle && !hasExcerpt) {
-        return json({ error: 'title or excerpt is required' }, 400, cors);
+      const hasTags = 'tags' in body;
+      if (!hasTitle && !hasExcerpt && !hasTags) {
+        return json({ error: 'title, excerpt, or tags is required' }, 400, cors);
       }
 
       if ((hasTitle && typeof body.title !== 'string') || (hasExcerpt && typeof body.excerpt !== 'string')) {
         return json({ error: 'title and excerpt must be strings' }, 400, cors);
+      }
+      const tags = hasTags ? normalizeTags(body.tags) : null;
+      if (hasTags && tags === null) {
+        return json({ error: 'tags must be an array of valid tag names' }, 400, cors);
       }
 
       const id = itemMatch[1];
       const existing = await env.saves.get(`item:${id}`, 'json') as SaveItem | null;
       if (!existing) return json({ error: 'Not found' }, 404, cors);
 
-      const newTitle = hasTitle ? body.title!.trim() : existing.title;
+      const newTitle = typeof body.title === 'string' ? body.title.trim() : existing.title;
       if (!newTitle) {
         return json({ error: 'title cannot be empty' }, 400, cors);
       }
@@ -216,10 +281,12 @@ export default {
       const item: SaveItem = {
         ...existing,
         title: newTitle,
-        ...(hasExcerpt ? { excerpt: body.excerpt! } : {}),
       };
+      if (typeof body.excerpt === 'string') item.excerpt = body.excerpt;
+      if (tags !== null) item.tags = tags;
 
       await env.saves.put(`item:${id}`, JSON.stringify(item));
+      if (tags) await addTagsToIndex(env, tags);
       return json(item, 200, cors);
     }
 

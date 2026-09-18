@@ -72,6 +72,15 @@ key with `openssl rand -base64 32` and paste its output for the third.
 If the deployed Worker URL differs from `https://site-editor.swappysh.workers.dev`, update
 `params.editorApiURL` in `config.toml`.
 
+To enable owner-only tag management on `/saves/`, add the saves Worker URL and its existing secrets:
+
+```bash
+npx wrangler secret put SAVES_READ_TOKEN
+npx wrangler secret put SAVES_WRITE_TOKEN
+```
+
+Set `SAVES_WORKER_URL` in `wrangler.toml` to the deployed saves Worker URL.
+
 ## Using the editor
 
 On any site page, type `:edit`. On a touch device, press and hold the `$ bash ./swapnil.sh` logo.
