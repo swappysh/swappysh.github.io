@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark">
 <title>Trait Dial</title>
-<meta name="description" content="Turn Big Five sliders, MBTI switches, or an Enneagram pick, and watch one shared profile update across all three. Folk-psychology mapping, not a validated instrument.">
+<meta name="description" content="Turn Big Five sliders, MBTI switches, an Enneagram pick, or a Hogwarts house, and watch one shared profile update across all four. Folk-psychology mapping, not a validated instrument.">
 <style>
   :root {
     --bg: #eef1ea;
@@ -124,7 +124,7 @@
     cursor: pointer;
   }
   .btn:hover { background: var(--brass); color: var(--panel-ink); }
-  .btn:focus-visible, input:focus-visible { outline: 2px solid var(--brass-strong); outline-offset: 2px; }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--brass-strong); outline-offset: 2px; }
 
   .knob-row {
     display: flex;
@@ -272,12 +272,12 @@
     border-top: 1px solid var(--panel-hair);
     margin: 20px 0;
   }
-  .ennea-sig {
+  .archetype-sig {
     opacity: 0.72;
     font-size: 0.78rem;
     margin: -10px 0 16px;
   }
-  .ennea-rank {
+  .archetype-rank {
     list-style: none;
     margin: 0;
     padding: 14px 0 0;
@@ -286,23 +286,23 @@
     flex-direction: column;
     gap: 9px;
   }
-  .ennea-row-top {
+  .archetype-row-top {
     display: flex;
     justify-content: space-between;
     font-size: 0.8rem;
     opacity: 0.9;
   }
-  .ennea-row-top .pct {
+  .archetype-row-top .pct {
     font-family: 'IBM Plex Mono', monospace;
     color: var(--brass-strong);
   }
-  .ennea-bar-track {
+  .archetype-bar-track {
     height: 5px;
     border-radius: 999px;
     background: rgba(243, 236, 214, 0.15);
     overflow: hidden;
   }
-  .ennea-bar-fill {
+  .archetype-bar-fill {
     height: 100%;
     background: var(--brass-strong);
     border-radius: 999px;
@@ -340,12 +340,13 @@
   .seg-btn + .seg-btn { border-left: 1px solid var(--hair); }
   .seg-btn.active { background: var(--brass); color: #fff; }
 
-  .ennea-grid {
+  .archetype-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
     gap: 8px;
   }
-  .ennea-btn {
+  .ennea-grid { grid-template-columns: repeat(3, 1fr); }
+  .house-grid { grid-template-columns: repeat(2, 1fr); }
+  .archetype-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -357,22 +358,23 @@
     background: var(--card);
     cursor: pointer;
   }
-  .ennea-btn .n {
+  .archetype-btn .n {
     font-family: 'Arvo', serif;
     font-size: 1.2rem;
     color: var(--ink);
   }
-  .ennea-btn .label {
+  .archetype-btn .label {
     font-size: 0.66rem;
     color: var(--muted);
     text-align: center;
     line-height: 1.15;
   }
-  .ennea-btn.active {
+  .archetype-btn.active {
     background: var(--brass);
     border-color: var(--brass);
   }
-  .ennea-btn.active .n, .ennea-btn.active .label { color: #fff; }
+  .archetype-btn.active .n, .archetype-btn.active .label { color: #fff; }
+  .house-code { font-size: clamp(1.8rem, 6vw, 2.6rem); }
 
   footer {
     margin-top: 22px;
@@ -387,7 +389,7 @@
 <header>
   <h1>Trait Dial</h1>
   <p class="thesis">I believe there's an ever-growing, ever-changing human personality underneath all of this, and personality quizzes are a low-dimensional reading of it. This page is my attempt to understand the shape of that thing as much as I can.</p>
-  <p>One underlying Big Five profile, three stereotype readouts. Turn the OCEAN sliders, flip an MBTI switch, or pick an Enneagram archetype: whichever knob you touch rewrites the profile, and the other two panels update to match. Folk-psychology mapping, not a validated instrument.</p>
+  <p>One underlying Big Five profile, four stereotype readouts. Turn the OCEAN sliders, flip an MBTI switch, pick an Enneagram archetype, or choose a Hogwarts house: whichever knob you touch rewrites the profile, and every panel updates to match. Folk-psychology mapping, not a validated instrument.</p>
 </header>
 
 <main class="layout">
@@ -410,8 +412,20 @@
     </div>
     <h2 class="type-title" id="enneaTitle">The Human Beanbag</h2>
     <p class="type-blurb" id="enneaBlurb">Agrees to whatever restaurant, secretly has opinions they'll never mention.</p>
-    <p class="ennea-sig" id="enneaSig">Signature: high Agreeableness, low Neuroticism</p>
-    <ol class="ennea-rank" id="enneaRank"></ol>
+    <p class="archetype-sig" id="enneaSig">Signature: high Agreeableness, low Neuroticism</p>
+    <ol class="archetype-rank" id="enneaRank"></ol>
+
+    <hr class="divider">
+
+    <p class="readout-eyebrow">Closest Hogwarts house</p>
+    <div class="code-row">
+      <p class="code house-code" id="houseName">Gryffindor</p>
+      <span class="suffix-badge mono" id="houseMatch">88% match</span>
+    </div>
+    <h2 class="type-title" id="houseTitle">The Nerve-First Hero</h2>
+    <p class="type-blurb" id="houseBlurb">Volunteers before hearing the plan, then turns the detour into the story everyone remembers.</p>
+    <p class="archetype-sig" id="houseSig">Signature: high Extraversion + Openness, low Neuroticism</p>
+    <ol class="archetype-rank" id="houseRank"></ol>
   </section>
 
   <section class="console">
@@ -516,11 +530,18 @@
     <div class="console-head">
       <h2>Archetype dial · Enneagram</h2>
     </div>
-    <div class="ennea-grid" id="enneaGrid"></div>
+    <div class="archetype-grid ennea-grid" id="enneaGrid"></div>
+
+    <hr class="divider">
+
+    <div class="console-head">
+      <h2>Sorting dial · Hogwarts</h2>
+    </div>
+    <div class="archetype-grid house-grid" id="houseGrid"></div>
   </section>
 </main>
 
-<footer>Five sliders, sixteen MBTI stereotypes, nine Enneagram archetypes, zero clinical validity.</footer>
+<footer>Five sliders, sixteen MBTI stereotypes, nine Enneagram archetypes, four Hogwarts houses, zero clinical validity.</footer>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Arvo:wght@400;700&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -562,6 +583,37 @@
     9: { name: "The Human Beanbag", blurb: "Agrees to whatever restaurant, secretly has opinions they'll never mention.", sig: "High Agreeableness, low Neuroticism", p: { o: 55, c: 50, e: 45, a: 80, n: 30 } }
   };
 
+  var HOUSES = {
+    gryffindor: {
+      name: "Gryffindor",
+      title: "The Nerve-First Hero",
+      blurb: "Volunteers before hearing the plan, then turns the detour into the story everyone remembers.",
+      sig: "High Extraversion + Openness, low Neuroticism",
+      p: { o: 70, c: 55, e: 82, a: 58, n: 28 }
+    },
+    ravenclaw: {
+      name: "Ravenclaw",
+      title: "The Restless Mind",
+      blurb: "Solves the riddle, questions the premise, and keeps three obscure research tabs open for fun.",
+      sig: "High Openness + Conscientiousness, lower Extraversion",
+      p: { o: 92, c: 72, e: 38, a: 52, n: 42 }
+    },
+    hufflepuff: {
+      name: "Hufflepuff",
+      title: "The Steady Friend",
+      blurb: "Shows up early, shares the snacks, and quietly does the work that keeps everyone together.",
+      sig: "High Agreeableness + Conscientiousness",
+      p: { o: 55, c: 78, e: 55, a: 90, n: 32 }
+    },
+    slytherin: {
+      name: "Slytherin",
+      title: "The Strategic Climber",
+      blurb: "Reads the room, finds the leverage, and plans three moves past the obvious one.",
+      sig: "High Conscientiousness, lower Agreeableness + Neuroticism",
+      p: { o: 68, c: 88, e: 65, a: 30, n: 30 }
+    }
+  };
+
   var AXIS_MAP = {
     ei: { slider: "e", high: "E", lowVal: 20, highVal: 80 },
     sn: { slider: "o", high: "N", lowVal: 20, highVal: 80 },
@@ -588,7 +640,8 @@
     "oVal", "cVal", "eVal", "aVal", "nVal",
     "oDrive", "cDrive", "eDrive", "aDrive", "nDrive",
     "code", "suffix", "title", "blurb", "breakdown",
-    "enneaNum", "enneaMatch", "enneaTitle", "enneaBlurb", "enneaSig", "enneaRank"
+    "enneaNum", "enneaMatch", "enneaTitle", "enneaBlurb", "enneaSig", "enneaRank",
+    "houseName", "houseMatch", "houseTitle", "houseBlurb", "houseSig", "houseRank"
   ];
   var ui = {};
   uiIds.forEach(function (id) {
@@ -597,6 +650,53 @@
 
   function setTrackFill(input) {
     input.style.setProperty("--pct", input.value + "%");
+  }
+
+  function applyProfile(profile) {
+    ids.forEach(function (id) {
+      els[id].value = profile[id];
+      setTrackFill(els[id]);
+    });
+    render();
+  }
+
+  function rankProfiles(catalog, profile) {
+    var maxDist = Math.sqrt(ids.length * 100 * 100);
+    return Object.keys(catalog).map(function (key) {
+      var prototype = catalog[key].p;
+      var squaredDistance = ids.reduce(function (sum, id) {
+        return sum + Math.pow(profile[id] - prototype[id], 2);
+      }, 0);
+      return {
+        key: key,
+        match: Math.round(100 - (Math.sqrt(squaredDistance) / maxDist) * 100)
+      };
+    }).sort(function (x, y) { return y.match - x.match; });
+  }
+
+  function renderRanking(list, scores, catalog, labelFor) {
+    list.innerHTML = "";
+    scores.forEach(function (score) {
+      var li = document.createElement("li");
+      var row = document.createElement("div");
+      row.className = "archetype-row-top";
+      var label = document.createElement("span");
+      label.textContent = labelFor(score.key, catalog[score.key]);
+      var pct = document.createElement("span");
+      pct.className = "pct";
+      pct.textContent = score.match + "%";
+      row.appendChild(label);
+      row.appendChild(pct);
+      var track = document.createElement("div");
+      track.className = "archetype-bar-track";
+      var fill = document.createElement("div");
+      fill.className = "archetype-bar-fill";
+      fill.style.width = score.match + "%";
+      track.appendChild(fill);
+      li.appendChild(row);
+      li.appendChild(track);
+      list.appendChild(li);
+    });
   }
 
   function render() {
@@ -654,54 +754,47 @@
     var sides = { ei: ei, sn: sn, tf: tf, jp: jp, at: at };
     document.querySelectorAll(".seg-btn").forEach(function (btn) {
       var axis = btn.getAttribute("data-axis");
-      btn.classList.toggle("active", btn.getAttribute("data-side") === sides[axis]);
+      var isActive = btn.getAttribute("data-side") === sides[axis];
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-pressed", String(isActive));
     });
 
-    var maxDist = Math.sqrt(5 * 100 * 100);
-    var scores = Object.keys(ENNEA).map(function (k) {
-      var pr = ENNEA[k].p;
-      var d = Math.sqrt(
-        Math.pow(o - pr.o, 2) + Math.pow(c - pr.c, 2) + Math.pow(e - pr.e, 2) +
-        Math.pow(a - pr.a, 2) + Math.pow(n - pr.n, 2)
-      );
-      return { num: k, match: Math.round(100 - (d / maxDist) * 100) };
-    });
-    scores.sort(function (x, y) { return y.match - x.match; });
+    var profile = { o: o, c: c, e: e, a: a, n: n };
+    var scores = rankProfiles(ENNEA, profile);
     var top = scores[0];
-    var topInfo = ENNEA[top.num];
+    var topInfo = ENNEA[top.key];
 
-    ui.enneaNum.textContent = top.num;
+    ui.enneaNum.textContent = top.key;
     ui.enneaMatch.textContent = top.match + "% match";
     ui.enneaTitle.textContent = topInfo.name;
     ui.enneaBlurb.textContent = topInfo.blurb;
     ui.enneaSig.textContent = "Signature: " + topInfo.sig;
-
-    var rankList = ui.enneaRank;
-    rankList.innerHTML = "";
-    scores.forEach(function (s) {
-      var li = document.createElement("li");
-      var top2 = document.createElement("div");
-      top2.className = "ennea-row-top";
-      var label = document.createElement("span");
-      label.textContent = s.num + " · " + ENNEA[s.num].name;
-      var pct = document.createElement("span");
-      pct.className = "pct";
-      pct.textContent = s.match + "%";
-      top2.appendChild(label);
-      top2.appendChild(pct);
-      var track = document.createElement("div");
-      track.className = "ennea-bar-track";
-      var fill = document.createElement("div");
-      fill.className = "ennea-bar-fill";
-      fill.style.width = s.match + "%";
-      track.appendChild(fill);
-      li.appendChild(top2);
-      li.appendChild(track);
-      rankList.appendChild(li);
+    renderRanking(ui.enneaRank, scores, ENNEA, function (key, info) {
+      return key + " · " + info.name;
     });
 
     document.querySelectorAll(".ennea-btn").forEach(function (btn) {
-      btn.classList.toggle("active", btn.getAttribute("data-num") === String(top.num));
+      var isActive = btn.getAttribute("data-key") === top.key;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-pressed", String(isActive));
+    });
+
+    var houseScores = rankProfiles(HOUSES, profile);
+    var topHouse = houseScores[0];
+    var houseInfo = HOUSES[topHouse.key];
+    ui.houseName.textContent = houseInfo.name;
+    ui.houseMatch.textContent = topHouse.match + "% match";
+    ui.houseTitle.textContent = houseInfo.title;
+    ui.houseBlurb.textContent = houseInfo.blurb;
+    ui.houseSig.textContent = "Signature: " + houseInfo.sig;
+    renderRanking(ui.houseRank, houseScores, HOUSES, function (key, info) {
+      return info.name;
+    });
+
+    document.querySelectorAll(".house-btn").forEach(function (btn) {
+      var isActive = btn.getAttribute("data-key") === topHouse.key;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-pressed", String(isActive));
     });
   }
 
@@ -714,11 +807,7 @@
   });
 
   document.getElementById("reset").addEventListener("click", function () {
-    ids.forEach(function (id) {
-      els[id].value = DEFAULTS[id];
-      setTrackFill(els[id]);
-    });
-    render();
+    applyProfile(DEFAULTS);
   });
 
   document.getElementById("shuffle").addEventListener("click", function () {
@@ -744,8 +833,8 @@
   Object.keys(ENNEA).forEach(function (num) {
     var btn = document.createElement("button");
     btn.type = "button";
-    btn.className = "ennea-btn";
-    btn.setAttribute("data-num", num);
+    btn.className = "archetype-btn ennea-btn";
+    btn.setAttribute("data-key", num);
     var n = document.createElement("span");
     n.className = "n";
     n.textContent = num;
@@ -755,14 +844,29 @@
     btn.appendChild(n);
     btn.appendChild(label);
     btn.addEventListener("click", function () {
-      var pr = ENNEA[num].p;
-      ids.forEach(function (id) {
-        els[id].value = pr[id];
-        setTrackFill(els[id]);
-      });
-      render();
+      applyProfile(ENNEA[num].p);
     });
     enneaGrid.appendChild(btn);
+  });
+
+  var houseGrid = document.getElementById("houseGrid");
+  Object.keys(HOUSES).forEach(function (key) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "archetype-btn house-btn";
+    btn.setAttribute("data-key", key);
+    var name = document.createElement("span");
+    name.className = "n";
+    name.textContent = HOUSES[key].name;
+    var label = document.createElement("span");
+    label.className = "label";
+    label.textContent = HOUSES[key].title.replace("The ", "");
+    btn.appendChild(name);
+    btn.appendChild(label);
+    btn.addEventListener("click", function () {
+      applyProfile(HOUSES[key].p);
+    });
+    houseGrid.appendChild(btn);
   });
 
   render();
