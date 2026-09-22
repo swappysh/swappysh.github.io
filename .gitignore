@@ -28,3 +28,4 @@ editor-worker/.wrangler/
 __pycache__/
 *.pyc
 scripts/.venv/
+.claude/settings.local.json
