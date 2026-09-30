@@ -8,7 +8,7 @@ I build production LLM systems for a living and spend the rest of my time buildi
 
 I host a philosophy reading group, which has been running long enough now that it's clearly not a phase. I read constantly, mostly philosophy and science fiction, and I write in public and in private. What ends up on this site is a small fraction of that, and lately I'm trying to write things that are truer to me instead of just more polished.
 
-Authors and essays I keep coming back to live on their own page: [Library](/library/). Things I'm thinking about right now are [here](/now/).
+Authors and essays I keep coming back to live on their own page: [Library](/library/). Things I'm thinking about right now are [here](/now/). Good places to eat and hike, and the hobbies I'm in the middle of, are collected [here](/interests/).
 
 **Projects and experiments:**
 
