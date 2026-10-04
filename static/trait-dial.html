@@ -382,6 +382,26 @@
     font-size: 0.78rem;
     text-align: center;
   }
+
+  .corr-info {
+    font-size: 0.8rem;
+    margin-top: -4px;
+  }
+  .corr-info summary {
+    cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.02em;
+    color: var(--brass-strong);
+    list-style: none;
+  }
+  .corr-info summary::-webkit-details-marker { display: none; }
+  .corr-info summary::before { content: "ⓘ "; }
+  .corr-info p {
+    margin: 8px 0 0;
+    line-height: 1.5;
+    color: var(--muted);
+  }
 </style>
 </head>
 <body>
@@ -436,6 +456,11 @@
         <button class="btn" id="shuffle">Shuffle</button>
       </div>
     </div>
+
+    <details class="corr-info">
+      <summary>How traits correlate</summary>
+      <p>These five sliders aren't fully independent. Moving one gives a small nudge to the traits that tend to move with it in real personality data: Openness up nudges Extraversion up and Neuroticism down a touch, Conscientiousness and Agreeableness both pull Neuroticism down, and so on. The nudges are mild and illustrative, not a validated model, so you can still reach any corner, it just takes a little more dragging.</p>
+    </details>
 
     <div class="knob-row">
       <div class="knob-label">
@@ -636,6 +661,26 @@
   });
   var DEFAULTS = { o: 60, c: 55, e: 65, a: 60, n: 45 };
 
+  var CORR = {
+    o: { e: 0.20, a: 0.10, c: 0.05, n: -0.05 },
+    c: { n: -0.30, a: 0.15, e: 0.05, o: 0.05 },
+    e: { o: 0.20, n: -0.15, c: 0.05, a: 0.10 },
+    a: { n: -0.30, c: 0.15, e: 0.10, o: 0.10 },
+    n: { c: -0.30, a: -0.30, e: -0.15, o: -0.05 }
+  };
+  var prevValues = {};
+
+  function nudgeCorrelated(sourceId, delta) {
+    if (!delta) return;
+    var row = CORR[sourceId];
+    Object.keys(row).forEach(function (targetId) {
+      var el = els[targetId];
+      var next = Math.max(0, Math.min(100, Math.round(Number(el.value) + delta * row[targetId])));
+      el.value = next;
+      setTrackFill(el);
+    });
+  }
+
   var uiIds = [
     "oVal", "cVal", "eVal", "aVal", "nVal",
     "oDrive", "cDrive", "eDrive", "aDrive", "nDrive",
@@ -796,12 +841,19 @@
       btn.classList.toggle("active", isActive);
       btn.setAttribute("aria-pressed", String(isActive));
     });
+
+    ids.forEach(function (id) {
+      prevValues[id] = Number(els[id].value);
+    });
   }
 
   ids.forEach(function (id) {
     setTrackFill(els[id]);
     els[id].addEventListener("input", function () {
+      var now = Number(els[id].value);
+      var delta = now - prevValues[id];
       setTrackFill(els[id]);
+      nudgeCorrelated(id, delta);
       render();
     });
   });
