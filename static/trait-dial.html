@@ -669,14 +669,18 @@
     n: { c: -0.30, a: -0.30, e: -0.15, o: -0.05 }
   };
   var prevValues = {};
+  var nudgeRemainder = {};
 
   function nudgeCorrelated(sourceId, delta) {
     if (!delta) return;
     var row = CORR[sourceId];
     Object.keys(row).forEach(function (targetId) {
+      var raw = delta * row[targetId] + (nudgeRemainder[targetId] || 0);
+      var step = Math.round(raw);
+      nudgeRemainder[targetId] = raw - step;
+      if (!step) return;
       var el = els[targetId];
-      var next = Math.max(0, Math.min(100, Math.round(Number(el.value) + delta * row[targetId])));
-      el.value = next;
+      el.value = Math.max(0, Math.min(100, Number(el.value) + step));
       setTrackFill(el);
     });
   }
