@@ -1,12 +1,12 @@
-@import 'tokens';
-@import 'typography';
-@import 'modes';
-@import 'layout';
-@import 'motion';
-@import 'components';
-@import 'leaves';
-@import 'saves';
-@import 'logo';
+@use 'tokens';
+@use 'typography';
+@use 'modes';
+@use 'layout';
+@use 'motion';
+@use 'components';
+@use 'leaves';
+@use 'saves';
+@use 'logo';
 
 *, *::before, *::after {
   box-sizing: border-box;

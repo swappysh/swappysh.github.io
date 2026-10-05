@@ -34,8 +34,6 @@ theme        = "hello-friend-ng"
   footerLeft  = "Powered by <a href=\"https://gohugo.io\">Hugo</a>"
   footerRight = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
 
-# TODO: libsass deprecated in Hugo v0.153.0 - migrate to dartsass
-# See: https://gohugo.io/functions/css/sass/#dart-sass
 [markup.goldmark.renderer]
   unsafe = true
 

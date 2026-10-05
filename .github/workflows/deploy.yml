@@ -37,7 +37,7 @@ jobs:
           # Accepted trade-off: visible in page source, read-only blast radius.
           # Set SAVES_READ_TOKEN in GitHub repo Settings > Secrets > Actions.
           HUGO_PARAMS_SAVESREADTOKEN: ${{ secrets.SAVES_READ_TOKEN }}
-        run: hugo --minify
+        run: hugo --minify --printPathWarnings --printI18nWarnings --panicOnWarning
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
