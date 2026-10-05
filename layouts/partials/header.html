@@ -2,11 +2,14 @@
     <span class="header__inner">
         <a href="{{ .Site.BaseURL }}" class="logo" aria-label="{{ .Site.Title }} home">
             <span class="logo__text">
-                <span class="logo__mark">$ </span><span class="logo-letter" data-mode="night">b</span><span class="logo-letter" data-mode="day">a</span><span class="logo-letter" data-mode="summer">s</span><span class="logo-letter">h</span> ./swapnil.sh<span class="logo__cursor" aria-hidden="true"></span>
+                <span class="logo__mark">$ </span>bash ./swapnil.sh<span class="logo__cursor" aria-hidden="true"></span>
             </span>
         </a>
 
         <span class="header__right">
+            <button type="button" id="audio-toggle" class="audio-toggle" aria-label="Forest sounds" aria-pressed="false" aria-controls="forest-audio">
+                <span class="audio-toggle__icon" aria-hidden="true">♪</span>
+            </button>
             {{- if len .Site.Menus }}
                 <button type="button" class="menu-trigger" aria-label="Open menu" aria-expanded="false" aria-controls="main-menu">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">

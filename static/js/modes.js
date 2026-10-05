@@ -1,9 +1,26 @@
 (function () {
   const MODES = ['night', 'day', 'summer'];
   const STORAGE_KEY = 'site-mode';
-  const KEY_TO_MODE = { n: 'night', d: 'day', s: 'summer' };
+  const controls = document.querySelectorAll('.mode-picker [data-mode]');
 
-  let currentMode = localStorage.getItem(STORAGE_KEY) || 'night';
+  function readStoredMode() {
+    try {
+      const storedMode = localStorage.getItem(STORAGE_KEY);
+      return MODES.includes(storedMode) ? storedMode : 'night';
+    } catch (error) {
+      return 'night';
+    }
+  }
+
+  function storeMode(mode) {
+    try {
+      localStorage.setItem(STORAGE_KEY, mode);
+    } catch (error) {
+      // The selected mode still works when storage is unavailable.
+    }
+  }
+
+  let currentMode = readStoredMode();
 
   function applyMode(mode) {
     if (!MODES.includes(mode)) return;
@@ -11,22 +28,16 @@
     MODES.forEach(m => body.classList.remove('mode-' + m));
     body.classList.add('mode-' + mode);
     currentMode = mode;
-    localStorage.setItem(STORAGE_KEY, mode);
-    document.dispatchEvent(new CustomEvent('modechange', { detail: { mode } }));
+    controls.forEach(function (control) {
+      control.setAttribute('aria-pressed', String(control.getAttribute('data-mode') === mode));
+    });
+    storeMode(mode);
+    document.dispatchEvent(new CustomEvent('modechange', { detail: { mode: mode } }));
   }
 
-  document.addEventListener('keydown', function (e) {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
-    const key = e.key.toLowerCase();
-    if (KEY_TO_MODE[key]) {
-      applyMode(KEY_TO_MODE[key]);
-    }
-  });
-
-  document.querySelectorAll('[data-mode]').forEach(function (el) {
-    el.addEventListener('click', function (e) {
-      e.preventDefault();
-      const mode = el.getAttribute('data-mode');
+  controls.forEach(function (control) {
+    control.addEventListener('click', function () {
+      const mode = control.getAttribute('data-mode');
       applyMode(mode);
     });
   });

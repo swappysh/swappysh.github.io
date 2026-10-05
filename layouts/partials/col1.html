@@ -12,6 +12,11 @@
     {{- end }}
 </div>
 
-<div id="mode-hint" class="mode-hint" role="status" aria-live="polite">
-    press D · N · S to shift moods
+<div class="mode-picker">
+    <span class="mode-picker__label" aria-hidden="true">$ mood --set</span>
+    <div class="mode-picker__options" role="group" aria-label="Site mood">
+        <button type="button" class="mode-picker__button" data-mode="night" aria-label="Night mode" aria-pressed="true">night</button>
+        <button type="button" class="mode-picker__button" data-mode="day" aria-label="Day mode" aria-pressed="false">day</button>
+        <button type="button" class="mode-picker__button" data-mode="summer" aria-label="Summer mode" aria-pressed="false">summer</button>
+    </div>
 </div>

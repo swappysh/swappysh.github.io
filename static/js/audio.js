@@ -1,12 +1,13 @@
-// Ambient forest audio: summer mode only. Entering summer mode always starts
-// playback muted (muted autoplay is always allowed); the first click or
-// keypress anywhere on the page then unmutes and fades in.
+// Ambient forest audio is available in summer mode and starts only from its
+// dedicated control.
 
 (function () {
   var audio = document.getElementById('forest-audio');
-  var btn = null;
-  var unlocked = false;
-  var fadeRaf = null;
+  var btn = document.getElementById('audio-toggle');
+  var icon = btn && btn.querySelector('.audio-toggle__icon');
+  var soundOn = false;
+  var starting = false;
+  var playAttempt = 0;
 
   function hydrateAudio() {
     var sources = audio.querySelectorAll('source[data-src]');
@@ -18,101 +19,86 @@
     audio.load();
   }
 
-  function createToggleBtn() {
-    btn = document.createElement('button');
-    btn.id = 'audio-toggle';
-    btn.className = 'audio-toggle';
-    btn.setAttribute('aria-label', 'Toggle forest sounds');
-    btn.innerHTML = '&#127925;';
-    btn.addEventListener('click', function () {
-      if (unlocked) {
-        muteOut();
-      } else {
-        unmuteIn();
-      }
-    });
-    document.body.appendChild(btn);
-  }
-
-  function fadeTo(target, duration, onDone) {
-    if (!audio) return;
-    if (fadeRaf) cancelAnimationFrame(fadeRaf);
-    var start = audio.volume;
-    var startTime = null;
-    function step(ts) {
-      if (!startTime) startTime = ts;
-      var progress = Math.min((ts - startTime) / duration, 1);
-      audio.volume = start + (target - start) * progress;
-      if (progress < 1) {
-        fadeRaf = requestAnimationFrame(step);
-      } else {
-        audio.volume = target;
-        if (onDone) onDone();
-      }
+  function updateButton(on, busy) {
+    soundOn = on;
+    starting = busy;
+    btn.setAttribute('aria-pressed', String(on));
+    btn.disabled = busy;
+    if (busy) {
+      btn.setAttribute('aria-busy', 'true');
+    } else {
+      btn.removeAttribute('aria-busy');
     }
-    fadeRaf = requestAnimationFrame(step);
+    if (icon) icon.textContent = on ? '🔊' : '♪';
   }
 
-  function unmuteIn() {
-    if (!audio || unlocked) return;
-    unlocked = true;
+  function stopAudio() {
+    playAttempt += 1;
+    audio.pause();
+    audio.muted = true;
+    audio.volume = 0.4;
+    updateButton(false, false);
+  }
+
+  function finishStart(attempt) {
+    if (attempt !== playAttempt || !document.body.classList.contains('mode-summer')) return;
+    updateButton(true, false);
+  }
+
+  function failStart(attempt) {
+    if (attempt !== playAttempt) return;
+    stopAudio();
+  }
+
+  function startAudio() {
+    if (starting || soundOn || !document.body.classList.contains('mode-summer')) return;
+    hydrateAudio();
+
+    var attempt = ++playAttempt;
+    updateButton(false, true);
     audio.muted = false;
-    audio.volume = 0;
-    audio.play().catch(function () {
-      // Still blocked for some reason: revert so the next click/keypress retries.
-      unlocked = false;
-      audio.muted = true;
-    });
-    fadeTo(0.4, 700);
-    if (btn) btn.innerHTML = '&#128264;';
-  }
+    audio.volume = 0.4;
 
-  function muteOut() {
-    if (!audio) return;
-    fadeTo(0, 400, function () {
-      audio.muted = true;
-    });
-    unlocked = false;
-    if (btn) btn.innerHTML = '&#127925;';
-  }
-
-  function onPageInteraction() {
-    if (!unlocked && document.body.classList.contains('mode-summer')) {
-      unmuteIn();
+    var playResult;
+    try {
+      playResult = audio.play();
+    } catch (error) {
+      failStart(attempt);
+      return;
     }
-  }
 
-  function handleModeChange(e) {
-    var mode = e.detail && e.detail.mode;
-    if (mode === 'summer') {
-      if (!audio) return;
-      hydrateAudio();
-      audio.muted = true;
-      audio.volume = 0.4;
-      unlocked = false;
-      audio.play().catch(function () {});
-      if (btn) btn.innerHTML = '&#127925;';
-    } else if (audio && !audio.paused) {
-      fadeTo(0, 400, function () {
-        audio.pause();
-        audio.muted = true;
+    if (playResult && typeof playResult.then === 'function') {
+      playResult.then(function () {
+        finishStart(attempt);
+      }, function () {
+        failStart(attempt);
       });
-      unlocked = false;
-      if (btn) btn.innerHTML = '&#127925;';
+    } else {
+      finishStart(attempt);
     }
+  }
+
+  function handleModeChange(event) {
+    var mode = event.detail && event.detail.mode;
+    if (mode !== 'summer') stopAudio();
   }
 
   document.addEventListener('DOMContentLoaded', function () {
-    if (!audio) return;
+    if (!audio || !btn) return;
     audio.muted = true;
     audio.volume = 0.4;
-    createToggleBtn();
+    updateButton(false, false);
+    btn.addEventListener('click', function () {
+      if (soundOn) {
+        stopAudio();
+      } else {
+        startAudio();
+      }
+    });
     document.addEventListener('modechange', handleModeChange);
-    document.addEventListener('click', onPageInteraction);
-    document.addEventListener('keydown', onPageInteraction);
-    if (document.body.classList.contains('mode-summer')) {
-      hydrateAudio();
-      audio.play().catch(function () {});
-    }
+    audio.addEventListener('pause', function () {
+      if (soundOn || starting) stopAudio();
+    });
+    audio.addEventListener('error', stopAudio);
   });
 })();

@@ -20,9 +20,7 @@
 }
 
 .audio-toggle {
-  position: fixed;
-  top: var(--space-lg);
-  right: var(--space-lg);
+  position: relative;
   background: transparent;
   border: 1px solid var(--line);
   color: var(--muted);
@@ -36,10 +34,20 @@
   z-index: 60;
   transition: color 150ms ease, border-color 150ms ease;
   border-radius: var(--radius-sm);
+  flex: 0 0 auto;
 
   &:hover {
     color: var(--text);
     border-color: var(--mid);
+  }
+
+  &[aria-pressed='true'] {
+    color: var(--text);
+    border-color: var(--accent);
+  }
+
+  &[aria-busy='true'] {
+    cursor: wait;
   }
 }
 
