@@ -9,7 +9,7 @@ description = "A running list of good places to eat, hike, and sit with coffee, 
 
 - **Madras Cafe** — my go-to for South Indian food.
 - **Base Camp**: Indian restaurant in SF.
-- **Koappai**: Indian restaurant in SF.
+- **Kola pasi**: Indian restaurant in SF.
 - Palak paneer is the dish I actually cook at home when I want something real instead of ordering in.
 - Spots jotted down to try or go back to: Terun Pizza, Ramen Kowa, La Bodeguita del Medio, Indo.
 
