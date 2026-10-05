@@ -41,7 +41,7 @@ More to add as they actually happen, not just get imagined.
 
 ## Hobbies
 
-- **Knitting** — mid-project right now, pulled toward the same textures I keep circling back to: jacquard, merino, chunky cable knit (more on that thread: [Now](/now/)).
+- **Knitting** — mid-project right now, pulled toward the same textures I keep circling back to: jacquard, merino, chunky cable knit (more on that thread: [My Philosophy So Far](/now/)).
 - **Crochet** — on the list, haven't started yet.
 - **Hardware** — list started, nothing built yet. Adding as I go.
 - **Software** — [Chorus, No Adults, lekh.space, Mixmake, Beacon, Trait Dial and the rest live on the homepage](/). Two more still cooking: a Strudel RL pipeline (training a small model to write live-coding music via reinforcement learning), and "Daki boxes" — type in a problem and some options, the box picks one for you.
@@ -49,4 +49,4 @@ More to add as they actually happen, not just get imagined.
 
 ## Consciousness, attention, and the rest of it
 
-Less a list, more a thread I keep pulling on: attention and will after Simone Weil, the hard problem, panpsychism, what a person or a model is actually made of. That thinking lives on its own pages: [Library](/library/) for what I'm reading, [Now](/now/) for what's live right now. **No Adults** is where it turns into code instead of staying in my head: simulated characters that revisit memories and revise what they believe.
+Less a list, more a thread I keep pulling on: attention and will after Simone Weil, the hard problem, panpsychism, what a person or a model is actually made of. That thinking lives on its own pages: [Library](/library/) for what I'm reading, [My Philosophy So Far](/now/) for what's live right now. **No Adults** is where it turns into code instead of staying in my head: simulated characters that revisit memories and revise what they believe.
