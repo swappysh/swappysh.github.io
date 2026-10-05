@@ -1,9 +1,12 @@
-<nav class="menu" id="main-menu">
+<nav class="menu" id="main-menu" aria-label="Site navigation">
     <ul class="menu__inner">
         {{- $currentPage := . -}}
         {{ range sort .Site.Menus.main ".Identifier" -}}
             {{- if ne .Identifier "resume" -}}
-            <li><a href="{{ .URL | relLangURL }}">{{ .Name }}</a></li>
+            {{- $href := .URL | relLangURL -}}
+            {{- $isCurrent := eq $currentPage.RelPermalink $href -}}
+            {{- $isPostsLocation := and (eq .Identifier "posts") (eq $currentPage.Section "posts") (not $isCurrent) -}}
+            <li><a href="{{ $href }}"{{ if $isCurrent }} class="active" aria-current="page"{{ else if $isPostsLocation }} class="active" aria-current="location"{{ end }}>{{ .Name }}</a></li>
             {{- end -}}
         {{- end }}
 
