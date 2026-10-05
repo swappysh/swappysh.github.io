@@ -11,6 +11,8 @@ A lot of what drives me comes down to this: suffering shouldn't go unnoticed, an
 
 In practice, that means I want to be an illuminator in people's lives: a community builder, a gardener, a caretaker, someone who pays attention to context and helps figure out the form that fits rather than forcing one. I want to be a listener and a guide, a place people can come to rest, where they feel love and care. And I want to bring real intensity and drive to all of it, these aren't abstract ideals, they're ones I want to push hard toward.
 
+Memes are one of the tools I take seriously for this, compressed cultural knowledge that travels on its own. Movies too: one of the better ways to put some light in front of someone without forcing it on them, letting them arrive at it themselves.
+
 ## Frameworks I keep coming back to
 
 - Context and form fit, after [Henrik & Johanna Karlsson](https://www.henrikkarlsson.xyz/p/problem-solving): *you don't solve a hard problem, you understand its context until the solution stops needing to be found.*
