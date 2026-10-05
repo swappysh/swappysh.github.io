@@ -123,6 +123,10 @@
 }
 
 @media (max-width: 768px) {
+  body.col1-open {
+    overflow: hidden;
+  }
+
   .site-col-1 {
     display: none;
   }
