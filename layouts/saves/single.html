@@ -21,12 +21,15 @@
     <input class="saves-search" id="search-input" type="text" placeholder="Search saves" aria-label="Search saves" disabled>
   </div>
 
-  <div class="saves-count" id="saves-count" aria-live="polite">Loading…</div>
-  <div class="saves-list" id="saves-grid" aria-live="polite">
+  <div class="saves-count" id="saves-count" aria-live="polite" aria-atomic="true" tabindex="-1">Loading…</div>
+  <div class="saves-list" id="saves-grid">
     <div class="saves-loading">
       <div class="saves-spinner"></div>
       <span>Loading your saves…</span>
     </div>
+  </div>
+  <div class="saves-more" id="saves-more" hidden>
+    <button class="filter-btn" id="show-more-btn" type="button" aria-controls="saves-grid">Show more</button>
   </div>
 </main>
 
@@ -61,9 +64,13 @@
   const WORKER_URL = 'https://saves-worker.swappysh.workers.dev';
   const READ_TOKEN = '{{ .Site.Params.savesreadtoken }}';
   const EDITOR_API = document.body.dataset.editorApi || '';
+  const BATCH_SIZE = 24;
+  const SAVE_TYPES = new Set(['tweet', 'article', 'video']);
 
   const countEl = document.getElementById('saves-count');
   const gridEl = document.getElementById('saves-grid');
+  const moreEl = document.getElementById('saves-more');
+  const showMoreBtn = document.getElementById('show-more-btn');
   const toolbarEl = document.getElementById('saves-toolbar');
   const typeFilterBtns = toolbarEl ? Array.from(toolbarEl.querySelectorAll('[data-filter]')) : [];
   const tagFilterRow = document.getElementById('tag-filter-row');
@@ -89,6 +96,8 @@
   let editingItemId = '';
   let isShuffled = false;
   let ownerEnabled = false;
+  let visibleLimit = BATCH_SIZE;
+  let loadState = 'loading';
 
   function esc(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -96,6 +105,20 @@
 
   function safeStr(val) {
     return (val != null ? String(val) : '').trim();
+  }
+
+  function itemType(value) {
+    const type = safeStr(value).toLowerCase();
+    return SAVE_TYPES.has(type) ? type : 'other';
+  }
+
+  function safeHttpUrl(value) {
+    try {
+      const url = new URL(safeStr(value));
+      return url.protocol === 'http:' || url.protocol === 'https:' ? url.href : '';
+    } catch (_) {
+      return '';
+    }
   }
 
   function itemTags(item) {
@@ -126,9 +149,14 @@
   }
 
   function renderCard(item) {
-    const url = item.url || '#';
-    const type = item.type || 'other';
-    const title = type === 'tweet' ? tweetTitle(url) : (item.title || url || 'Untitled');
+    const rawUrl = safeStr(item.url);
+    const url = safeHttpUrl(rawUrl);
+    const type = itemType(item.type);
+    const fallbackTitle = safeStr(item.title) || rawUrl || 'Untitled';
+    const title = type === 'tweet' && url ? tweetTitle(url) : fallbackTitle;
+    const titleMarkup = url
+      ? `<a class="save-card__title" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a>`
+      : `<span class="save-card__title">${esc(title)}</span>`;
     const excerptStr = safeStr(item.excerpt);
     const metaHost = hostname(url);
     const tags = itemTags(item);
@@ -139,7 +167,7 @@
       : '';
     return `
       <div class="save-card" data-type="${type}">
-        <a class="save-card__title" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a>
+        ${titleMarkup}
         <span class="type-badge type-badge--${type}">${esc(type)}</span>
         <div class="save-card__meta">
           <span class="save-meta__hostname" title="${esc(metaHost)}">${esc(metaHost)}</span>
@@ -171,8 +199,14 @@
     }).join('');
   }
 
+  function resetVisibleLimit() {
+    visibleLimit = BATCH_SIZE;
+  }
+
   function setFilter(filter) {
+    if (filter === activeFilter) return;
     activeFilter = filter;
+    resetVisibleLimit();
     typeFilterBtns.forEach(button => {
       const active = button.dataset.filter === activeFilter;
       button.classList.toggle('active', active);
@@ -183,11 +217,12 @@
 
   function setTagFilter(tag) {
     activeTag = activeTag === tag ? '' : tag;
+    resetVisibleLimit();
     render();
   }
 
   function getVisible() {
-    let items = activeFilter === 'all' ? displayItems : displayItems.filter(item => (item.type || '') === activeFilter);
+    let items = activeFilter === 'all' ? displayItems : displayItems.filter(item => itemType(item.type) === activeFilter);
     if (activeTag) items = items.filter(item => itemTags(item).includes(activeTag));
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
@@ -196,17 +231,43 @@
     return items;
   }
 
+  function updateShowMore(matchedCount) {
+    if (!moreEl || !showMoreBtn) return;
+    const remaining = Math.max(0, matchedCount - visibleLimit);
+    const available = loadState === 'ready' && remaining > 0;
+    moreEl.hidden = !available;
+    showMoreBtn.disabled = !available;
+    if (available) {
+      const nextCount = Math.min(BATCH_SIZE, remaining);
+      showMoreBtn.textContent = `Show ${nextCount} more`;
+      showMoreBtn.setAttribute('aria-label', `Show ${nextCount} more saves (${remaining} remaining)`);
+    }
+  }
+
+  function focusCount() {
+    countEl.focus();
+  }
+
+  function focusEditControl(itemId) {
+    const control = Array.from(gridEl.querySelectorAll('[data-edit-tags]'))
+      .find(button => button.dataset.editTags === safeStr(itemId));
+    if (control) control.focus();
+    else focusCount();
+  }
+
   function render() {
     renderTagFilters();
-    const visible = getVisible();
+    const matchedItems = getVisible();
+    const visible = matchedItems.slice(0, visibleLimit);
     const total = allItems.length;
-    const filtered = visible.length;
+    const matched = matchedItems.length;
+    const shown = visible.length;
     if (total === 0) {
-      countEl.textContent = '0 saves';
-    } else if (filtered === total) {
-      countEl.textContent = `${total} saves`;
+      countEl.textContent = 'Showing 0 of 0 saves';
+    } else if (matched === total) {
+      countEl.textContent = `Showing ${shown} of ${matched} saves`;
     } else {
-      countEl.textContent = `${filtered} of ${total} saves`;
+      countEl.textContent = `Showing ${shown} of ${matched} matching saves · ${total} total`;
     }
     let emptyMsg = 'Save links from the web and revisit them here. <a href="https://github.com/swappysh/saves-worker" target="_blank" rel="noopener">Install the browser extension</a> to start saving links from around the web.';
     if (searchQuery) {
@@ -215,9 +276,11 @@
       emptyMsg = `No saves tagged #${esc(activeTag)}`;
     }
     gridEl.innerHTML = visible.length ? visible.map(renderCard).join('') : `<div class="saves-empty">${emptyMsg}</div>`;
+    updateShowMore(matched);
   }
 
   function setLoading(loading) {
+    loadState = loading ? 'loading' : loadState;
     typeFilterBtns.forEach(button => { button.disabled = loading; });
     if (shuffleBtn) shuffleBtn.disabled = loading;
     if (searchInput) {
@@ -228,6 +291,9 @@
     if (loading) {
       countEl.textContent = 'Loading…';
       gridEl.innerHTML = '<div class="saves-loading"><div class="saves-spinner"></div><span>Loading your saves…</span></div>';
+      updateShowMore(0);
+    } else {
+      updateShowMore(getVisible().length);
     }
   }
 
@@ -254,6 +320,7 @@
 
   async function load() {
     setLoading(true);
+    resetVisibleLimit();
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 15000);
@@ -272,10 +339,14 @@
       const items = data?.items;
       allItems = Array.isArray(items) ? items : [];
       displayItems = allItems.slice();
+      loadState = 'ready';
       render();
     } catch (err) {
-      countEl.textContent = '';
-      gridEl.innerHTML = '<div class="saves-error">' + errorMessage(err) + ' <button type="button" class="retry-btn">Retry</button></div>';
+      loadState = 'error';
+      const message = errorMessage(err);
+      countEl.textContent = message;
+      gridEl.innerHTML = '<div class="saves-error">' + message + ' <button type="button" class="retry-btn">Retry</button></div>';
+      updateShowMore(0);
     } finally {
       setLoading(false);
     }
@@ -340,6 +411,7 @@
   }
 
   async function saveTags() {
+    const savedItemId = editingItemId;
     const selected = Array.from(tagOptions.querySelectorAll('input:checked')).map(input => input.value);
     const entered = newTagsInput.value.split(',').map(normalizeTag).filter(Boolean);
     const requested = [...new Set([...selected, ...entered])];
@@ -349,14 +421,16 @@
       const missing = requested.filter(tag => !knownTags.includes(tag));
       await Promise.all(missing.map(createTag));
       const tags = requested.sort();
-      const updated = await ownerRequest(`/api/saves/item/${editingItemId}`, {
+      const updated = await ownerRequest(`/api/saves/item/${encodeURIComponent(savedItemId)}`, {
         method: 'PATCH',
         body: JSON.stringify({ tags }),
       });
-      allItems = allItems.map(item => item.id === editingItemId ? updated : item);
-      displayItems = displayItems.map(item => item.id === editingItemId ? updated : item);
+      allItems = allItems.map(item => item.id === savedItemId ? updated : item);
+      displayItems = displayItems.map(item => item.id === savedItemId ? updated : item);
       tagDialog.close();
+      resetVisibleLimit();
       render();
+      focusEditControl(savedItemId);
     } catch (error) {
       tagStatus.textContent = error.message;
     } finally {
@@ -378,13 +452,30 @@
       isShuffled = !isShuffled;
       displayItems = isShuffled ? shuffled(allItems) : allItems;
       shuffleBtn.textContent = isShuffled ? 'By date' : 'Shuffle';
+      resetVisibleLimit();
       render();
     });
   }
 
   searchInput?.addEventListener('input', event => {
-    searchQuery = event.target.value.trim();
+    const nextQuery = event.target.value.trim();
+    if (nextQuery === searchQuery) return;
+    searchQuery = nextQuery;
+    resetVisibleLimit();
     render();
+  });
+
+  showMoreBtn?.addEventListener('click', () => {
+    const firstNewIndex = Math.min(visibleLimit, getVisible().length);
+    const restoreFocus = document.activeElement === showMoreBtn;
+    visibleLimit += BATCH_SIZE;
+    render();
+    if (restoreFocus && moreEl.hidden) {
+      const firstNewCard = gridEl.querySelectorAll('.save-card')[firstNewIndex];
+      const firstNewLink = firstNewCard?.querySelector('.save-card__title[href]');
+      if (firstNewLink) firstNewLink.focus();
+      else focusCount();
+    }
   });
 
   gridEl.addEventListener('click', event => {

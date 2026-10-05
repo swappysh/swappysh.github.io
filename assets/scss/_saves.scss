@@ -90,6 +90,14 @@
   gap: var(--space-lg);
 }
 
+.saves-more {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-lg);
+
+  &[hidden] { display: none; }
+}
+
 .save-card {
   border: 1px solid var(--line);
   padding: var(--space-md);
