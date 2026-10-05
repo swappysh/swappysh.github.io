@@ -51,7 +51,7 @@ h5 {
 
 h6 {
   font-size: var(--text-sm);
-  color: var(--mid);
+  color: var(--muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -117,7 +117,7 @@ blockquote {
   padding: var(--space-sm) var(--space-lg);
   border-left: 3px solid var(--accent);
   font-style: italic;
-  color: var(--mid);
+  color: var(--muted);
 }
 
 blockquote p:last-child {
@@ -126,7 +126,7 @@ blockquote p:last-child {
 
 figcaption {
   font-size: var(--text-sm);
-  color: var(--mid);
+  color: var(--muted);
   text-align: center;
   margin-top: var(--space-xs);
 }

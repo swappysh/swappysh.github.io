@@ -41,7 +41,7 @@
 .editor-bar__path,
 .editor-bar__status,
 .editor-dialog__footer > span {
-  color: var(--mid);
+  color: var(--muted);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
 }
@@ -122,7 +122,6 @@
 .editor-dialog__close:focus-visible {
   border-color: var(--mid);
   color: var(--hi);
-  outline: none;
 }
 
 .editor-button:disabled {
@@ -143,7 +142,7 @@
 }
 
 .editor-button--quiet {
-  color: var(--mid);
+  color: var(--muted);
 }
 
 body.editor-active {
@@ -166,7 +165,7 @@ body.editor-active [data-editor-content] > [data-editor-block]::before {
   right: 0;
   padding: 0.1rem 0.3rem;
   background: var(--bg);
-  color: var(--mid);
+  color: var(--muted);
   font: var(--text-xs)/1 var(--font-mono);
   opacity: 0;
   pointer-events: none;
@@ -191,7 +190,7 @@ body.editor-active [contenteditable="true"] {
 }
 
 body.editor-active [contenteditable="true"]:focus {
-  outline-color: var(--accent) !important;
+  outline-color: var(--focus) !important;
 }
 
 .editor-dialog {
@@ -266,7 +265,7 @@ body.editor-active [contenteditable="true"]:focus {
 
 .editor-dialog__close {
   border: 0;
-  color: var(--mid);
+  color: var(--muted);
   font-size: 1.35rem;
   padding: 0.4rem;
 }
@@ -314,7 +313,7 @@ body.editor-active [contenteditable="true"]:focus {
 .editor-new-form label {
   display: grid;
   gap: 0.4rem;
-  color: var(--mid);
+  color: var(--muted);
   font: var(--text-xs)/1.4 var(--font-mono);
 }
 
@@ -337,8 +336,7 @@ body.editor-active [contenteditable="true"]:focus {
 .editor-new-form input:focus,
 .editor-new-form textarea:focus,
 .editor-new-form select:focus {
-  border-color: var(--accent);
-  outline: none;
+  border-color: var(--focus);
 }
 
 .editor-page-form__body textarea {
@@ -395,7 +393,6 @@ body.editor-active [contenteditable="true"]:focus {
 .editor-pages__open:focus-visible {
   background: color-mix(in srgb, var(--accent) 6%, transparent);
   color: var(--hi);
-  outline: none;
 }
 
 .editor-pages__copy {
@@ -405,7 +402,7 @@ body.editor-active [contenteditable="true"]:focus {
 
 .editor-pages__kind {
   width: 3.25rem;
-  color: var(--mid);
+  color: var(--muted);
   font-size: var(--text-xs);
   text-transform: uppercase;
 }

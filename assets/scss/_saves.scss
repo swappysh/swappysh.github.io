@@ -11,7 +11,7 @@
   p {
     margin: 0;
     font-size: var(--text-base);
-    color: var(--mid);
+    color: var(--muted);
   }
 }
 
@@ -36,7 +36,7 @@
   padding: var(--space-2xs) var(--space-sm);
   border: 1px solid var(--line);
   background: transparent;
-  color: var(--mid);
+  color: var(--muted);
   cursor: pointer;
   border-radius: var(--radius-sm);
   text-transform: uppercase;
@@ -63,7 +63,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  color: var(--mid);
+  color: var(--muted);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
 
@@ -79,10 +79,9 @@
   color: var(--text);
   width: 100%;
   max-width: 320px;
-  outline: none;
 
-  &::placeholder { color: var(--mid); }
-  &:focus { border-color: var(--mid); }
+  &::placeholder { color: var(--muted); }
+  &:focus { border-color: var(--focus); }
 }
 
 .saves-list {
@@ -110,14 +109,14 @@
 .save-card__meta {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  color: var(--mid);
+  color: var(--muted);
   margin-bottom: var(--space-xs);
 }
 
 .save-card__excerpt {
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  color: var(--mid);
+  color: var(--muted);
   line-height: 1.6;
 }
 
@@ -133,7 +132,7 @@
 .save-card__edit {
   border: 0;
   background: transparent;
-  color: var(--mid);
+  color: var(--muted);
   cursor: pointer;
   font-family: var(--font-mono);
   font-size: var(--text-xs);
@@ -167,7 +166,7 @@
   legend,
   label,
   small {
-    color: var(--mid);
+    color: var(--muted);
     font-family: var(--font-mono);
     font-size: var(--text-xs);
   }
@@ -187,8 +186,7 @@
     padding: var(--space-xs) var(--space-sm);
 
     &:focus {
-      border-color: var(--accent);
-      outline: none;
+      border-color: var(--focus);
     }
   }
 }
@@ -214,7 +212,7 @@
 }
 
 .save-tags-empty {
-  color: var(--mid);
+  color: var(--muted);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
 }
@@ -224,7 +222,7 @@
   font-size: var(--text-xs);
   letter-spacing: 0.05em;
   text-transform: lowercase;
-  color: var(--mid);
+  color: var(--muted);
 
   &--tweet  { color: #1d9bf0; }
   &--video  { color: #ff4444; }
@@ -236,7 +234,7 @@
 .saves-empty {
   font-family: var(--font-mono);
   font-size: var(--text-base);
-  color: var(--mid);
+  color: var(--muted);
   padding: var(--space-xl) 0;
   text-align: center;
 }
@@ -248,7 +246,7 @@
   margin-left: var(--space-xs);
   border: 1px solid var(--line);
   background: transparent;
-  color: var(--mid);
+  color: var(--muted);
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: border-color 200ms ease, color 200ms ease;

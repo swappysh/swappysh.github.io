@@ -93,7 +93,7 @@
   font-family: var(--font-sans);
   font-size: var(--text-base);
   font-weight: 500;
-  color: var(--mid);
+  color: var(--muted);
   text-decoration: none;
   display: block;
   padding: var(--space-2xs) 0;
@@ -117,7 +117,7 @@
 
 .social-icons a,
 .social-icon {
-  color: var(--mid);
+  color: var(--muted);
   text-decoration: none;
   transition: color 150ms ease;
   display: flex;
@@ -136,7 +136,7 @@
 .mode-hint {
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-  color: var(--mid);
+  color: var(--muted);
   position: fixed;
   bottom: var(--space-lg);
   left: var(--space-lg);
@@ -172,7 +172,7 @@
 .home-subtitle {
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  color: var(--mid);
+  color: var(--muted);
   margin-bottom: var(--space-lg);
 }
 
@@ -267,7 +267,7 @@
 .home-recent__date {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  color: var(--mid);
+  color: var(--muted);
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -278,7 +278,7 @@
   a {
     font-family: var(--font-mono);
     font-size: var(--text-sm);
-    color: var(--mid);
+    color: var(--muted);
 
     &:hover { color: var(--text); }
   }
@@ -308,14 +308,14 @@
 .entry__meta {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  color: var(--mid);
+  color: var(--muted);
   margin-bottom: var(--space-sm);
 }
 
 .entry__excerpt {
   font-family: var(--font-sans);
   font-size: var(--text-base);
-  color: var(--mid);
+  color: var(--muted);
   line-height: 1.6;
 }
 
@@ -331,7 +331,7 @@
 .footer__inner {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
-  color: var(--mid);
+  color: var(--muted);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -348,7 +348,7 @@
 .menu-trigger {
   background: none;
   border: 1px solid var(--line);
-  color: var(--mid);
+  color: var(--muted);
   cursor: pointer;
   padding: var(--space-xs);
   display: none;
@@ -368,7 +368,7 @@
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 
@@ -419,7 +419,7 @@
     border-left: 2px solid var(--mid);
     padding-left: var(--space-md);
     margin: var(--space-lg) 0;
-    color: var(--mid);
+    color: var(--muted);
     font-style: italic;
   }
 }
