@@ -65,6 +65,8 @@
   const READ_TOKEN = '{{ .Site.Params.savesreadtoken }}';
   const EDITOR_API = document.body.dataset.editorApi || '';
   const BATCH_SIZE = 24;
+  const PAGE_SIZE = 200;
+  const MAX_PAGES = 100;
   const SAVE_TYPES = new Set(['tweet', 'article', 'video']);
 
   const countEl = document.getElementById('saves-count');
@@ -318,26 +320,67 @@
     return 'Unable to load saves. Try again.';
   }
 
-  async function load() {
-    setLoading(true);
-    resetVisibleLimit();
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 15000);
-      const res = await fetch(`${WORKER_URL}/api/list?limit=200`, {
+  function itemKey(item) {
+    const id = safeStr(item.id);
+    return id ? `id:${id}` : `item:${JSON.stringify(item)}`;
+  }
+
+  async function fetchAllItems(signal) {
+    const items = [];
+    const seen = new Set();
+    let offset = 0;
+    let reportedTotal = null;
+
+    for (let pageNumber = 0; pageNumber < MAX_PAGES; pageNumber += 1) {
+      const res = await fetch(`${WORKER_URL}/api/list?limit=${PAGE_SIZE}&offset=${offset}`, {
         headers: { Authorization: `Bearer ${READ_TOKEN}` },
-        signal: controller.signal,
+        signal,
       });
-      clearTimeout(timeoutId);
       if (!res.ok) throw new Error(String(res.status));
+
       let data;
       try {
         data = await res.json();
       } catch (_) {
         throw new Error('Invalid response');
       }
-      const items = data?.items;
-      allItems = Array.isArray(items) ? items : [];
+      if (!data || typeof data !== 'object' || Array.isArray(data) || !Array.isArray(data.items)) {
+        throw new Error('Invalid response');
+      }
+
+      const page = data.items;
+      if (page.length > PAGE_SIZE || page.some(item => !item || typeof item !== 'object' || Array.isArray(item))) {
+        throw new Error('Invalid response');
+      }
+      if (reportedTotal === null && Number.isSafeInteger(data.total) && data.total >= 0) {
+        reportedTotal = data.total;
+      }
+
+      const previousCount = items.length;
+      page.forEach(item => {
+        const key = itemKey(item);
+        if (!seen.has(key)) {
+          seen.add(key);
+          items.push(item);
+        }
+      });
+
+      if (reportedTotal !== null && items.length >= reportedTotal) return items.slice(0, reportedTotal);
+      if (page.length === 0 || page.length < PAGE_SIZE) return items;
+      if (items.length === previousCount) throw new Error('Invalid response');
+      offset += PAGE_SIZE;
+    }
+
+    throw new Error('Invalid response');
+  }
+
+  async function load() {
+    setLoading(true);
+    resetVisibleLimit();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    try {
+      allItems = await fetchAllItems(controller.signal);
       displayItems = allItems.slice();
       loadState = 'ready';
       render();
@@ -348,6 +391,7 @@
       gridEl.innerHTML = '<div class="saves-error">' + message + ' <button type="button" class="retry-btn">Retry</button></div>';
       updateShowMore(0);
     } finally {
+      clearTimeout(timeoutId);
       setLoading(false);
     }
   }
