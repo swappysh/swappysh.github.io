@@ -8,6 +8,16 @@
   var unlocked = false;
   var fadeRaf = null;
 
+  function hydrateAudio() {
+    var sources = audio.querySelectorAll('source[data-src]');
+    if (!sources.length) return;
+    sources.forEach(function (source) {
+      source.src = source.getAttribute('data-src');
+      source.removeAttribute('data-src');
+    });
+    audio.load();
+  }
+
   function createToggleBtn() {
     btn = document.createElement('button');
     btn.id = 'audio-toggle';
@@ -76,6 +86,7 @@
     var mode = e.detail && e.detail.mode;
     if (mode === 'summer') {
       if (!audio) return;
+      hydrateAudio();
       audio.muted = true;
       audio.volume = 0.4;
       unlocked = false;
@@ -100,6 +111,7 @@
     document.addEventListener('click', onPageInteraction);
     document.addEventListener('keydown', onPageInteraction);
     if (document.body.classList.contains('mode-summer')) {
+      hydrateAudio();
       audio.play().catch(function () {});
     }
   });
