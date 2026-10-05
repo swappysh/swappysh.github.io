@@ -1,3 +1,7 @@
++++
+description = "Production AI systems, artificial minds, language, attention, and human connection."
++++
+
 I'm interested in artificial minds, how people connect, and how attention shapes what we experience. I explore these through code, writing, and conversations.
 
 I build production LLM systems for a living and spend the rest of my time building the same way: a tool nobody asked for, a sentence, a Saturday.
