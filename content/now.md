@@ -1,9 +1,15 @@
 +++
-title = "Things I'm Thinking About Now"
+title = "My Philosophy So Far"
 date = 2026-09-09T00:00:00Z
 draft = false
 description = "Frameworks I keep coming back to, and what I'm currently curious about."
 +++
+
+## What I'm oriented toward
+
+A lot of what drives me comes down to this: suffering shouldn't go unnoticed, and people shouldn't have to fight so hard to find a way out of it. I want to build paths toward safety that people can actually walk, not just point at from a distance. I want help to reach people quickly, with as little resistance as possible between someone's pain and the support that could meet it.
+
+In practice, that means I want to be an illuminator in people's lives: a community builder, a gardener, a caretaker, someone who pays attention to context and helps figure out the form that fits rather than forcing one. I want to be a listener and a guide, a place people can come to rest, where they feel love and care. And I want to bring real intensity and drive to all of it, these aren't abstract ideals, they're ones I want to push hard toward.
 
 ## Frameworks I keep coming back to
 

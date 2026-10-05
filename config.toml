@@ -90,7 +90,7 @@ theme        = "hello-friend-ng"
 
     [[menu.main]]
       identifier = "now"
-      name       = "Now"
+      name       = "My Philosophy So Far"
       url        = "/now/"
 
     [[menu.main]]
