@@ -1,3 +1,9 @@
+{{- /* Security meta. GitHub Pages cannot set HTTP headers, so the policy
+       ships in the document. CSP allows only self plus the inline theme and
+       editor snippets, the Google Fonts files, and our two own Workers. */ -}}
+{{- $editorApi := .Site.Params.editorApiURL | default "https://site-editor.swappysh.workers.dev" -}}
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; media-src 'self'; connect-src 'self' {{ $editorApi }} https://saves-worker.swappysh.workers.dev; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; object-src 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
