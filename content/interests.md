@@ -47,6 +47,7 @@ More to add as they actually happen, not just get imagined.
 - **Software** — [Chorus, No Adults, lekh.space, Mixmake, Beacon, Trait Dial and the rest live on the homepage](/). Two more still cooking: a Strudel RL pipeline (training a small model to write live-coding music via reinforcement learning), and “Daki boxes” — type in a problem and some options, the box picks one for you.
 - **EDM / audiovisual project** — Max Cooper-inspired, generative visuals paired with original music, references collecting on Are.na as it goes.
 - **Deep Dive** - MF doom doomsday, and lana del rey - music where people create whole personas.
+- TV Shows to watch - The office, The Jury
 
 ## Consciousness, attention, and the rest of it
 
