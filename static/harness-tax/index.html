@@ -485,7 +485,7 @@ function drawChartBase() {
   g += `<line id="rHead" y1="${MT}" y2="${CH - MB}" stroke="var(--ink)" stroke-width="1.5" stroke-dasharray="3 3"/>`;
   $("rChart").innerHTML = g;
   $("rLegend").innerHTML = [["cc", "Claude Code"], ["pi", "pi"]].map(([h, n]) => `<span style="--sw:var(--${h})">${n} spend</span>`).join("") +
-    ["bash", "read", "edit", "search", "other"].filter(k => runs.some(r => r.steps.some(x => (TOOLC[x.tool] || "--t-other") === TOOLC[k]))).map(k => `<span style="--sw:var(${TOOLC[k]})">${k}</span>`).join("");
+    ["bash", "read", "edit", "search", "other"].filter(k => runs.some(r => r.steps.some(x => (TOOLC[x.tool] || "--t-other") === TOOLC[k]))).map(k => `<span style="--sw:var(${TOOLC[k]})">${k === "edit" ? "edit/write" : k}</span>`).join("");
 }
 function render() {
   const p = pair();
@@ -589,7 +589,8 @@ if (stall) {
   const g0 = s[gi];
   $("stallH").textContent = `The run that waited ${Math.round(gap / 60)} minutes`;
   const twin = runs.find(r => r.task === stall.task && r.rep === stall.rep && r.h !== stall.h);
-  $("stallProse").innerHTML = `<p>One run shows a difference in harness design that has nothing to do with tokens. On the key-value store task, <span class="${stall.h}">${H[stall.h]}</span> had done its work by minute ${Math.round(g0.t / 60)}. Then it ran its tests followed by a long random stress test, <code>${esc(g0.label)}</code>, and waited. The command never finished, and the run hit our 30-minute limit ${Math.round(gap / 60)} minutes later.</p>
+  const seeds = /\bN=(\d+)/.exec(g0.label);
+  $("stallProse").innerHTML = `<p>One run shows a difference in harness design that has nothing to do with tokens. On the key-value store task, <span class="${stall.h}">${H[stall.h]}</span> had done its work by minute ${Math.round(g0.t / 60)}. Then, in one shell command, it ran its tests and a random stress test${seeds ? ` over ${(+seeds[1]).toLocaleString("en-US")} seeds` : ""}, and waited. The command never finished, and the run hit our 30-minute limit ${Math.round(gap / 60)} minutes later.</p>
   <p>Its fixes were correct, and every hidden test passed. It cost only ${usd(stall.usd)}, because waiting is free. But it took ${mmss(stall.sec)} of wall clock${twin ? ` against ${mmss(twin.sec)} for <span class="${twin.h}">${H[twin.h]}</span> on the same task` : ""}. Claude Code's shell tool stops any command after two minutes unless the model asks for longer. pi's shell tool has no default limit, so one long command can hold the whole run.</p>`;
   drawStall = () => {
   const SW = VW(), sl = 20, sr = 20, sx = t => sl + (SW - sl - sr) * t / stall.sec;
