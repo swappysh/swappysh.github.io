@@ -246,7 +246,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
   </div>
 
   <h2>Two harnesses, one model</h2>
-  <p>A coding agent is a model plus a harness. The harness is the program around the model. It writes the system prompt, defines the tools (run a shell command, edit a file), runs the loop, and decides what the model sees on each step (one step is one model call). We held the model fixed at Claude Opus 5.5 with high reasoning effort, and swapped only the harness.</p>
+  <p>A coding agent is a model plus a harness. The harness is the program around the model. It writes the system prompt, defines the tools (run a shell command, edit a file), runs the loop, and decides what the model sees on each step (one step is one model call). We held the model fixed at Claude Opus 5.5 with high reasoning effort, and swapped only the harness. One difference comes with the harness: pi 0.73.1 came out before Opus 5.5, so it ran the model with a fixed thinking budget instead of the model's adaptive thinking.</p>
   <p><span class="cc">Claude Code</span> is Anthropic's own agent. It ships a long system prompt and a big tool kit: a todo list, sub-agents, web fetch, careful rules about git. <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">pi</a>, by Mario Zechner, goes the other way. Its prompt fits on a page and it has four tools. Here is how much text each one sends on its first model call, before the model has done any work, measured from our runs:</p>
   <div class="fig">
     <div class="packs" id="packs"></div>
@@ -347,7 +347,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
       <li>The replay also has three small pilot tasks, run before the main round. They are not in the scorecard or the numbers above.</li>
       <li>The runs shared one <code>/tmp</code> folder. On the markdown-it-py task, four later runs (two per harness) reused a JavaScript library the first run had installed there, so those four may be a little cheap and quick.</li>
       <li>Some runs used the network: all six inflect runs read the maintainer's blog page on project layout, one Claude Code run on the markdown-it-py task installed the JavaScript markdown-it library, and one on the boltons task installed pytest. Runs on both sides pulled dev tools such as ruff and the mypy type checker through uvx, and the logs show mypy downloads in one Claude Code run and two pi runs. No run fetched the upstream fix.</li>
-      <li>One model. A different model, or a newer pi that knows about this model's adaptive thinking, could change the picture.</li>
+      <li>One model, and a pi version older than it. A different model, or a newer pi, could change the picture.</li>
       <li>The graders are from the same model family as the agents.</li>
       <li>Everything ran on one machine through one API route, at most two runs at a time, with launch order alternated.</li>
     </ul>
@@ -537,11 +537,11 @@ function fit(h) {
 }
 const F = { cc: fit("cc"), pi: fit("pi") };
 const B = (F.cc.b + F.pi.b) / 2, W = (F.cc.w + F.pi.w) / 2;
-// call 1 writes the starting context to cache; every later call rereads what came before;
-// every call writes its own growth to cache and pays for its output
-const model = (h, n) => n < 1 ? 0 : (F[h].a * P.cw + (n - 1) * F[h].a * P.cr + B * P.cr * (n - 1) * n / 2 + n * B * P.cw) / 1e6 + n * W;
+// call i (from 0) has context a + B*i. Call 0 writes a to cache; every later call rereads
+// the previous call's context and writes its growth B. Every call pays for its output.
+const model = (h, n) => n < 1 ? 0 : (F[h].a * P.cw + (n - 1) * F[h].a * P.cr + B * P.cr * (n - 2) * (n - 1) / 2 + (n - 1) * B * P.cw) / 1e6 + n * W;
 // same tokens with no prompt cache: every context token is plain input, every call
-const modelNo = (h, n) => n < 1 ? 0 : (n * F[h].a + B * (n - 1) * n / 2 + n * B) * P.in / 1e6 + n * W;
+const modelNo = (h, n) => n < 1 ? 0 : (n * F[h].a + B * (n - 1) * n / 2) * P.in / 1e6 + n * W;
 // a real run repriced without the cache: reads and writes become plain input
 runs.forEach(r => r.usdNo = r.usd + r.opus.reduce((t, u) => t + (u.cr * (P.in - P.cr) + u.cw * (P.in - P.cw)) / 1e6, 0));
 const tCache = $("tCache");
@@ -581,7 +581,9 @@ const tot = (h, k) => fullH(h).reduce((t, r) => t + r[k], 0);
 const cells = {}; full.forEach(r => (cells[r.task + r.h] ||= []).push(r.usd));
 const spread = Math.max(...Object.values(cells).map(c => Math.max(...c) / Math.min(...c)));
 $("medCalls").textContent = Math.round(median(full.map(r => r.calls.length)));
-$("tProse").textContent = `In this model pi saves ${sv(5)}% on a 5-call job, ${sv(15)}% at 15 calls and ${sv(60)}% at 60. The dots tell the other half: real runs scatter widely around both curves, because the work itself varies so much from run to run. On the same task with the same harness, one run cost up to ${spread.toFixed(1)} times as much as another. With that much noise, our runs are too few to show the fade.`;
+const long = full.filter(r => r.calls.length > 30);
+const longBelow = long.length > 1 && long.every(r => r.usd < Math.min(model("cc", r.calls.length), model("pi", r.calls.length))) ? ` All ${long.length} runs past 30 calls cost less than either curve.` : "";
+$("tProse").textContent = `In this model pi saves ${sv(5)}% on a 5-call job, ${sv(15)}% at 15 calls and ${sv(60)}% at 60. The dots tell the other half: real runs scatter widely, because the work itself varies so much from run to run.${longBelow} On the same task with the same harness, one run cost up to ${spread.toFixed(1)} times as much as another. With that much noise, our runs are too few to show the fade.`;
 $("tCacheProse").textContent = `All of this assumes prompt caching, and caching is why the tax is small. Tokens the API has already seen cost ${usd(P.cr, 2)} per million instead of ${usd(P.in, 0)}. Priced with no cache, our ${fullH("cc").length} main-round Claude Code runs would cost ${usd(tot("cc", "usdNo"), 0)} instead of ${usd(tot("cc", "usd"), 0)}, and our ${fullH("pi").length} pi runs ${usd(tot("pi", "usdNo"), 0)} instead of ${usd(tot("pi", "usd"), 0)}. pi's edge in total spend grows from ${Math.round(100 * (1 - tot("pi", "usd") / tot("cc", "usd")))}% to ${Math.round(100 * (1 - tot("pi", "usdNo") / tot("cc", "usdNo")))}%, and in the model a 15-call job shows a ${sv(15, modelNo)}% gap instead of ${sv(15)}%. Untick the box above to watch it happen.`;
 
 // ---------- stall ----------
