@@ -55,7 +55,7 @@ body {
   padding-block: 0 4rem;
 }
 .page { max-width: 64ch; margin-inline: auto; display: flex; flex-direction: column; gap: 1.1rem; }
-.wide { width: min(980px, calc(100vw - 32px)); margin-inline: calc((min(980px, calc(100vw - 32px)) - 100%) / -2); }
+.wide { width: 100%; }
 
 h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.15; margin: 0; }
 h1 { font-size: clamp(2.6rem, 8vw, 4.4rem); font-weight: 800; letter-spacing: -0.01em; }
@@ -147,7 +147,7 @@ input[type=range] { accent-color: var(--ink); width: 100%; }
 .legend span::before { content: ""; display: inline-block; width: 0.7em; height: 0.7em; border-radius: 2px; margin-right: 0.35em; background: var(--sw); vertical-align: -0.05em; }
 .chartwrap { overflow-x: auto; }
 #rTask { width: 100%; }
-.chart { min-width: 600px; width: 100%; height: auto; display: block; overflow: visible; }
+.chart { min-width: 520px; width: 100%; height: auto; display: block; overflow: visible; }
 .chart text { font: 500 13px var(--mono); fill: var(--muted); }
 @media (max-width: 640px) { .chartwrap::after, .tablewrap::after { content: "scroll sideways for the rest →"; display: block; font: 500 0.72rem/1.4 var(--mono); color: var(--muted); padding-top: 0.25rem; position: sticky; left: 0; } }
 .chart .axis { stroke: var(--line); stroke-width: 1; }
@@ -204,10 +204,10 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
       <svg viewBox="0 0 240 200"><g filter="url(#wob)">
         <use href="#guy" x="40" y="70" width="40" height="84"/>
         <use href="#guy" x="160" y="70" width="40" height="84"/>
-        <text x="60" y="58" text-anchor="middle" font-size="13">Opus 5.5</text>
-        <text x="180" y="58" text-anchor="middle" font-size="13">also Opus 5.5</text>
+        <text x="60" y="58" text-anchor="middle" font-size="15">Opus 5.5</text>
+        <text x="180" y="58" text-anchor="middle" font-size="15">also Opus 5.5</text>
         <path class="ink" d="M100 120 h40 M132 113 l8 7 -8 7"/>
-        <text x="120" y="184" text-anchor="middle" font-size="12">same brain, same task</text>
+        <text x="120" y="184" text-anchor="middle" font-size="15">same brain, same task</text>
       </g></svg>
       <figcaption class="cap">Same model. Same job.</figcaption>
     </figure>
@@ -215,15 +215,15 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
       <svg viewBox="0 0 240 200"><g filter="url(#wob)">
         <path class="ink" d="M33.2 54.0 q5.8 -10.0 11.6 0"/><rect class="fill-cc" x="10.0" y="52.0" width="58.0" height="92.0" rx="13.9"/><path class="fill-cc" d="M13.5 72.0 Q39.0 46.0 64.5 72.0 Z"/><rect class="fill-cc" x="19.3" y="108.0" width="39.4" height="28.0" rx="5.8"/><path class="ink" d="M62.2 66.0 Q76.1 64.0 84.0 93.0"/><path class="ink" d="M65.1 124.0 L84.0 105.0"/>
         <use href="#guy" x="66" y="62" width="40" height="84"/>
-        <text x="39" y="84" text-anchor="middle" font-size="9.5">prompt</text>
-        <text x="39" y="94" text-anchor="middle" font-size="9.5">+ tools</text>
-        <text x="39" y="104" text-anchor="middle" font-size="9.5">+ task</text>
+        <text x="39" y="81" text-anchor="middle" font-size="11">prompt</text>
+        <text x="39" y="92.5" text-anchor="middle" font-size="11">+ tools</text>
+        <text x="39" y="104" text-anchor="middle" font-size="11">+ task</text>
         <g transform="translate(166 99) scale(1.177) translate(-166 -99)"><path class="ink" d="M155.2 88.4 q1.8 -2.4 3.6 0"/><rect class="fill-pi" x="148.0" y="87.9" width="18.0" height="22.1" rx="4.3"/><path class="fill-pi" d="M149.1 92.7 Q157.0 86.5 164.9 92.7 Z"/><rect class="fill-pi" x="150.9" y="101.4" width="12.2" height="6.7" rx="1.8"/></g><path class="ink" d="M164.2 91.3 Q174.1 89.3 178.0 93.0"/><path class="ink" d="M165.1 105.2 L178.0 95.9"/>
         <use href="#guy" x="160" y="62" width="40" height="84"/>
-        <text x="60" y="30" text-anchor="middle" font-size="13" class="t-cc">Claude Code</text>
-        <text x="180" y="30" text-anchor="middle" font-size="13" class="t-pi">pi</text>
-        <text x="60" y="176" text-anchor="middle" font-size="12" id="comicCC">~27k tokens</text>
-        <text x="180" y="176" text-anchor="middle" font-size="12" id="comicPI">~3k tokens</text>
+        <text x="60" y="30" text-anchor="middle" font-size="15" class="t-cc">Claude Code</text>
+        <text x="180" y="30" text-anchor="middle" font-size="15" class="t-pi">pi</text>
+        <text x="60" y="176" text-anchor="middle" font-size="15" id="comicCC">~27k tokens</text>
+        <text x="180" y="176" text-anchor="middle" font-size="15" id="comicPI">~3k tokens</text>
       </g></svg>
       <figcaption class="cap">Different backpacks.</figcaption>
     </figure>
@@ -232,14 +232,14 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
         <path class="ink" d="M27.6 75.4 q4.4 -7.4 8.8 0"/><rect class="fill-cc" x="10.0" y="73.9" width="44.0" height="68.1" rx="10.6"/><path class="fill-cc" d="M12.6 88.7 Q32.0 69.5 51.4 88.7 Z"/><rect class="fill-cc" x="17.0" y="115.4" width="29.9" height="20.7" rx="4.4"/><path class="ink" d="M49.6 84.3 Q57.8 82.3 60.0 104.0"/><path class="ink" d="M51.8 127.2 L60.0 112.9"/>
         <use href="#guy" x="44" y="76" width="36" height="76"/>
         <path class="ink" d="M120 40 V160 M104 64 h32"/>
-        <text x="120" y="32" text-anchor="middle" font-size="12">TOLL</text>
-        <text x="120" y="84" text-anchor="middle" font-size="11" style="paint-order:stroke;stroke:var(--panel);stroke-width:5px">reread</text>
-        <text x="120" y="97" text-anchor="middle" font-size="11" style="paint-order:stroke;stroke:var(--panel);stroke-width:5px">your bag</text>
+        <text x="120" y="32" text-anchor="middle" font-size="15">TOLL</text>
+        <text x="120" y="84" text-anchor="middle" font-size="12.5" style="paint-order:stroke;stroke:var(--panel);stroke-width:5px">reread</text>
+        <text x="120" y="97" text-anchor="middle" font-size="12.5" style="paint-order:stroke;stroke:var(--panel);stroke-width:5px">your bag</text>
         <text x="62" y="62" text-anchor="middle" font-size="15">$$</text>
         <g transform="translate(180 110.8) scale(1.096) translate(-180 -110.8)"><path class="ink" d="M171.6 102.0 q1.4 -2.0 2.8 0"/><rect class="fill-pi" x="166.0" y="101.6" width="14.0" height="18.4" rx="3.4"/><path class="fill-pi" d="M166.8 105.6 Q173.0 100.4 179.2 105.6 Z"/><rect class="fill-pi" x="168.2" y="112.8" width="9.5" height="5.6" rx="1.4"/></g><path class="ink" d="M178.6 104.4 Q187.3 102.4 190.0 104.0"/><path class="ink" d="M179.3 116.0 L190.0 106.4"/>
         <use href="#guy" x="174" y="76" width="36" height="76"/>
         <text x="192" y="62" text-anchor="middle" font-size="15">$</text>
-        <text x="120" y="186" text-anchor="middle" font-size="12">...at every single step</text>
+        <text x="120" y="186" text-anchor="middle" font-size="15">...at every single step</text>
       </g></svg>
       <figcaption class="cap">The fee is paid on every step.</figcaption>
     </figure>
@@ -255,8 +255,15 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
   <p>The model is stateless. On every step the harness sends the whole conversation again, starting with that pack. Prompt caching makes the repeat cheap: a cached token costs $0.20 per million, a twentieth of a fresh one. But an agent takes many steps (<span id="medCalls"></span> model calls in a typical run here), and the context grows on each one. The question is whether this fee shows up on the bill.</p>
   <p>We are not the first to ask. In April, siddharth (<a href="https://x.com/sambharia/status/2043703343453987133" target="_blank" rel="noopener">@sambharia</a>) wrote <em>The Harness Tax</em>, which traces where Claude Code's tokens go on a small job. In September, a UC Berkeley and Arena team published <a href="https://harnesstax.github.io/" target="_blank" rel="noopener">HarnessTax</a>, a much bigger study of seven models in three harnesses (Claude Code, Codex CLI and pi) on SWE-bench Lite and Terminal-Bench 2.0. They found that the harness barely changed how often tasks were solved, and that Claude Code cost about twice as much as pi on SWE-bench Lite. Our study is far smaller. What it adds is a blind grade of the code itself, not just whether the tests pass, and a replay of every run.</p>
 
+  <h2>The scorecard</h2>
+  <p id="scoreLead"></p>
+  <div class="fig wide">
+    <div class="tablewrap" tabindex="0" role="region" aria-label="Results by task, scrolls sideways"><table id="score"></table></div>
+    <p class="figcap">Medians per task for cost and time, mean for the grade. "Solved" means every hidden test passed, including tests that already passed before the change, so a fix that breaks something else does not count. "Grade" is the blind grader's score out of 10. Underline marks the cheaper, faster or higher-graded side.</p>
+  </div>
+
   <h2>Watch two runs side by side</h2>
-  <p>Each replay below is a real pair of runs on the same task, one per harness, started together. The meters show money spent so far, computed from each harness's own token log. The tape shows each tool call as it happened, and how the run ended. A few pi calls name tools that don't exist, such as <code>pelican_write</code>; pi answers those with an error. Press Replay, or drag the slider to scrub. In the charts and the table below, CC is short for Claude Code.</p>
+  <p>Each replay below is a real pair of runs on the same task, one per harness, started together. The meters show money spent so far, computed from each harness's own token log. The tape shows each tool call as it happened, and how the run ended. A few pi calls name tools that don't exist, such as <code>pelican_write</code>; pi answers those with an error. Press Replay, or drag the slider to scrub. In the table above and the charts below, CC is short for Claude Code.</p>
   <section class="fig wide" id="replay" aria-label="Run replay">
     <div class="controls">
       <label for="rTask" style="flex:1 1 14rem">task <select id="rTask"></select></label>
@@ -304,13 +311,6 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
     <p class="figcap">Every tick is one tool call; calls a few seconds apart are stacked in one column. The shaded stretch is one shell command that was still running when the limit hit.</p>
   </section>
 
-  <h2>The scorecard</h2>
-  <p id="scoreLead"></p>
-  <div class="fig wide">
-    <div class="tablewrap" tabindex="0" role="region" aria-label="Results by task, scrolls sideways"><table id="score"></table></div>
-    <p class="figcap">Medians per task for cost and time, mean for the grade. "Solved" means every hidden test passed, including tests that already passed before the change, so a fix that breaks something else does not count. "Grade" is the blind grader's score out of 10. Underline marks the cheaper, faster or higher-graded side.</p>
-  </div>
-
   <h2>What the tests couldn't tell us</h2>
   <div class="strip wide" role="img" aria-label="Comic: one figure says pi is cheaper, then asks whether both passed the tests; the other says every run did; so the tests can't tell them apart.">
     <figure style="margin:0;display:flex;flex-direction:column;gap:6px">
@@ -318,30 +318,33 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
         <use href="#guy" x="30" y="90" width="40" height="84"/>
         <rect class="ink" x="110" y="40" width="110" height="80"/>
         <path class="ink" d="M120 108 L145 90 L170 96 L210 56"/>
-        <text x="110" y="150" font-size="13">"pi is cheaper!"</text>
+        <text x="110" y="150" font-size="15">"pi is cheaper!"</text>
       </g></svg>
     </figure>
     <figure style="margin:0;display:flex;flex-direction:column;gap:6px">
       <svg viewBox="0 0 240 200"><g filter="url(#wob)">
         <use href="#guy" x="30" y="90" width="40" height="84"/>
         <use href="#guy" x="170" y="90" width="40" height="84"/>
-        <text x="50" y="32" text-anchor="middle" font-size="12">"did both</text>
-        <text x="50" y="48" text-anchor="middle" font-size="12">pass the tests?"</text>
-        <text x="190" y="80" text-anchor="middle" font-size="12" id="comicPass">"every run did."</text>
+        <text x="6" y="32" font-size="15">"did both</text>
+        <text x="6" y="48" font-size="15">pass the tests?"</text>
+        <text x="234" y="80" text-anchor="end" font-size="15" id="comicPass">"every run did."</text>
       </g></svg>
     </figure>
     <figure style="margin:0;display:flex;flex-direction:column;gap:6px">
       <svg viewBox="0 0 240 200"><g filter="url(#wob)">
         <use href="#guy" x="30" y="90" width="40" height="84"/>
         <use href="#guy" x="170" y="90" width="40" height="84"/>
-        <text x="120" y="40" text-anchor="middle" font-size="12">"so the tests can't tell</text>
-        <text x="120" y="56" text-anchor="middle" font-size="12">them apart."</text>
-        <text x="190" y="80" text-anchor="middle" font-size="12">"...yeah."</text>
+        <text x="120" y="40" text-anchor="middle" font-size="15">"so the tests can't tell</text>
+        <text x="120" y="56" text-anchor="middle" font-size="15">them apart."</text>
+        <text x="190" y="80" text-anchor="middle" font-size="15">"...yeah."</text>
       </g></svg>
     </figure>
   </div>
+  <div id="limitsLead" class="page" style="gap:1.1rem"></div>
+  <div class="page">
+  <p>Tests and grades both miss some of what makes a diff easy to keep. After the launch, Gagan (<a href="https://x.com/gagu_sh/status/2119899741223842074" target="_blank" rel="noopener">@gagu_sh</a>) suggested cheap structural signals to put next to the grades: linter findings, new dependencies, and lines changed outside the task. They often explain why one diff reads better than another. The last one needs only the diffs we already have, so it is our next check.</p>
+  </div>
   <div class="notes">
-    <p id="limitsLead"></p>
     <p>Other limits:</p>
     <ul>
       <li>A small sample: six Python tasks, three runs each per harness. Three are real bug fixes from open-source projects, merged after the model's training cutoff but still public. The other three are synthetic tasks, written by a Claude agent. Each per-task median rests on three runs.</li>
@@ -460,17 +463,16 @@ function lane(r) {
     <div class="meter"><span class="big">${usd(cost, 3)}</span><span class="small">${mmss(Math.min(now, r.sec))} elapsed<br>${nt} model calls · ${calls} tool calls</span></div>
     <ul class="tape" aria-live="off">${tape || `<li><span class="empty">waiting for the first tool call…</span></li>`}</ul>`;
 }
-// on phones the charts draw in a 600-wide viewBox, so text keeps its CSS size
-const narrowQ = matchMedia("(max-width: 640px)");
-const VW = () => narrowQ.matches ? 600 : 900;
-const setVB = (id, h) => $(id).setAttribute("viewBox", `0 0 ${VW()} ${h}`);
+// each chart draws in a viewBox as wide as its box (at least 520), so text keeps its CSS size
+const VW = id => Math.max(520, Math.round($(id).parentNode.clientWidth) || 600);
+const setVB = (id, h) => $(id).setAttribute("viewBox", `0 0 ${VW(id)} ${h}`);
 let CW = 900;
 const CH = 262, ML = 52, MR = 14, MT = 12, MB = 62;
 let cx, cy;
 function niceStep(max, n) { const raw = max / n, p = Math.pow(10, Math.floor(Math.log10(raw))); return [1, 2, 2.5, 5, 10].map(m => m * p).find(s => s >= raw); }
 function drawChartBase() {
   const p = pair(), ymax = Math.max(p.cc.usd, p.pi.usd) * 1.08;
-  CW = VW(); setVB("rChart", CH);
+  CW = VW("rChart"); setVB("rChart", CH);
   cx = t => ML + (CW - ML - MR) * t / st.max;
   cy = v => CH - MB - (CH - MT - MB) * v / ymax;
   let g = "";
@@ -557,7 +559,7 @@ const tx = n => tl + (TW - tl - tr) * n / NMAX, ty = v => TH - tb - (TH - tt - t
 function drawTax() {
   const n = +tSteps.value, on = tCache.checked, M = on ? model : modelNo, cost = r => on ? r.usd : r.usdNo;
   dotsMax = Math.max(...full.map(cost), M("cc", NMAX)) * 1.05;
-  TW = VW(); setVB("tChart", TH);
+  TW = VW("tChart"); setVB("tChart", TH);
   $("tCacheLbl").textContent = on ? "prompt caching on (untick to see the tax without the discount)" : "prompt caching off: every token paid at full input price, every call";
   let g = "";
   const ys = niceStep(dotsMax, 4);
@@ -602,7 +604,7 @@ if (stall) {
   $("stallProse").innerHTML = `<p>One run shows a difference in harness design that has nothing to do with tokens. On the key-value store task, <span class="${stall.h}">${H[stall.h]}</span> had done its work by minute ${Math.round(g0.t / 60)}. Then, in one shell command, it ran its tests and a random stress test${seeds ? ` over ${(+seeds[1]).toLocaleString("en-US")} seeds` : ""}, and waited. The command never finished, and the run hit our 30-minute limit ${Math.round(gap / 60)} minutes later.</p>
   <p>Its fixes were correct, and every hidden test passed. It cost only ${usd(stall.usd)}, because waiting is free. But it took ${mmss(stall.sec)} of wall clock${twin ? ` against ${mmss(twin.sec)} for <span class="${twin.h}">${H[twin.h]}</span> on the same task` : ""}. After two minutes, Claude Code's shell tool moves a command to the background and hands control back to the model, so the run goes on. pi's shell tool has no default limit, so one long command can hold the whole run.</p>`;
   drawStall = () => {
-  const SW = VW(), sl = 20, sr = 20, sx = t => sl + (SW - sl - sr) * t / stall.sec;
+  const SW = VW("sChart"), sl = 20, sr = 20, sx = t => sl + (SW - sl - sr) * t / stall.sec;
   setVB("sChart", 120);
   let g = `<rect x="${sx(g0.t)}" y="20" width="${sx(g0.t + gap) - sx(g0.t)}" height="56" fill="var(--hi)" fill-opacity="0.35"/>`;
   g += `<line class="axis" x1="${sl}" x2="${SW - sr}" y1="76" y2="76"/>`;
@@ -618,7 +620,8 @@ if (stall) {
   drawStall();
 } else { $("stallH").hidden = true; $("sChart").closest("section").hidden = true; }
 
-narrowQ.addEventListener("change", () => { drawChartBase(); render(); drawTax(); drawStall(); });
+let lastW = 0;
+addEventListener("resize", () => { const w = VW("rChart"); if (w !== lastW) { lastW = w; drawChartBase(); render(); drawTax(); drawStall(); } });
 
 // ---------- scorecard ----------
 const ft = [...new Set(full.map(r => r.task))].sort();
@@ -649,7 +652,7 @@ const lo = Math.min(mc, mq), hi = Math.max(mc, mq), cut = 1 - lo / hi, clearCost
 const gc = gmean(C), gq = gmean(Q), better = gc >= gq ? "cc" : "pi", gap = Math.abs(gc - gq), clearQ = gap >= 1 && winsGrade[better] >= 4, clearTime = tcut >= 0.15 && winsTime[quicker] >= 5;
 $("scoreLead").innerHTML = `Across the ${full.length} main-round runs, <span class="${cheaper}">${H[cheaper]}</span> had the lower median cost per run, ${usd(lo)} against ${usd(hi)}, ${Math.round(100 * cut)}% less. It was cheaper on ${winsCost[cheaper]} of ${ft.length} tasks. Before running, we set the bar for a clear win at a median at least 15% lower and lower on at least 5 of 6 tasks, so ${clearCost ? "that is a clear win" : "this falls short of a clear win"}. On quality the lean goes ${better === cheaper ? "the same way" : "the other way"}: the blind graders (a fresh grader session for each task) gave <span class="${better}">${H[better]}</span>'s diffs ${g1(Math.max(gc, gq))} out of 10 against ${g1(Math.min(gc, gq))}, higher on ${winsGrade[better]} of ${ft.length} tasks. The bar there was a full point and 4 of 6 tasks, so ${clearQ ? "that one is a clear win" : "that falls short too"}. ${clearTime ? `Speed is a clear win for <span class="${quicker}">${H[quicker]}</span>` : `Speed leaned to <span class="${quicker}">${H[quicker]}</span>, again without clearing the bar`}: its median run took ${mmss(Math.min(tc, tq))} against ${mmss(Math.max(tc, tq))}, ${(100 * tcut).toFixed(1)}% less, and it was faster on ${winsTime[quicker]} of ${ft.length} tasks.`;
 const allSolved = full.every(r => r.resolved), AG = DATA.agreement, RG = DATA.regrade;
-$("limitsLead").innerHTML = `Quality is the weakest signal here, for the reason in the comic: ${allSolved ? "every run" : "almost every run"} solved its task, so the hidden tests can't rank the harnesses. That leaves the blind graders: for each task, a fresh grader session read the diffs shuffled, with the harness names removed, and scored them against a rubric we wrote before the runs. They found real misses (an edge case in a stream seek, a crash on a 5,000-digit list index, one link-trim spot that a dependency hides), but they were small and spread over both sides: ${g1(gc)} against ${g1(gq)} out of 10.${AG ? ` A second grader re-scored the template engine task on its own. It gave the same total to ${AG.exact} of ${AG.n} diffs${AG.grader_b.cc > AG.grader_b.pi === AG.grader_a.cc > AG.grader_a.pi ? ` and also put ${H[AG.grader_b.cc > AG.grader_b.pi ? "cc" : "pi"]} ahead` : ""}, and its ranking of the ${AG.n} diffs correlates with the first grader's at ${AG.spearman.toFixed(2)} (they split on one diff: the first grader ranked it top, and the second gave it a 9 and ranked it fourth).` : ""}${RG ? ` Those graders were Claude Opus 5.5, the same model as the agents, so later we had a non-Claude model, ${RG.model}, re-grade the ${RG.n} diffs we could still recover (${RG.tasks} of the ${ft.length} tasks). It graded harder and ${(RG.gpt.cc > RG.gpt.pi) === (RG.opus.cc > RG.opus.pi) ? "kept the same side ahead" : "flipped the order"}: ${H.cc} ${g1(RG.gpt.cc)} against ${H.pi} ${g1(RG.gpt.pi)}, where Opus gave the same diffs ${g1(RG.opus.cc)} against ${g1(RG.opus.pi)}. Averaging the two graders gives ${g1(RG.both.cc)} against ${g1(RG.both.pi)}.` : ""}`;
+$("limitsLead").innerHTML = `<p>Quality is the weakest signal here, for the reason in the comic: ${allSolved ? "every run" : "almost every run"} solved its task, so the hidden tests can't rank the harnesses.</p><p>That leaves the blind graders: for each task, a fresh grader session read the diffs shuffled, with the harness names removed, and scored them against a rubric we wrote before the runs. They found real misses (an edge case in a stream seek, a crash on a 5,000-digit list index, one link-trim spot that a dependency hides), but they were small and spread over both sides: ${g1(gc)} against ${g1(gq)} out of 10.${AG ? ` A second grader re-scored the template engine task on its own. It gave the same total to ${AG.exact} of ${AG.n} diffs${AG.grader_b.cc > AG.grader_b.pi === AG.grader_a.cc > AG.grader_a.pi ? ` and also put ${H[AG.grader_b.cc > AG.grader_b.pi ? "cc" : "pi"]} ahead` : ""}, and its ranking of the ${AG.n} diffs correlates with the first grader's at ${AG.spearman.toFixed(2)} (they split on one diff: the first grader ranked it top, and the second gave it a 9 and ranked it fourth).` : ""}</p>${RG ? `<p>Those graders were Claude Opus 5.5, the same model as the agents, so later we had a non-Claude model, ${RG.model}, re-grade the ${RG.n} diffs we could still recover (${RG.tasks} of the ${ft.length} tasks). It graded harder and ${(RG.gpt.cc > RG.gpt.pi) === (RG.opus.cc > RG.opus.pi) ? "kept the same side ahead" : "flipped the order"}: ${H.cc} ${g1(RG.gpt.cc)} against ${H.pi} ${g1(RG.gpt.pi)}, where Opus gave the same diffs ${g1(RG.opus.cc)} against ${g1(RG.opus.pi)}. Averaging the two graders gives ${g1(RG.both.cc)} against ${g1(RG.both.pi)}.</p>` : ""}`;
 $("comicPass").textContent = allSolved ? `"every run did."` : `"${full.filter(r => r.resolved).length} of ${full.length} did."`;
 })();
 </script>

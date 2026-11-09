@@ -181,3 +181,8 @@ em, i {
 .post .post-content {
   max-width: 65ch;
 }
+
+.post .post-excerpt {
+  max-width: 65ch;
+  margin-bottom: 1.25rem;
+}
