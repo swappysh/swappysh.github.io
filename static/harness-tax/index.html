@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Same model, same coding jobs, two agent harnesses. We ran a taxi meter on Claude Code and pi. Replay every run."><link rel="canonical" href="https://swappysh.github.io/harness-tax/"><meta property="og:type" content="article"><meta property="og:title" content="The Harness Tax"><meta property="og:description" content="Same model, same coding jobs, two agent harnesses. We ran a taxi meter on Claude Code and pi. Replay every run."><meta property="og:url" content="https://swappysh.github.io/harness-tax/"><meta property="og:image" content="https://swappysh.github.io/harness-tax/hook.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="675"><meta property="og:image:alt" content="Three-panel comic: two stick figures run the same model on the same coding job. Claude Code carries a 27k-token backpack of prompt text and pi a 3k one, and a toll charges for rereading the bag on every step."><meta name="twitter:image:alt" content="Three-panel comic: two stick figures run the same model on the same coding job. Claude Code carries a 27k-token backpack of prompt text and pi a 3k one, and a toll charges for rereading the bag on every step."><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="The Harness Tax"><meta name="twitter:description" content="Same model, same coding jobs, two agent harnesses. We ran a taxi meter on Claude Code and pi. Replay every run."><meta name="twitter:image" content="https://swappysh.github.io/harness-tax/hook.png"><meta name="twitter:creator" content="@swappysh"><script>try{var m=localStorage.getItem('site-mode');document.documentElement.setAttribute('data-theme',m==='day'||m==='summer'?'light':'dark')}catch(e){}</script><style>body{margin:0}[hidden]{display:none!important}</style><title>The Harness Tax</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,400;0,600;0,800;1,400&amp;family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap"><style>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Same model, same coding jobs, two agent harnesses. We ran a taxi meter on Claude Code and pi. Replay every run."><link rel="canonical" href="https://swappysh.github.io/harness-tax/"><meta property="og:type" content="article"><meta property="og:site_name" content="Swapnil Sharma"><meta property="og:title" content="The Harness Tax"><meta property="og:description" content="Same model, same coding jobs, two agent harnesses. We ran a taxi meter on Claude Code and pi. Replay every run."><meta property="og:url" content="https://swappysh.github.io/harness-tax/"><meta property="og:image" content="https://swappysh.github.io/harness-tax/hook.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="675"><meta property="og:image:alt" content="Three-panel comic: two stick figures run the same model on the same coding job. Claude Code carries a 27k-token backpack of prompt, tools and task, and pi a 3k one, and a toll charges for rereading the bag on every step."><meta name="twitter:image:alt" content="Three-panel comic: two stick figures run the same model on the same coding job. Claude Code carries a 27k-token backpack of prompt, tools and task, and pi a 3k one, and a toll charges for rereading the bag on every step."><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="The Harness Tax"><meta name="twitter:description" content="Same model, same coding jobs, two agent harnesses. We ran a taxi meter on Claude Code and pi. Replay every run."><meta name="twitter:image" content="https://swappysh.github.io/harness-tax/hook.png"><meta name="twitter:creator" content="@swappysh"><script>try{var m=localStorage.getItem('site-mode');document.documentElement.setAttribute('data-theme',m==='day'||m==='summer'?'light':'dark')}catch(e){}</script><style>body{margin:0}[hidden]{display:none!important}</style><title>The Harness Tax</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,400;0,600;0,800;1,400&amp;family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap"><style>
 /* Layout: a graph-paper lab notebook. One 64ch reading column; widgets break out to ~980px; comics sit between sections. */
 :root {
   --paper: #f3f5f8;
@@ -167,7 +167,8 @@ thead th { font-weight: 600; font-size: 0.74rem; letter-spacing: 0.06em; text-tr
 td.win { font-weight: 600; text-decoration: underline 2px; text-underline-offset: 3px; }
 td.win.c { text-decoration-color: var(--cc); }
 td.win.p { text-decoration-color: var(--pi); }
-tfoot td { font-weight: 600; border-bottom: 0; border-top: 2px solid var(--ink); }
+tbody th { font-weight: 400; }
+tfoot td, tfoot th { font-weight: 600; border-bottom: 0; border-top: 2px solid var(--ink); }
 .sub { display: block; font-size: 0.78rem; color: var(--muted); }
 
 /* stall timeline */
@@ -195,7 +196,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
     <p class="byline">By <a href="https://swappysh.github.io">Swapnil Sharma</a> · <a href="https://x.com/swappysh">@swappysh</a></p>
   </header>
 
-  <div class="strip wide" role="img" aria-label="Comic: two identical stick figures labelled Opus 5.5; one carries a huge backpack of prompt text, the other a small pouch; both must reread their bag at every step.">
+  <div class="strip wide" role="img" aria-label="Comic: two identical stick figures labelled Opus 5.5; one carries a huge backpack of prompt, tools and task, the other a small pouch; both must reread their bag at every step.">
     <figure style="margin:0;display:flex;flex-direction:column;gap:6px">
       <svg viewBox="0 0 240 200"><g filter="url(#wob)">
         <use href="#guy" x="40" y="70" width="40" height="84"/>
@@ -380,8 +381,8 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;",
 const median = a => { const s = [...a].sort((x, y) => x - y), n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : NaN; };
 const mean = a => a.reduce((x, y) => x + y, 0) / a.length;
 const usd = (x, d = 2) => "$" + x.toFixed(d);
-// axis labels: "$0", whole dollars for whole-dollar steps, cents otherwise
-const usdTick = (v, step) => v === 0 ? "$0" : usd(v, step >= 1 ? 0 : 2);
+// axis labels: "$0", then as many decimals as the step needs ($2.5 steps get one, $0.025 steps get three)
+const usdTick = (v, step) => v === 0 ? "$0" : usd(v, step >= 1 ? (step % 1 ? 1 : 0) : Math.round(step * 1000) % 10 ? 3 : 2);
 // time axis step in seconds: the first round step that gives at most n gaps
 const timeStep = (max, n) => [5, 10, 15, 20, 30, 60, 120, 300, 600, 900, 1200, 1800, 3600].find(s => s >= max / n) || 3600;
 const mmss = s => { s = Math.max(0, Math.round(s)); return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0"); };
@@ -623,7 +624,7 @@ ft.forEach(t => {
   if (cs < ps) winsTime.cc++; else if (ps < cs) winsTime.pi++;
   const cg = gmean(c), pg = gmean(q);
   if (cg > pg) winsGrade.cc++; else if (pg > cg) winsGrade.pi++;
-  rows += `<tr><td><span class="nw">${esc(short(t))}</span><span class="sub">${c.length} + ${q.length} runs</span></td>
+  rows += `<tr><th scope="row"><span class="nw">${esc(short(t))}</span><span class="sub">${c.length} + ${q.length} runs</span></th>
     <td class="${cu < pu ? "win c" : ""}">${usd(cu)}</td><td class="${pu < cu ? "win p" : ""}">${usd(pu)}</td>
     <td class="${cs < ps ? "win c" : ""}">${mmss(cs)}</td><td class="${ps < cs ? "win p" : ""}">${mmss(ps)}</td>
     <td>${c.filter(r => r.resolved).length}/${c.length}</td><td>${q.filter(r => r.resolved).length}/${q.length}</td>
@@ -632,9 +633,8 @@ ft.forEach(t => {
 const C = full.filter(r => r.h === "cc"), Q = full.filter(r => r.h === "pi");
 const tc = median(C.map(r => r.sec)), tq = median(Q.map(r => r.sec)), quicker = tq < tc ? "pi" : "cc", tcut = 1 - Math.min(tc, tq) / Math.max(tc, tq);
 const mc = median(C.map(r => r.usd)), mq = median(Q.map(r => r.usd));
-rows += "";
-$("score").innerHTML = `<thead><tr><th>Task</th><th class="cc">CC cost</th><th class="pi"><span class="nc">pi</span> cost</th><th class="cc">CC time</th><th class="pi"><span class="nc">pi</span> time</th><th class="cc">CC solved</th><th class="pi"><span class="nc">pi</span> solved</th><th class="cc">CC grade</th><th class="pi"><span class="nc">pi</span> grade</th></tr></thead><tbody>${rows}</tbody>
-  <tfoot><tr><td>Main round<span class="sub">${C.length} + ${Q.length} runs</span></td><td>${usd(mc)}</td><td>${usd(mq)}</td><td>${mmss(median(C.map(r => r.sec)))}</td><td>${mmss(median(Q.map(r => r.sec)))}</td><td>${C.filter(r => r.resolved).length}/${C.length}</td><td>${Q.filter(r => r.resolved).length}/${Q.length}</td><td>${g1(gmean(C))}</td><td>${g1(gmean(Q))}</td></tr></tfoot>`;
+$("score").innerHTML = `<thead><tr><th scope="col">Task</th><th scope="col" class="cc">CC cost</th><th scope="col" class="pi"><span class="nc">pi</span> cost</th><th scope="col" class="cc">CC time</th><th scope="col" class="pi"><span class="nc">pi</span> time</th><th scope="col" class="cc">CC solved</th><th scope="col" class="pi"><span class="nc">pi</span> solved</th><th scope="col" class="cc">CC grade</th><th scope="col" class="pi"><span class="nc">pi</span> grade</th></tr></thead><tbody>${rows}</tbody>
+  <tfoot><tr><th scope="row">Main round<span class="sub">${C.length} + ${Q.length} runs</span></th><td>${usd(mc)}</td><td>${usd(mq)}</td><td>${mmss(median(C.map(r => r.sec)))}</td><td>${mmss(median(Q.map(r => r.sec)))}</td><td>${C.filter(r => r.resolved).length}/${C.length}</td><td>${Q.filter(r => r.resolved).length}/${Q.length}</td><td>${g1(gmean(C))}</td><td>${g1(gmean(Q))}</td></tr></tfoot>`;
 const cheaper = mq < mc ? "pi" : "cc", other = cheaper === "pi" ? "cc" : "pi";
 const lo = Math.min(mc, mq), hi = Math.max(mc, mq), cut = 1 - lo / hi, clearCost = cut >= 0.15 && winsCost[cheaper] >= 5;
 const gc = gmean(C), gq = gmean(Q), better = gc >= gq ? "cc" : "pi", gap = Math.abs(gc - gq), clearQ = gap >= 1 && winsGrade[better] >= 4, clearTime = tcut >= 0.15 && winsTime[quicker] >= 5;
