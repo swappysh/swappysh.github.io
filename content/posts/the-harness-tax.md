@@ -19,4 +19,4 @@ Every one of the 36 runs passed every hidden test.
 
 [Read the full write-up and replay every run →](/harness-tax/)
 
-![Three-panel comic: two stick figures run the same model on the same coding job. Claude Code carries a 27k-token backpack of instructions and pi a 3k one, and a toll charges for rereading the bag on every step.](/harness-tax/hook.png)
+![Three-panel comic: two stick figures run the same model on the same coding job. Claude Code carries a 27k-token backpack of prompt text and pi a 3k one, and a toll charges for rereading the bag on every step.](/harness-tax/hook.png)
