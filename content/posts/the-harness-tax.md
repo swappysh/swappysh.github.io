@@ -14,7 +14,7 @@ On a typical run, Claude Code's first step sends the model about 27k tokens, and
 We ran both on six Python tasks, three times each, to see what that costs.
 
 The short version: pi's median run cost 29% less and Claude Code's code got slightly better blind grades, but neither gap cleared the bar we set before running.
-Speed was about even.
+pi was also a bit faster, again short of the bar.
 Every one of the 36 runs passed every hidden test.
 
 [Read the full write-up and replay every run →](/harness-tax/)

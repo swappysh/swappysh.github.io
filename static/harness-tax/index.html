@@ -85,6 +85,8 @@ header.hero { padding-block: 3rem 0.5rem; display: flex; flex-direction: column;
 .strip svg { width: 100%; height: auto; background: var(--panel); border: 2px solid var(--ink); display: block; }
 .strip svg text { font-family: var(--display); fill: var(--ink); }
 .strip svg .ink { stroke: var(--ink); fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.strip svg .t-cc { fill: var(--cc); }
+.strip svg .t-pi { fill: var(--pi); }
 .strip svg .fill-cc { fill: var(--cc-soft); stroke: var(--cc); stroke-width: 2.2; }
 .strip svg .fill-pi { fill: var(--pi-soft); stroke: var(--pi); stroke-width: 2.2; }
 .strip svg .head { fill: var(--panel); stroke: var(--ink); stroke-width: 2.4; }
@@ -214,7 +216,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
         <g transform="translate(166 99) scale(1.177) translate(-166 -99)"><path class="ink" d="M155.2 88.4 q1.8 -2.4 3.6 0"/><rect class="fill-pi" x="148.0" y="87.9" width="18.0" height="22.1" rx="4.3"/><path class="fill-pi" d="M149.1 92.7 Q157.0 86.5 164.9 92.7 Z"/><rect class="fill-pi" x="150.9" y="101.4" width="12.2" height="6.7" rx="1.8"/></g><path class="ink" d="M164.2 91.3 Q174.1 89.3 178.0 93.0"/><path class="ink" d="M165.1 105.2 L178.0 95.9"/>
         <use href="#guy" x="160" y="62" width="40" height="84"/>
         <text x="60" y="30" text-anchor="middle" font-size="13" class="t-cc">Claude Code</text>
-        <text x="180" y="30" text-anchor="middle" font-size="13">pi</text>
+        <text x="180" y="30" text-anchor="middle" font-size="13" class="t-pi">pi</text>
         <text x="60" y="176" text-anchor="middle" font-size="12" id="comicCC">~27k tokens</text>
         <text x="180" y="176" text-anchor="middle" font-size="12" id="comicPI">~3k tokens</text>
       </g></svg>
@@ -266,7 +268,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
       <div class="lane cc" id="laneCC"></div>
       <div class="lane pi" id="lanePI"></div>
     </div>
-    <div class="chartwrap"><svg class="chart" id="rChart" viewBox="0 0 900 262" role="img" aria-label="Cost over time for both runs"></svg></div>
+    <div class="chartwrap" tabindex="0" role="region" aria-label="Replay chart, scrolls sideways"><svg class="chart" id="rChart" viewBox="0 0 900 262" role="img" aria-label="Cost over time for both runs"></svg></div>
     <div class="legend" id="rLegend"></div>
   </section>
   <p>Two things stand out once you watch a few. The meters climb in steps, one per model call, and the big steps are the calls where the model writes a lot. And the two runs rarely take the same path, even on the same task. <span id="rPath"></span> Those choices move the bill too, as the next section shows.</p>
@@ -282,7 +284,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
       <div><div class="k">pi</div><div class="v pi" id="tPI">$0</div></div>
       <div><div class="k">pi saves</div><div class="v" id="tGap">0%</div></div>
     </div>
-    <div class="chartwrap"><svg class="chart" id="tChart" viewBox="0 0 900 260" role="img" aria-label="Model cost curves for both harnesses with real runs as dots"></svg></div>
+    <div class="chartwrap" tabindex="0" role="region" aria-label="Cost curve chart, scrolls sideways"><svg class="chart" id="tChart" viewBox="0 0 900 260" role="img" aria-label="Model cost curves for both harnesses with real runs as dots"></svg></div>
     <p class="figcap" id="tCap">A toy model fitted to our runs. Both harnesses get the same work per step (output and cache writes, averaged over all runs) and the same context growth per step. The only difference is the starting context. Dots are real runs.</p>
   </section>
   <p id="tProse"></p>
@@ -291,14 +293,14 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
   <h2 id="stallH">The run that sat waiting</h2>
   <div id="stallProse" class="page" style="gap:1.1rem"></div>
   <section class="fig wide stall" aria-label="Timeline of the stalled run">
-    <div class="chartwrap"><svg class="chart" id="sChart" viewBox="0 0 900 120" role="img" aria-label="Tool calls over time in the stalled run"></svg></div>
+    <div class="chartwrap" tabindex="0" role="region" aria-label="Stalled run chart, scrolls sideways"><svg class="chart" id="sChart" viewBox="0 0 900 120" role="img" aria-label="Tool calls over time in the stalled run"></svg></div>
     <p class="figcap">Every tick is one tool call. The shaded stretch is one shell command that was still running when the limit hit.</p>
   </section>
 
   <h2>The scorecard</h2>
   <p id="scoreLead"></p>
   <div class="fig wide">
-    <div class="tablewrap"><table id="score"></table></div>
+    <div class="tablewrap" tabindex="0" role="region" aria-label="Results by task, scrolls sideways"><table id="score"></table></div>
     <p class="figcap">Medians per task for cost and time, mean for the grade. "Solved" means every hidden test passed, including tests that already passed before the change, so a fix that breaks something else does not count. "Grade" is the blind grader's score out of 10. Underline marks the cheaper, faster or higher-graded side. CC is Claude Code.</p>
   </div>
 
@@ -338,7 +340,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
       <li>A small sample: six Python tasks, three runs each per harness. Three are real bug fixes from open-source projects, merged after the model's training cutoff but still public. The other three are synthetic tasks, written by a Claude agent. Each per-task median rests on three runs.</li>
       <li>The replay also has three small pilot tasks, run before the main round. They are not in the scorecard or the numbers above.</li>
       <li>The runs shared one <code>/tmp</code> folder. On the markdown-it-py task, four later runs (two per harness) reused a JavaScript library the first run had installed there, so those four may be a little cheap and quick.</li>
-      <li>Some runs used the network: all six inflect (number words) runs read the maintainer's blog page on project layout, two Claude Code runs installed a package, and two pi runs downloaded the mypy type checker. No run fetched the upstream fix.</li>
+      <li>Some runs used the network: all six inflect (number words) runs read the maintainer's blog page on project layout, one Claude Code run on the markdown fix installed the JavaScript markdown-it library, and one on spooled streams installed pytest. Runs on both sides pulled dev tools such as ruff and the mypy type checker through uvx, and the logs show mypy downloads in one Claude Code run and two pi runs. No run fetched the upstream fix.</li>
       <li>One model. A different model, or a newer pi that knows about this model's adaptive thinking, could change the picture.</li>
       <li>The graders are from the same model family as the agents.</li>
       <li>Everything ran on one machine through one API route, at most two runs at a time, with launch order alternated.</li>
@@ -467,7 +469,7 @@ function drawChartBase() {
   const ys = niceStep(ymax, 4);
   for (let v = 0; v <= ymax; v += ys) g += `<line class="gridl" x1="${ML}" x2="${CW - MR}" y1="${cy(v)}" y2="${cy(v)}"/><text x="${ML - 6}" y="${cy(v) + 4}" text-anchor="end">${usdTick(v, ys)}</text>`;
   const xs = timeStep(st.max, 6);
-  for (let t = 0; t <= st.max; t += xs) g += `<text x="${cx(t)}" y="${CH - MB + 46}" text-anchor="middle">${mmss(t)}</text>`;
+  for (let t = 0; t <= st.max; t += xs) g += `<text x="${cx(t)}" y="${CH - MB + 46}" text-anchor="${cx(t) > CW - MR - 25 ? "end" : "middle"}">${mmss(t)}</text>`;
   g += `<line class="axis" x1="${ML}" x2="${CW - MR}" y1="${CH - MB}" y2="${CH - MB}"/>`;
   const path = r => { let d = `M${cx(0)},${cy(0)}`, c = 0; for (const u of r.curve) { d += ` H${cx(u.t).toFixed(1)} V${cy(u.c).toFixed(1)}`; c = u.c; } return d + ` H${cx(r.sec).toFixed(1)} V${cy(r.usd).toFixed(1)}`; };
   // tool ticks
@@ -629,8 +631,8 @@ $("score").innerHTML = `<thead><tr><th>Task</th><th class="cc">CC cost</th><th c
   <tfoot><tr><td>Main round<span class="sub">${C.length} + ${Q.length} runs</span></td><td>${usd(mc)}</td><td>${usd(mq)}</td><td>${mmss(median(C.map(r => r.sec)))}</td><td>${mmss(median(Q.map(r => r.sec)))}</td><td>${C.filter(r => r.resolved).length}/${C.length}</td><td>${Q.filter(r => r.resolved).length}/${Q.length}</td><td>${g1(gmean(C))}</td><td>${g1(gmean(Q))}</td></tr></tfoot>`;
 const cheaper = mq < mc ? "pi" : "cc", other = cheaper === "pi" ? "cc" : "pi";
 const lo = Math.min(mc, mq), hi = Math.max(mc, mq), cut = 1 - lo / hi, clearCost = cut >= 0.15 && winsCost[cheaper] >= 5;
-const gc = gmean(C), gq = gmean(Q), better = gc >= gq ? "cc" : "pi", gap = Math.abs(gc - gq), clearQ = gap >= 1 && winsGrade[better] >= 4;
-$("scoreLead").innerHTML = `Across the ${full.length} main-round runs, <span class="${cheaper}">${H[cheaper]}</span> had the lower median cost per run, ${usd(lo)} against ${usd(hi)}, ${Math.round(100 * cut)}% less. It was cheaper on ${winsCost[cheaper]} of ${ft.length} tasks. Before running, we set the bar for a clear win at a median at least 15% lower and lower on at least 5 of 6 tasks, so ${clearCost ? "that is a clear win" : "this falls short of a clear win"}. On quality the lean goes ${better === cheaper ? "the same way" : "the other way"}: the blind graders (a fresh grader session for each task) gave <span class="${better}">${H[better]}</span>'s diffs ${g1(Math.max(gc, gq))} out of 10 against ${g1(Math.min(gc, gq))}, higher on ${winsGrade[better]} of ${ft.length} tasks. The bar there was a full point and 4 of 6 tasks, so ${clearQ ? "that one is a clear win" : "that falls short too"}. Speed came out even: ${H[quicker]}'s median run took ${mmss(Math.min(tc, tq))} against ${mmss(Math.max(tc, tq))}, ${(100 * tcut).toFixed(1)}% less, and it was faster on ${winsTime[quicker]} of ${ft.length} tasks, short of the same bar.`;
+const gc = gmean(C), gq = gmean(Q), better = gc >= gq ? "cc" : "pi", gap = Math.abs(gc - gq), clearQ = gap >= 1 && winsGrade[better] >= 4, clearTime = tcut >= 0.15 && winsTime[quicker] >= 5;
+$("scoreLead").innerHTML = `Across the ${full.length} main-round runs, <span class="${cheaper}">${H[cheaper]}</span> had the lower median cost per run, ${usd(lo)} against ${usd(hi)}, ${Math.round(100 * cut)}% less. It was cheaper on ${winsCost[cheaper]} of ${ft.length} tasks. Before running, we set the bar for a clear win at a median at least 15% lower and lower on at least 5 of 6 tasks, so ${clearCost ? "that is a clear win" : "this falls short of a clear win"}. On quality the lean goes ${better === cheaper ? "the same way" : "the other way"}: the blind graders (a fresh grader session for each task) gave <span class="${better}">${H[better]}</span>'s diffs ${g1(Math.max(gc, gq))} out of 10 against ${g1(Math.min(gc, gq))}, higher on ${winsGrade[better]} of ${ft.length} tasks. The bar there was a full point and 4 of 6 tasks, so ${clearQ ? "that one is a clear win" : "that falls short too"}. ${clearTime ? `Speed is a clear win for <span class="${quicker}">${H[quicker]}</span>` : `Speed leaned to <span class="${quicker}">${H[quicker]}</span>, again without clearing the bar`}: its median run took ${mmss(Math.min(tc, tq))} against ${mmss(Math.max(tc, tq))}, ${(100 * tcut).toFixed(1)}% less, and it was faster on ${winsTime[quicker]} of ${ft.length} tasks.`;
 const allSolved = full.every(r => r.resolved), AG = DATA.agreement;
 $("limitsLead").innerHTML = `Quality is the weakest signal here, for the reason in the comic: ${allSolved ? "every run" : "almost every run"} solved its task, so the hidden tests can't rank the harnesses. That leaves the blind graders: for each task, a fresh grader session read the diffs shuffled, with the harness names removed, and scored them against a rubric we wrote before the runs. They found real misses (an edge case in a stream seek, a crash on a 5,000-digit list index, one link-trim spot that a dependency hides), but they were small and spread over both sides: ${g1(gc)} against ${g1(gq)} out of 10.${AG ? ` A second grader re-scored the template engine task on its own. It gave the same total to ${AG.exact} of ${AG.n} diffs${AG.grader_b.cc > AG.grader_b.pi === AG.grader_a.cc > AG.grader_a.pi ? ` and also put ${H[AG.grader_b.cc > AG.grader_b.pi ? "cc" : "pi"]} ahead` : ""}, and its ranking of the ${AG.n} diffs correlates with the first grader's at ${AG.spearman.toFixed(2)} (the first grader gave three diffs a 10, so its top pick was a three-way tie).` : ""}`;
 $("comicPass").textContent = allSolved ? `"every run did."` : `"${full.filter(r => r.resolved).length} of ${full.length} did."`;
