@@ -19,6 +19,9 @@ The blind graders were Claude Opus 5.5, so a non-Claude model, GPT-6.1 Sol Pro, 
 pi was also a bit faster, again short of the bar.
 Every one of the 36 runs passed every hidden test.
 
+Bigger studies came first and found the same cost pattern: [HarnessTax](https://harnesstax.github.io/) from UC Berkeley and Arena, and [@sambharia's](https://x.com/sambharia/status/2043703343453987133) April post of the same name.
+What this one adds is a blind grade of the code itself, not just whether the tests pass, and a replay of every run.
+
 [Read the full write-up and replay every run →](/harness-tax/)
 
 ![Three-panel comic: two stick figures run the same model on the same coding job. Claude Code carries a 27k-token backpack of prompt, tools and task, and pi a 3k one, and a toll charges for rereading the bag on every step.](/harness-tax/hook.png)
