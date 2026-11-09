@@ -97,6 +97,9 @@ header.hero { padding-block: 3rem 0.5rem; display: flex; flex-direction: column;
 .fig { background: var(--panel); border: 1.5px solid var(--line); border-radius: 10px; padding: 1rem; display: flex; flex-direction: column; gap: 0.9rem; }
 .figcap { font: 400 0.84rem/1.5 var(--body); color: var(--muted); }
 .controls { display: flex; flex-wrap: wrap; gap: 0.6rem 1rem; align-items: center; font: 500 0.85rem/1 var(--mono); }
+.cachectl { flex-wrap: nowrap; align-items: flex-start; line-height: 1.35; }
+.cachectl input { flex: none; margin-top: 0.2em; }
+.cachectl span { min-width: 0; }
 .controls label { min-width: 0; max-width: 100%; display: flex; gap: 0.4rem; align-items: center; color: var(--muted); }
 select, button, input[type=range] { font: inherit; color: var(--ink); }
 select { max-width: 100%; min-width: 0; background: var(--paper); border: 1.5px solid var(--muted); border-radius: 6px; padding: 0.35rem 0.5rem; }
@@ -280,14 +283,14 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
   <section class="fig wide" id="tax" aria-label="Harness tax model">
     <div class="controls" style="justify-content:space-between"><label for="tSteps">model calls in the run</label><span class="num" id="tStepsOut" aria-hidden="true">20</span></div>
     <input type="range" id="tSteps" min="1" max="80" step="1" value="20">
-    <label class="controls" for="tCache"><input type="checkbox" id="tCache" checked> <span id="tCacheLbl">prompt caching on</span></label>
+    <label class="controls cachectl" for="tCache"><input type="checkbox" id="tCache" checked> <span id="tCacheLbl">prompt caching on</span></label>
     <div class="readout">
       <div><div class="k">Claude Code</div><div class="v cc" id="tCC">$0</div></div>
       <div><div class="k"><span class="nc">pi</span></div><div class="v pi" id="tPI">$0</div></div>
       <div><div class="k"><span class="nc">pi</span> saves</div><div class="v" id="tGap">0%</div></div>
     </div>
     <div class="chartwrap" tabindex="0" role="region" aria-label="Cost curve chart, scrolls sideways"><svg class="chart" id="tChart" viewBox="0 0 900 260" role="img" aria-label="Model cost curves for both harnesses with real runs as dots"></svg></div>
-    <p class="figcap" id="tCap">A toy model fitted to our runs. Both harnesses get the same work per step (output and cache writes, averaged over all runs) and the same context growth per step. The only difference is the starting context. Dots are real runs.</p>
+    <p class="figcap" id="tCap">A toy model fitted to our main-round runs. Both harnesses get the same context growth per call and the same output per call (averaged over the runs). The only difference is the starting context. Dots are real runs.</p>
   </section>
   <p id="tProse"></p>
   <p id="tCacheProse"></p>
@@ -579,7 +582,7 @@ const cells = {}; full.forEach(r => (cells[r.task + r.h] ||= []).push(r.usd));
 const spread = Math.max(...Object.values(cells).map(c => Math.max(...c) / Math.min(...c)));
 $("medCalls").textContent = Math.round(median(full.map(r => r.calls.length)));
 $("tProse").textContent = `In this model pi saves ${sv(5)}% on a 5-call job, ${sv(15)}% at 15 calls and ${sv(60)}% at 60. The dots tell the other half: real runs scatter widely around both curves, because the work itself varies so much from run to run. On the same task with the same harness, one run cost up to ${spread.toFixed(1)} times as much as another. With that much noise, our runs are too few to show the fade.`;
-$("tCacheProse").textContent = `All of this assumes prompt caching, and caching is why the tax is small. Tokens the API has already seen cost ${usd(P.cr, 2)} per million instead of ${usd(P.in, 0)}. Priced with no cache, our ${fullH("cc").length} main-round Claude Code runs would cost ${usd(tot("cc", "usdNo"), 0)} instead of ${usd(tot("cc", "usd"), 0)}, and our ${fullH("pi").length} pi runs ${usd(tot("pi", "usdNo"), 0)} instead of ${usd(tot("pi", "usd"), 0)}. pi's edge grows from ${Math.round(100 * (1 - tot("pi", "usd") / tot("cc", "usd")))}% to ${Math.round(100 * (1 - tot("pi", "usdNo") / tot("cc", "usdNo")))}%, and in the model a 15-call job shows a ${sv(15, modelNo)}% gap instead of ${sv(15)}%. Untick the box above to watch it happen.`;
+$("tCacheProse").textContent = `All of this assumes prompt caching, and caching is why the tax is small. Tokens the API has already seen cost ${usd(P.cr, 2)} per million instead of ${usd(P.in, 0)}. Priced with no cache, our ${fullH("cc").length} main-round Claude Code runs would cost ${usd(tot("cc", "usdNo"), 0)} instead of ${usd(tot("cc", "usd"), 0)}, and our ${fullH("pi").length} pi runs ${usd(tot("pi", "usdNo"), 0)} instead of ${usd(tot("pi", "usd"), 0)}. pi's edge in total spend grows from ${Math.round(100 * (1 - tot("pi", "usd") / tot("cc", "usd")))}% to ${Math.round(100 * (1 - tot("pi", "usdNo") / tot("cc", "usdNo")))}%, and in the model a 15-call job shows a ${sv(15, modelNo)}% gap instead of ${sv(15)}%. Untick the box above to watch it happen.`;
 
 // ---------- stall ----------
 let drawStall = () => {};
