@@ -8,15 +8,15 @@ categories = ["research"]
 images = ["/harness-tax/hook.png"]
 +++
 
-Claude Code and pi can run the same model on the same coding job. What differs is the harness: the
-system prompt, the tools and the loop around the model. Claude Code sends about 28k tokens of
-instructions with every step, and pi sends about 4k. We ran both on six Python tasks, three times
-each, to see what that costs.
+Claude Code and pi can run the same model on the same coding job.
+What differs is the harness: the system prompt, the tools and the loop around the model.
+On a typical run, Claude Code's first step sends the model about 27k tokens, and pi's sends about 3k.
+We ran both on six Python tasks, three times each, to see what that costs.
 
-The short version: pi's median run cost 29% less and Claude Code's code got slightly better blind
-grades, but neither gap cleared the bar we set before running. Speed was about even. Every one of the 36 runs passed every
-hidden test.
+The short version: pi's median run cost 29% less and Claude Code's code got slightly better blind grades, but neither gap cleared the bar we set before running.
+Speed was about even.
+Every one of the 36 runs passed every hidden test.
 
 [Read the full write-up and replay every run →](/harness-tax/)
 
-![The Harness Tax comic: same model, different backpacks](/harness-tax/hook.png)
+![Three-panel comic: two stick figures run the same model on the same coding job. Claude Code carries a 27k-token backpack of instructions and pi a 3k one, and a toll charges for rereading the bag on every step.](/harness-tax/hook.png)
