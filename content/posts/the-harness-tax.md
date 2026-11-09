@@ -10,10 +10,10 @@ images = ["/harness-tax/hook.png"]
 
 Claude Code and pi can run the same model on the same coding job.
 What differs is the harness: the system prompt, the tools and the loop around the model.
-On a typical run, Claude Code's first step sends the model about 27k tokens, and pi's sends about 3k.
+On a typical run, Claude Code's first model call sends about 27k tokens, and pi's sends about 3k.
 We ran both on six Python tasks, three times each, to see what that costs.
 
-The short version: pi's median run cost 29% less and Claude Code's code got slightly better blind grades, but neither gap cleared the bar we set before running.
+The short version: pi's median run cost 29% less and Claude Code's code got slightly better blind grades (graders scored the code without seeing which harness wrote it), but neither gap cleared the bar we set before running.
 pi was also a bit faster, again short of the bar.
 Every one of the 36 runs passed every hidden test.
 
