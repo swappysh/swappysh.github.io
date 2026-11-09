@@ -276,7 +276,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
     <div class="chartwrap" tabindex="0" role="region" aria-label="Replay chart, scrolls sideways"><svg class="chart" id="rChart" viewBox="0 0 900 262" role="img" aria-label="Cost over time for both runs"></svg></div>
     <div class="legend" id="rLegend"></div>
   </section>
-  <p>Two things stand out once you watch a few. The meters climb in steps, one per model call, and the big steps are the calls where the model writes a lot. And the two runs rarely take the same path, even on the same task. <span id="rPath"></span> Those choices move the bill too, as the next section shows.</p>
+  <p>Two things stand out once you watch a few. The meters climb in steps, one per model call, and the big steps are the calls where the model writes a lot, plus Claude Code's first call, which writes its whole starting context to the cache. And the two runs rarely take the same path, even on the same task. <span id="rPath"></span> Those choices move the bill too, as the next section shows.</p>
 
   <h2>Why the tax should fade on long jobs</h2>
   <p>The fee is fixed per step, so it adds up in a straight line. But each step also rereads everything said so far, and that part grows with the length of the job. On a short job the fixed fee is a big share of the bill. On a long job the growing conversation and the model's own output take over, and the fee's share shrinks. Drag the slider to see where our runs sit.</p>
@@ -290,7 +290,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
       <div><div class="k"><span class="nc">pi</span> saves</div><div class="v" id="tGap">0%</div></div>
     </div>
     <div class="chartwrap" tabindex="0" role="region" aria-label="Cost curve chart, scrolls sideways"><svg class="chart" id="tChart" viewBox="0 0 900 260" role="img" aria-label="Model cost curves for both harnesses with real runs as dots"></svg></div>
-    <p class="figcap" id="tCap">A toy model fitted to our main-round runs. Both harnesses get the same context growth per call and the same output per call (averaged over the runs). The only difference is the starting context. Dots are real runs.</p>
+    <p class="figcap" id="tCap">A toy model fitted to our main-round runs. Both harnesses get the same context growth per call and the same output and uncached input per call (averaged over the runs). The only difference is the starting context. Dots are real runs.</p>
   </section>
   <p id="tProse"></p>
   <p id="tCacheProse"></p>
@@ -409,7 +409,7 @@ const byH = h => runs.filter(r => r.h === h);
 const fullH = h => full.filter(r => r.h === h);
 
 // footer
-$("foot").innerHTML = `${full.length} main-round runs and ${runs.length - full.length} pilot runs · Claude Code 2.1.296 · pi 0.73.1 · <span class="nw">claude-opus-5-5</span>, high effort · built ${DATA.built || ""}`;
+$("foot").innerHTML = `${full.length} main-round runs and ${runs.length - full.length} pilot runs · Claude Code 2.1.296 · pi 0.73.1 · <span class="nw">claude-opus-5-5</span>, high effort or thinking · built ${DATA.built || ""}`;
 
 // contestants
 const firstCtx = h => median(fullH(h).filter(r => r.calls.length).map(r => { const u = r.calls[0]; return u.in + u.cr + u.cw; }));
@@ -497,9 +497,10 @@ function render() {
   $("laneCC").innerHTML = lane(p.cc);
   $("lanePI").innerHTML = lane(p.pi);
   const x = cx(st.now);
-  const cr = $("rClipR"); if (cr) cr.setAttribute("width", x.toFixed(1));
-  const hd = $("rHead"); if (hd) { hd.setAttribute("x1", x); hd.setAttribute("x2", x); }
-  rScrub.value = Math.round(st.now);
+  // a run's last cost step sits at its end, so clip a little past the playhead and hide the playhead once done
+  const cr = $("rClipR"); if (cr) cr.setAttribute("width", (x + 2).toFixed(1));
+  const hd = $("rHead"); if (hd) { hd.setAttribute("x1", x); hd.setAttribute("x2", x); hd.style.visibility = st.now >= st.max ? "hidden" : ""; }
+  rScrub.value = st.now >= st.max ? rScrub.max : Math.round(st.now);
   rScrub.setAttribute("aria-valuetext", mmss(st.now) + " of " + mmss(st.max));
   $("rPlay").textContent = st.playing ? "Pause" : (st.now >= st.max ? "Replay" : "Play");
 }
@@ -521,7 +522,7 @@ document.querySelectorAll("[data-speed]").forEach(b => b.onclick = () => {
   st.speed = +b.dataset.speed;
   document.querySelectorAll("[data-speed]").forEach(x => x.setAttribute("aria-pressed", x === b));
 });
-rScrub.oninput = () => { st.now = +rScrub.value; st.playing = false; render(); };
+rScrub.oninput = () => { st.now = Math.min(st.max, +rScrub.value); st.playing = false; render(); };
 rTask.onchange = () => { st.task = rTask.value; st.playing = false; fillReps(); load(); };
 rRep.onchange = () => { st.rep = rRep.value; st.playing = false; load(); };
 fillReps(); load();
@@ -572,7 +573,7 @@ function drawTax() {
   tSteps.setAttribute("aria-valuetext", n + " model calls");
   $("tCC").textContent = usd(c, 3); $("tPI").textContent = usd(q, 3);
   $("tGap").textContent = Math.round(100 * (1 - q / c)) + "% (" + usd(c - q, 3) + ")";
-  $("tCap").textContent = `A toy model fitted to our main-round runs. Starting context: Claude Code ${kt(F.cc.a)} tokens, pi ${kt(F.pi.a)} (the first-call sizes above), ${on ? "written to cache once and reread on every later call" : "resent at full input price on every call"}. Both get the same context growth per call (${kt1(B)} tokens) and the same output per call (${usd(W, 3)}, averaged over the runs). Dots are real runs.`;
+  $("tCap").textContent = `A toy model fitted to our main-round runs. Starting context: Claude Code ${kt(F.cc.a)} tokens, pi ${kt(F.pi.a)} (the first-call sizes above), ${on ? "written to cache once and reread on every later call" : "resent at full input price on every call"}. Both get the same context growth per call (${kt1(B)} tokens) and the same output and uncached input per call (${usd(W, 3)}, averaged over the runs). Dots are real runs.`;
 }
 tSteps.value = Math.round(median(full.map(r => r.calls.length)) || 20);
 tSteps.oninput = drawTax; tCache.onchange = drawTax; drawTax();
@@ -582,7 +583,7 @@ const cells = {}; full.forEach(r => (cells[r.task + r.h] ||= []).push(r.usd));
 const spread = Math.max(...Object.values(cells).map(c => Math.max(...c) / Math.min(...c)));
 $("medCalls").textContent = Math.round(median(full.map(r => r.calls.length)));
 const long = full.filter(r => r.calls.length > 30);
-const longBelow = long.length > 1 && long.every(r => r.usd < Math.min(model("cc", r.calls.length), model("pi", r.calls.length))) ? ` All ${long.length} runs past 30 calls cost less than either curve.` : "";
+const longBelow = long.length > 1 && long.every(r => r.usd < Math.min(model("cc", r.calls.length), model("pi", r.calls.length))) ? ` All ${long.length} runs past 30 calls cost less than either curve${new Set(long.map(r => r.task)).size === 1 ? ` (all on the ${short(long[0].task)} task)` : ""}.` : "";
 $("tProse").textContent = `In this model pi saves ${sv(5)}% on a 5-call job, ${sv(15)}% at 15 calls and ${sv(60)}% at 60. The dots tell the other half: real runs scatter widely, because the work itself varies so much from run to run.${longBelow} On the same task with the same harness, one run cost up to ${spread.toFixed(1)} times as much as another. With that much noise, our runs are too few to show the fade.`;
 $("tCacheProse").textContent = `All of this assumes prompt caching, and caching is why the tax is small. Tokens the API has already seen cost ${usd(P.cr, 2)} per million instead of ${usd(P.in, 0)}. Priced with no cache, our ${fullH("cc").length} main-round Claude Code runs would cost ${usd(tot("cc", "usdNo"), 0)} instead of ${usd(tot("cc", "usd"), 0)}, and our ${fullH("pi").length} pi runs ${usd(tot("pi", "usdNo"), 0)} instead of ${usd(tot("pi", "usd"), 0)}. pi's edge in total spend grows from ${Math.round(100 * (1 - tot("pi", "usd") / tot("cc", "usd")))}% to ${Math.round(100 * (1 - tot("pi", "usdNo") / tot("cc", "usdNo")))}%, and in the model a 15-call job shows a ${sv(15, modelNo)}% gap instead of ${sv(15)}%. Untick the box above to watch it happen.`;
 
@@ -598,7 +599,7 @@ if (stall) {
   const twin = runs.find(r => r.task === stall.task && r.rep === stall.rep && r.h !== stall.h);
   const seeds = /\bN=(\d+)/.exec(g0.label);
   $("stallProse").innerHTML = `<p>One run shows a difference in harness design that has nothing to do with tokens. On the key-value store task, <span class="${stall.h}">${H[stall.h]}</span> had done its work by minute ${Math.round(g0.t / 60)}. Then, in one shell command, it ran its tests and a random stress test${seeds ? ` over ${(+seeds[1]).toLocaleString("en-US")} seeds` : ""}, and waited. The command never finished, and the run hit our 30-minute limit ${Math.round(gap / 60)} minutes later.</p>
-  <p>Its fixes were correct, and every hidden test passed. It cost only ${usd(stall.usd)}, because waiting is free. But it took ${mmss(stall.sec)} of wall clock${twin ? ` against ${mmss(twin.sec)} for <span class="${twin.h}">${H[twin.h]}</span> on the same task` : ""}. Claude Code's shell tool stops any command after two minutes unless the model asks for longer. pi's shell tool has no default limit, so one long command can hold the whole run.</p>`;
+  <p>Its fixes were correct, and every hidden test passed. It cost only ${usd(stall.usd)}, because waiting is free. But it took ${mmss(stall.sec)} of wall clock${twin ? ` against ${mmss(twin.sec)} for <span class="${twin.h}">${H[twin.h]}</span> on the same task` : ""}. After two minutes, Claude Code's shell tool moves a command to the background and hands control back to the model, so the run goes on. pi's shell tool has no default limit, so one long command can hold the whole run.</p>`;
   drawStall = () => {
   const SW = VW(), sl = 20, sr = 20, sx = t => sl + (SW - sl - sr) * t / stall.sec;
   setVB("sChart", 120);
@@ -647,7 +648,7 @@ const lo = Math.min(mc, mq), hi = Math.max(mc, mq), cut = 1 - lo / hi, clearCost
 const gc = gmean(C), gq = gmean(Q), better = gc >= gq ? "cc" : "pi", gap = Math.abs(gc - gq), clearQ = gap >= 1 && winsGrade[better] >= 4, clearTime = tcut >= 0.15 && winsTime[quicker] >= 5;
 $("scoreLead").innerHTML = `Across the ${full.length} main-round runs, <span class="${cheaper}">${H[cheaper]}</span> had the lower median cost per run, ${usd(lo)} against ${usd(hi)}, ${Math.round(100 * cut)}% less. It was cheaper on ${winsCost[cheaper]} of ${ft.length} tasks. Before running, we set the bar for a clear win at a median at least 15% lower and lower on at least 5 of 6 tasks, so ${clearCost ? "that is a clear win" : "this falls short of a clear win"}. On quality the lean goes ${better === cheaper ? "the same way" : "the other way"}: the blind graders (a fresh grader session for each task) gave <span class="${better}">${H[better]}</span>'s diffs ${g1(Math.max(gc, gq))} out of 10 against ${g1(Math.min(gc, gq))}, higher on ${winsGrade[better]} of ${ft.length} tasks. The bar there was a full point and 4 of 6 tasks, so ${clearQ ? "that one is a clear win" : "that falls short too"}. ${clearTime ? `Speed is a clear win for <span class="${quicker}">${H[quicker]}</span>` : `Speed leaned to <span class="${quicker}">${H[quicker]}</span>, again without clearing the bar`}: its median run took ${mmss(Math.min(tc, tq))} against ${mmss(Math.max(tc, tq))}, ${(100 * tcut).toFixed(1)}% less, and it was faster on ${winsTime[quicker]} of ${ft.length} tasks.`;
 const allSolved = full.every(r => r.resolved), AG = DATA.agreement;
-$("limitsLead").innerHTML = `Quality is the weakest signal here, for the reason in the comic: ${allSolved ? "every run" : "almost every run"} solved its task, so the hidden tests can't rank the harnesses. That leaves the blind graders: for each task, a fresh grader session read the diffs shuffled, with the harness names removed, and scored them against a rubric we wrote before the runs. They found real misses (an edge case in a stream seek, a crash on a 5,000-digit list index, one link-trim spot that a dependency hides), but they were small and spread over both sides: ${g1(gc)} against ${g1(gq)} out of 10.${AG ? ` A second grader re-scored the template engine task on its own. It gave the same total to ${AG.exact} of ${AG.n} diffs${AG.grader_b.cc > AG.grader_b.pi === AG.grader_a.cc > AG.grader_a.pi ? ` and also put ${H[AG.grader_b.cc > AG.grader_b.pi ? "cc" : "pi"]} ahead` : ""}, and its ranking of the ${AG.n} diffs correlates with the first grader's at ${AG.spearman.toFixed(2)} (the first grader gave three diffs a 10, so its top pick was a three-way tie).` : ""}`;
+$("limitsLead").innerHTML = `Quality is the weakest signal here, for the reason in the comic: ${allSolved ? "every run" : "almost every run"} solved its task, so the hidden tests can't rank the harnesses. That leaves the blind graders: for each task, a fresh grader session read the diffs shuffled, with the harness names removed, and scored them against a rubric we wrote before the runs. They found real misses (an edge case in a stream seek, a crash on a 5,000-digit list index, one link-trim spot that a dependency hides), but they were small and spread over both sides: ${g1(gc)} against ${g1(gq)} out of 10.${AG ? ` A second grader re-scored the template engine task on its own. It gave the same total to ${AG.exact} of ${AG.n} diffs${AG.grader_b.cc > AG.grader_b.pi === AG.grader_a.cc > AG.grader_a.pi ? ` and also put ${H[AG.grader_b.cc > AG.grader_b.pi ? "cc" : "pi"]} ahead` : ""}, and its ranking of the ${AG.n} diffs correlates with the first grader's at ${AG.spearman.toFixed(2)} (they split on one diff: the first grader ranked it top, and the second gave it a 9 and ranked it fourth).` : ""}`;
 $("comicPass").textContent = allSolved ? `"every run did."` : `"${full.filter(r => r.resolved).length} of ${full.length} did."`;
 })();
 </script>
