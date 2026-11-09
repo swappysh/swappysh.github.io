@@ -296,6 +296,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
   <div id="stallProse" class="page" style="gap:1.1rem"></div>
   <section class="fig wide stall" aria-label="Timeline of the stalled run">
     <div class="chartwrap" tabindex="0" role="region" aria-label="Stalled run chart, scrolls sideways"><svg class="chart" id="sChart" viewBox="0 0 900 120" role="img" aria-label="Tool calls over time in the stalled run"></svg></div>
+    <div class="legend" id="sLegend"></div>
     <p class="figcap">Every tick is one tool call; calls a few seconds apart are stacked in one column. The shaded stretch is one shell command that was still running when the limit hit.</p>
   </section>
 
@@ -351,7 +352,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
 
   <h2>How we ran it</h2>
   <div class="notes">
-    <p>The plan, the tasks, the metrics and the bar for calling a winner were written down before any paid run. One change came after the first two runs, when only their cost had been seen: they cost more than expected, so we changed the rule for the number of runs per task to fit the budget, and added a hard stop at $37. Both harnesses ran headless with stock settings, all permissions allowed, a fresh copy of the repo, the same prompt, and a 30-minute limit. Nobody nudged them. Cost is recomputed from each harness's own token log with one price table: $4 per million input tokens, $20 output, $0.20 cache read and $5 cache write. Claude Code's own cost report matched ours. pi prices tokens with the table we gave it, and its totals matched too.</p>
+    <p>The plan, the tasks, the metrics and the bar for calling a winner were written down before any paid run of the main round. One change came after the first two runs, when only their cost had been seen: they cost more than expected, so we changed the rule for the number of runs per task to fit the budget, and added a hard stop at $37. Both harnesses ran headless with stock settings, all permissions allowed, a fresh copy of the repo, the same prompt, and a 30-minute limit. Nobody nudged them. Cost is recomputed from each harness's own token log with one price table: $4 per million input tokens, $20 output, $0.20 cache read and $5 cache write. Claude Code's own cost report matched ours. pi prices tokens with the table we gave it, and its totals matched too.</p>
   </div>
   <footer id="foot"></footer>
 </main>
@@ -606,6 +607,7 @@ if (stall) {
   g += `<text x="${sx(g0.t) + 10}" y="54" text-anchor="start">waiting on one command</text>`;
   $("sChart").innerHTML = g;
   };
+  $("sLegend").innerHTML = ["bash", "read", "edit", "search", "other"].filter(k => s.some(x => (TOOLC[x.tool] || "--t-other") === TOOLC[k])).map(k => `<span style="--sw:var(${TOOLC[k]})">${k === "edit" ? "edit/write" : k}</span>`).join("");
   drawStall();
 } else { $("stallH").hidden = true; $("sChart").closest("section").hidden = true; }
 

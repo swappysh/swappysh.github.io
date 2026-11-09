@@ -13,7 +13,8 @@ What differs is the harness: the system prompt, the tools and the loop around th
 On a typical run, Claude Code's first model call sends about 27k tokens, and pi's sends about 3k.
 We ran both on six Python tasks, three times each, to see what that costs.
 
-The short version: pi's median run cost 29% less and Claude Code's code got slightly better blind grades (graders scored the code without seeing which harness wrote it), but neither gap cleared the bar we set before running.
+The short version: pi's median run cost 29% less, and Claude Code's code got slightly better blind grades (graders scored the code without seeing which harness wrote it).
+Neither lead met the bar we set before running: pi was cheaper on only 4 of 6 tasks, and the grade gap was 0.6 points, short of a full point.
 pi was also a bit faster, again short of the bar.
 Every one of the 36 runs passed every hidden test.
 
