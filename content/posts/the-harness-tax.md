@@ -55,4 +55,5 @@ What this one adds is a blind grade of the code itself, not just whether the tes
 - Nov 9: made the page easier to read, and credited Gagan, who suggested two checks that cost less than a model grader.
 - Nov 9: added Gemini 4 Argon as a third grader.
 - Nov 10: ran both of Gagan's checks, property tests and a count of lines changed beyond the project's own fix.
+- Nov 10: saved the shrunk failing inputs as plain tests, as Gagan suggested next.
 - Nov 10: a second review found we had overstated how well the property tests matched the graders, and had left out that runs shared a prompt cache. Both are fixed. We also made the post easier to read and gave the comic a real punch line.
