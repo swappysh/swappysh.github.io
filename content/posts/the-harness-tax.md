@@ -8,6 +8,8 @@ categories = ["research"]
 images = ["/harness-tax/hook.png"]
 +++
 
+_Updated Nov 10, 2026: the changes since launch are listed at the end._
+
 Claude Code and pi can run the same model on the same coding job.
 What differs is the harness: the system prompt, the tools and the loop around the model.
 On a typical run, Claude Code's first model call sends about 27k tokens, and pi's sends about 3k.
@@ -21,9 +23,19 @@ The blind graders were Claude Opus 5.5, so a non-Claude model, GPT-6.1 Sol Pro, 
 A second outside grader, Gemini 4 Argon, called those diffs a tie (9.1 each). Averaged over all three graders, the score is 9.0 vs 8.8.
 pi was also a bit faster, again short of the bar.
 Every one of the 36 runs passed every hidden test.
+After launch, Gagan ([@gagu_sh](https://x.com/gagu_sh/status/2119899741223842074)) suggested two cheaper checks, and we ran both.
+Hypothesis property tests failed the same four diffs the graders had marked down, and found nothing new.
+A count of lines changed outside the task pointed the wrong way: the diffs that changed the most outside the upstream fix were the most correct.
 
 Bigger studies came first and found the same cost pattern: [HarnessTax](https://harnesstax.github.io/) from UC Berkeley and Arena, and [@sambharia's](https://x.com/sambharia/status/2043703343453987133) April post of the same name.
 What this one adds is a blind grade of the code itself, not just whether the tests pass, and a replay of every run.
 
 [Read the full write-up and replay every run →](/harness-tax/)
 
+**Changes since launch**
+
+- Nov 9, 2026: GPT-6.1 Sol Pro re-graded the diffs we could still recover.
+- Nov 9: credited earlier work on the same question.
+- Nov 9: made the page easier to read, and credited Gagan for suggesting structural signals.
+- Nov 9: added Gemini 4 Argon as a third grader.
+- Nov 10: ran Gagan's two suggestions, property tests and a count of lines changed outside the task.
