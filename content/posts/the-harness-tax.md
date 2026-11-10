@@ -13,8 +13,10 @@ _Updated Nov 10, 2026: the changes since launch are listed at the end._
 Claude Code and pi can run the same model on the same coding job.
 What differs is the harness: the system prompt, the tools and the loop around the model.
 On a typical run, Claude Code's first model call sends about 27k tokens, and pi's sends about 3k.
-The model rereads that text on every step, and we call the extra cost the harness tax.
-We ran both on six Python tasks, three times each, to see how big it is.
+The harness resends that text on every step, and we call the extra cost the harness tax.
+A prompt cache makes each resend cost a twentieth of the normal price, but an agent takes many steps.
+We ran both on six Python tasks, three times each, to see how big the tax is.
+Three tasks are real bug fixes from open-source projects, and three are synthetic.
 
 [![Three-panel comic: two stick figures run the same model on the same coding job. Claude Code carries a 27k-token backpack of prompt, tools and task, and pi a 3k one. A toll booth makes them reread the whole bag on every step, but rereads are 95% off.](/harness-tax/hook.png)](/harness-tax/)
 
@@ -22,6 +24,8 @@ The short version: every one of the 36 runs passed every hidden test, so the tes
 pi's median run cost 29% less, and it was a bit faster.
 Claude Code's code got slightly better blind grades (graders scored the code without knowing which harness wrote it): 9.6 against 9.0 out of 10.
 None of these gaps met the bar we set before running.
+For cost and speed, a side had to be at least 15% lower on the median run and lower on at least 5 of the 6 tasks.
+On cost, pi was lower on only 4.
 
 The main graders were Claude Opus 5.5, the same model as the agents.
 So two other models re-graded the half of the diffs we still had.
@@ -33,7 +37,8 @@ If every run had started with an empty cache, pi's median run would have cost ab
 That clears our bar.
 
 After launch, Gagan ([@gagu_sh](https://x.com/gagu_sh/status/2119899741223842074)) suggested two cheaper checks, and we ran both.
-On the two tasks we could test, property tests, which throw thousands of random inputs at the code, failed 4 of the 5 diffs the graders had marked down for correctness, and found no new bugs.
+On the two tasks we could test, we ran property tests, which throw thousands of random inputs at the code.
+They failed 4 of the 5 diffs the graders had marked down for correctness, and found no bug the graders had missed.
 We wrote them after reading the graders' notes, so they looked where the graders had looked.
 A count of lines changed beyond the project's own fix found nothing the graders missed either.
 We expected straying from the fix to signal a worse diff. It went the other way: the diffs that went furthest beyond the fix were among the best graded.
