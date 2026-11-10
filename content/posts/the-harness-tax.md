@@ -29,13 +29,14 @@ GPT-6.1 Sol Pro also put Claude Code slightly ahead, and Gemini 4 Argon called i
 The small quality lead depends on which model grades.
 
 One caveat on cost: the runs shared a prompt cache, so most Claude Code runs started with their big prompt already cached.
-If every run had started cold, pi would have been about a third cheaper, on 5 of 6 tasks, which would clear our bar.
+If every run had started with an empty cache, pi's median run would have cost about a third less, and pi would have been cheaper on 5 of 6 tasks.
+That clears our bar.
 
 After launch, Gagan ([@gagu_sh](https://x.com/gagu_sh/status/2119899741223842074)) suggested two cheaper checks, and we ran both.
-Property tests, which throw thousands of random inputs at the code, failed 4 of the 5 diffs the graders had marked down and found no new bugs.
+On the two tasks we could test, property tests, which throw thousands of random inputs at the code, failed 4 of the 5 diffs the graders had marked down for correctness, and found no new bugs.
 We wrote them after reading the graders' notes, so they looked where the graders had looked.
 A count of lines changed beyond the project's own fix found nothing the graders missed either.
-As a warning sign it pointed the wrong way: the diffs that went furthest beyond the fix were among the best graded.
+We expected straying from the fix to signal a worse diff. It went the other way: the diffs that went furthest beyond the fix were among the best graded.
 
 Others got there first. [HarnessTax](https://harnesstax.github.io/), from UC Berkeley and Arena, is a much bigger study that found the same cost pattern, and [@sambharia's](https://x.com/sambharia/status/2043703343453987133) April post of the same name traces where Claude Code's tokens go.
 What this one adds is a blind grade of the code itself, not just whether the tests pass, and a replay of every run.
@@ -46,7 +47,7 @@ What this one adds is a blind grade of the code itself, not just whether the tes
 
 - Nov 9, 2026: GPT-6.1 Sol Pro re-graded the diffs we still had.
 - Nov 9: credited earlier work on the same question.
-- Nov 9: made the page easier to read, and credited Gagan, who suggested cheaper checks than a model grader.
+- Nov 9: made the page easier to read, and credited Gagan, who suggested two checks that cost less than a model grader.
 - Nov 9: added Gemini 4 Argon as a third grader.
-- Nov 10: ran both of Gagan's checks: property tests, and a count of lines changed outside the task.
+- Nov 10: ran both of Gagan's checks, property tests and a count of lines changed beyond the project's own fix.
 - Nov 10: a second review found we had overstated how well the property tests matched the graders, and had left out that runs shared a prompt cache. Both are fixed. We also made the post easier to read and gave the comic a real punch line.
