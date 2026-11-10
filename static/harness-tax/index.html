@@ -195,12 +195,12 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
   <header class="hero">
     <div class="eyebrow">Field notes · coding agents · same model, two harnesses</div>
     <h1>The Harness <span class="hl">Tax</span></h1>
-    <p class="dek">We gave the same model the same coding jobs inside two agent harnesses (the program that drives the model), <span class="cc">Claude Code</span> and <span class="pi">pi</span>, and ran a taxi meter on each. One of them pays a much bigger fixed fee on every step before it does any work. This page is about how much that fee costs, and whether it fades on longer jobs.</p>
+    <p class="dek">We gave the same model the same coding jobs inside two agent harnesses, <span class="cc">Claude Code</span> and <span class="pi">pi</span>, and metered every run. Claude Code sends the model far more text on every step, before any work starts. We call that extra cost the harness tax. <span id="dekLead"></span></p>
     <p class="byline">By <a href="https://swappysh.github.io">Swapnil Sharma</a> · <a href="https://x.com/swappysh">@swappysh</a></p>
     <p class="byline">Updated Nov 10, 2026 · <a href="#changes">what changed</a></p>
   </header>
 
-  <div class="strip wide" role="img" aria-label="Comic: two identical stick figures labelled Opus 5.5; one carries a huge backpack of prompt, tools and task, the other a small pouch; both must reread their bag at every step.">
+  <div class="strip wide" role="img" aria-label="Comic: two identical stick figures labelled Opus 5.5; one carries a huge backpack of prompt, tools and task, the other a small pouch; both must reread their bag at every step, but rereads are 95% off.">
     <figure style="margin:0;display:flex;flex-direction:column;gap:6px">
       <svg viewBox="0 0 240 200"><g filter="url(#wob)">
         <use href="#guy" x="40" y="70" width="40" height="84"/>
@@ -242,29 +242,29 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
         <text x="192" y="62" text-anchor="middle" font-size="15">$</text>
         <text x="120" y="186" text-anchor="middle" font-size="15">...at every single step</text>
       </g></svg>
-      <figcaption class="cap">The fee is paid on every step.</figcaption>
+      <figcaption class="cap">The fee is paid on every step. Luckily, rereads are 95% off.</figcaption>
     </figure>
   </div>
 
   <h2>Two harnesses, one model</h2>
-  <p>A coding agent is a model plus a harness. The harness is the program around the model. It writes the system prompt, defines the tools (run a shell command, edit a file), runs the loop, and decides what the model sees on each step (one step is one model call). We held the model fixed at Claude Opus 5.5 with high reasoning effort, and swapped only the harness. One difference comes with the harness: pi 0.73.1 came out before Opus 5.5, so it ran the model with a fixed thinking budget instead of the model's adaptive thinking.</p>
+  <p>A coding agent is a model plus a harness. The harness is the program around the model. It writes the system prompt, defines the tools (run a shell command, edit a file), runs the loop, and decides what the model sees on each step (one step is one model call). We held the model fixed at Claude Opus 5.5 with high reasoning effort, and swapped only the harness. There is one catch. pi 0.73.1 came out before Opus 5.5, so it gave the model a fixed thinking budget instead of letting the model decide how long to think.</p>
   <p><span class="cc">Claude Code</span> is Anthropic's own agent. It ships a long system prompt and a big tool kit: a todo list, sub-agents, web fetch, careful rules about git. <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">pi</a>, by Mario Zechner, goes the other way. Its prompt fits on a page and it has four tools. Here is how much text each one sends on its first model call, before the model has done any work, measured from our runs:</p>
   <div class="fig">
     <div class="packs" id="packs"></div>
-    <p class="figcap">Tokens of context on the first model call, median over the main-round runs: system prompt, tool definitions, the task prompt and any instruction file in the repo. The task prompt and repo are the same for both. One repo (markdown-it-py) has a long AGENTS.md that adds about 6k to both sides.</p>
+    <p class="figcap">Tokens of context on the first model call, median over the 36 main runs: system prompt, tool definitions, the task prompt and any instruction file in the repo. The task prompt and repo are the same for both. One repo (markdown-it-py) has a long AGENTS.md that adds about 6k to both sides.</p>
   </div>
-  <p>The model is stateless. On every step the harness sends the whole conversation again, starting with that pack. Prompt caching makes the repeat cheap: a cached token costs $0.20 per million, a twentieth of a fresh one. But an agent takes many steps (<span id="medCalls"></span> model calls in a typical run here), and the context grows on each one. The question is whether this fee shows up on the bill.</p>
+  <p>The model is stateless. On every step the harness sends the whole conversation again, starting with that first-call context. Prompt caching makes the repeat cheap: a cached token costs $0.20 per million, a twentieth of a fresh one. But an agent takes many steps (<span id="medCalls"></span> model calls in a typical run here), and the context grows on each one. That repeated fee is the harness tax, and the question is how much it adds to the bill.</p>
   <p>We are not the first to ask. In April, siddharth (<a href="https://x.com/sambharia/status/2043703343453987133" target="_blank" rel="noopener">@sambharia</a>) wrote <em>The Harness Tax</em>, which traces where Claude Code's tokens go on a small job. In September, a UC Berkeley and Arena team published <a href="https://harnesstax.github.io/" target="_blank" rel="noopener">HarnessTax</a>, a much bigger study of seven models in three harnesses (Claude Code, Codex CLI and pi) on SWE-bench Lite and Terminal-Bench 2.0. They found that the harness barely changed how often tasks were solved, and that Claude Code cost about twice as much as pi on SWE-bench Lite. Our study is far smaller. What it adds is a blind grade of the code itself, not just whether the tests pass, and a replay of every run.</p>
 
   <h2>The scorecard</h2>
-  <p id="scoreLead"></p>
+  <div id="scoreLead" class="page" style="gap:1.1rem"></div>
   <div class="fig wide">
     <div class="tablewrap" tabindex="0" role="region" aria-label="Results by task, scrolls sideways"><table id="score"></table></div>
-    <p class="figcap">Medians per task for cost and time, mean for the grade. "Solved" means every hidden test passed, including tests that already passed before the change, so a fix that breaks something else does not count. "Grade" is the blind grader's score out of 10. Underline marks the cheaper, faster or higher-graded side.</p>
+    <p class="figcap">Medians per task for cost and time, mean for the grade. "Solved" means every hidden test passed, including tests that already passed before the change, so a fix that breaks something else does not count. "Grade" is the blind grader's score out of 10. Underline marks the cheaper, faster or higher-graded side. CC is Claude Code.</p>
   </div>
 
   <h2>Watch two runs side by side</h2>
-  <p>Each replay below is a real pair of runs on the same task, one per harness, started together. The meters show money spent so far, computed from each harness's own token log. The tape shows each tool call as it happened, and how the run ended. A few pi calls name tools that don't exist, such as <code>pelican_write</code>; pi answers those with an error. Press Replay, or drag the slider to scrub. In the table above and the charts below, CC is short for Claude Code.</p>
+  <p>Each replay below is a real pair of runs on the same task, one per harness, started together. The meters show money spent so far, computed from each harness's own token log. The tape shows each tool call as it happened, and how the run ended. A few pi calls name tools that don't exist, such as <code>pelican_write</code>; pi answers those with an error. Press Replay, or drag the slider to scrub.</p>
   <section class="fig wide" id="replay" aria-label="Run replay">
     <div class="controls">
       <label for="rTask" style="flex:1 1 14rem">task <select id="rTask"></select></label>
@@ -285,7 +285,7 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
     <div class="chartwrap" tabindex="0" role="region" aria-label="Replay chart, scrolls sideways"><svg class="chart" id="rChart" viewBox="0 0 900 262" role="img" aria-label="Cost over time for both runs"></svg></div>
     <div class="legend" id="rLegend"></div>
   </section>
-  <p>Two things stand out once you watch a few. The meters climb in steps, one per model call, and the big steps are the calls where the model writes a lot, plus Claude Code's first call, which writes its whole starting context to the cache. And the two runs rarely take the same path, even on the same task. <span id="rPath"></span> Those choices move the bill too, as the next section shows.</p>
+  <p>Two things stand out once you watch a few. First, the meters climb in steps, one per model call. The big steps are calls where the model writes a lot, and Claude Code's first call when its prompt isn't cached yet. Second, the two runs rarely take the same path, even on the same task. <span id="rPath"></span> Those choices move the bill too, as the next section shows.</p>
 
   <h2>Why the tax should fade on long jobs</h2>
   <p>The fee is fixed per step, so it adds up in a straight line. But each step also rereads everything said so far, and that part grows with the length of the job. On a short job the fixed fee is a big share of the bill. On a long job the growing conversation and the model's own output take over, and the fee's share shrinks. Drag the slider to see where our runs sit.</p>
@@ -313,13 +313,14 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
   </section>
 
   <h2 id="quality">What the tests couldn't tell us</h2>
-  <div class="strip wide" role="img" aria-label="Comic: one figure says pi is cheaper, then asks whether both passed the tests; the other says every run did; so the tests can't tell them apart.">
+  <div class="strip wide" role="img" aria-label="Comic: one figure says pi is cheaper and asks whether both passed the tests; the other says every run did; so they wrote meaner tests, and the official fix fails them.">
     <figure style="margin:0;display:flex;flex-direction:column;gap:6px">
       <svg viewBox="0 0 240 200"><g filter="url(#wob)">
         <use href="#guy" x="30" y="90" width="40" height="84"/>
         <rect class="ink" x="110" y="40" width="110" height="80"/>
-        <path class="ink" d="M120 108 L145 90 L170 96 L210 56"/>
-        <text x="110" y="150" font-size="15">"pi is cheaper!"</text>
+        <rect class="fill-cc" x="132" y="58" width="28" height="56"/><rect class="fill-pi" x="172" y="74" width="28" height="40"/>
+        <text x="165" y="134" text-anchor="middle" font-size="12">$ per run</text>
+        <text x="110" y="162" font-size="15">"pi is cheaper!"</text>
       </g></svg>
     </figure>
     <figure style="margin:0;display:flex;flex-direction:column;gap:6px">
@@ -335,25 +336,27 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
       <svg viewBox="0 0 240 200"><g filter="url(#wob)">
         <use href="#guy" x="30" y="90" width="40" height="84"/>
         <use href="#guy" x="170" y="90" width="40" height="84"/>
-        <text x="120" y="40" text-anchor="middle" font-size="15">"so the tests can't tell</text>
-        <text x="120" y="56" text-anchor="middle" font-size="15">them apart."</text>
-        <text x="190" y="80" text-anchor="middle" font-size="15">"...yeah."</text>
+        <text x="6" y="32" font-size="15">"so we wrote</text>
+        <text x="6" y="48" font-size="15">meaner tests."</text>
+        <text x="234" y="64" text-anchor="end" font-size="15">"the official fix</text>
+        <text x="234" y="80" text-anchor="end" font-size="15">fails them."</text>
       </g></svg>
     </figure>
   </div>
   <div id="limitsLead" class="page" style="gap:1.1rem"></div>
   <div class="page">
-  <p>Tests and grades both miss some of what makes a diff easy to keep. After the launch, Gagan (<a href="https://x.com/gagu_sh/status/2119899741223842074" target="_blank" rel="noopener">@gagu_sh</a>) suggested two cheaper checks: structural signals such as lines changed outside the task, and property tests from a tool like Hypothesis in place of an LLM grader. We ran both on the 18 diffs we could still recover.</p>
-  <p>The property tests failed the same four diffs the graders had marked down, found nothing new, and turned each bug into a short failing input. On the boltons task, for example: write <code>aéa</code>, seek back one character, ask for the length, then read one character. The read comes back empty. The tests also failed the projects' own fixes. Upstream boltons still lets the length call move the read position, and the stencil reference crashes on the same long list index.</p>
-  <p>The line count pointed the wrong way. On the markdown-it-py task, the diffs with the most lines outside the upstream fix were the ones the graders rated most correct. Their extra lines also fix link destinations, a case the upstream fix misses.</p>
+  <p>Tests and grades both miss some of what makes a diff easy to keep. After the launch, Gagan (<a href="https://x.com/gagu_sh/status/2119899741223842074" target="_blank" rel="noopener">@gagu_sh</a>) suggested two cheaper checks than a model grader. One counts the lines each diff changes outside the code the project's own fix touched. The other is property tests, which throw thousands of random inputs at the code and check that a rule always holds (Hypothesis is a Python tool for this). Each check fits two of the three tasks we kept, so each covered 12 diffs.</p>
+  <p>The property tests failed 4 of the 5 diffs the graders had marked down for correctness, and found no bug the graders had missed. The fifth diff caps how deeply a template can nest, and our tests never tried deep nesting. We wrote the tests after reading the graders' notes, so they looked where the graders had looked. What they added was a concrete failing input for each of the four bugs. On the boltons task, for example: write <code>aéa</code>, seek back one character, ask for the length, then read one character. The read comes back empty. They also caught bugs in two reference fixes. The fix boltons itself merged still lets the length call move the read position, and our own reference template engine crashes on the same long list index.</p>
+  <p>The line count found nothing the graders missed, and as a warning sign it pointed the wrong way. On both tasks, the diffs that changed the most beyond the project's fix were among those the graders rated best. On markdown-it-py the extra lines also fix link destinations, a case the project's fix misses. On boltons they rewrite the length call so it no longer moves the read position.</p>
   </div>
-  <div class="notes">
+  <div class="notes" id="limits">
     <p>Other limits:</p>
     <ul>
       <li>A small sample: six Python tasks, three runs each per harness. Three are real bug fixes from open-source projects, merged after the model's training cutoff but still public. The other three are synthetic tasks, written by a Claude agent. Each per-task median rests on three runs.</li>
       <li>The replay also has three small pilot tasks, run before the main round. They are not in the scorecard or the numbers above.</li>
       <li>The runs shared one <code>/tmp</code> folder. On the markdown-it-py task, four later runs (two per harness) reused a JavaScript library the first run had installed there, so those four may be a little cheap and quick.</li>
-      <li>Some runs used the network: all six inflect runs read the maintainer's blog page on project layout, one Claude Code run on the markdown-it-py task installed the JavaScript markdown-it library, and one on the boltons task installed pytest. Runs on both sides pulled dev tools such as ruff and the mypy type checker through uvx, and the logs show mypy downloads in one Claude Code run and two pi runs. No run fetched the upstream fix.</li>
+      <li id="cacheLimit"></li>
+      <li>Some runs used the network: all six inflect runs read the maintainer's blog page on project layout, one Claude Code run on the markdown-it-py task installed the JavaScript markdown-it library, and one on the boltons task installed pytest (another pulled it in through uv). Runs on both sides pulled dev tools such as ruff, tox and the mypy type checker through uvx, and the logs show mypy downloads in one Claude Code run and two pi runs. No run fetched the upstream fix.</li>
       <li>One model, and a pi version older than it. A different model, or a newer pi, could change the picture.</li>
       <li>The main graders were Claude Opus 5.5, the same model as the agents, running inside Claude Code. The outside re-grades, by GPT and Gemini, cover only half the diffs, with one call per task for each model.</li>
       <li>Everything ran on one machine through one API route, at most two runs at a time, with launch order alternated.</li>
@@ -367,11 +370,12 @@ footer { margin-top: 2rem; font: 400 0.82rem/1.5 var(--mono); color: var(--muted
   <h2 id="changes">Changes since launch</h2>
   <div class="notes">
     <ul>
-      <li>Nov 9, 2026: GPT-6.1 Sol Pro re-graded the diffs we could still recover.</li>
+      <li>Nov 9, 2026: GPT-6.1 Sol Pro re-graded the diffs we still had.</li>
       <li>Nov 9: credited earlier work on the same question.</li>
-      <li>Nov 9: made the page easier to read, and credited Gagan for suggesting structural signals.</li>
+      <li>Nov 9: made the page easier to read, and credited Gagan, who suggested cheaper checks than a model grader.</li>
       <li>Nov 9: added Gemini 4 Argon as a third grader.</li>
-      <li>Nov 10: ran Gagan's two suggestions, property tests and a count of lines changed outside the task. The results are under <a href="#quality">What the tests couldn't tell us</a>.</li>
+      <li>Nov 10: ran both of Gagan's checks: property tests, and a count of lines changed outside the task. Results are in <a href="#quality">What the tests couldn't tell us</a>.</li>
+      <li>Nov 10: a second review found we had overstated how well the property tests matched the graders, and had left out that runs shared a prompt cache (see the <a href="#limits">limits</a>). Both are fixed. We also made the page easier to read and gave the comics real punch lines.</li>
     </ul>
   </div>
   <footer id="foot"></footer>
@@ -426,7 +430,7 @@ const byH = h => runs.filter(r => r.h === h);
 const fullH = h => full.filter(r => r.h === h);
 
 // footer
-$("foot").innerHTML = `${full.length} main-round runs and ${runs.length - full.length} pilot runs · Claude Code 2.1.296 · pi 0.73.1 · <span class="nw">claude-opus-5-5</span>, high effort or thinking · built ${DATA.built || ""}`;
+$("foot").innerHTML = `${full.length} main-round runs and ${runs.length - full.length} pilot runs · Claude Code 2.1.296 · pi 0.73.1 · Claude Opus 5.5 (high effort in Claude Code, a fixed thinking budget in pi) · built ${DATA.built || ""}`;
 
 // contestants
 const firstCtx = h => median(fullH(h).filter(r => r.calls.length).map(r => { const u = r.calls[0]; return u.in + u.cr + u.cw; }));
@@ -599,9 +603,9 @@ const cells = {}; full.forEach(r => (cells[r.task + r.h] ||= []).push(r.usd));
 const spread = Math.max(...Object.values(cells).map(c => Math.max(...c) / Math.min(...c)));
 $("medCalls").textContent = Math.round(median(full.map(r => r.calls.length)));
 const long = full.filter(r => r.calls.length > 30);
-const longBelow = long.length > 1 && long.every(r => r.usd < Math.min(model("cc", r.calls.length), model("pi", r.calls.length))) ? ` All ${long.length} runs past 30 calls cost less than either curve${new Set(long.map(r => r.task)).size === 1 ? ` (all on the ${short(long[0].task)} task)` : ""}.` : "";
-$("tProse").textContent = `In this model pi saves ${sv(5)}% on a 5-call job, ${sv(15)}% at 15 calls and ${sv(60)}% at 60. The dots tell the other half: real runs scatter widely, because the work itself varies so much from run to run.${longBelow} On the same task with the same harness, one run cost up to ${spread.toFixed(1)} times as much as another. With that much noise, our runs are too few to show the fade.`;
-$("tCacheProse").textContent = `All of this assumes prompt caching, and caching is why the tax is small. Tokens the API has already seen cost ${usd(P.cr, 2)} per million instead of ${usd(P.in, 0)}. Priced with no cache, our ${fullH("cc").length} main-round Claude Code runs would cost ${usd(tot("cc", "usdNo"), 0)} instead of ${usd(tot("cc", "usd"), 0)}, and our ${fullH("pi").length} pi runs ${usd(tot("pi", "usdNo"), 0)} instead of ${usd(tot("pi", "usd"), 0)}. pi's edge in total spend grows from ${Math.round(100 * (1 - tot("pi", "usd") / tot("cc", "usd")))}% to ${Math.round(100 * (1 - tot("pi", "usdNo") / tot("cc", "usdNo")))}%, and in the model a 15-call job shows a ${sv(15, modelNo)}% gap instead of ${sv(15)}%. Untick the box above to watch it happen.`;
+const longBelow = long.length > 1 && long.every(r => r.usd < Math.min(model("cc", r.calls.length), model("pi", r.calls.length))) ? ` The ${long.length} longest runs (past 30 calls${new Set(long.map(r => r.task)).size === 1 ? `, all on the ${short(long[0].task)} task` : ""}) cost less than either curve predicts.` : "";
+$("tProse").textContent = `Our runs are too noisy to show the fade. In the model, pi saves ${sv(5)}% on a 5-call job, ${sv(15)}% at 15 calls and ${sv(60)}% at 60. Real runs scatter widely around the curves, because the work itself varies so much. On the same task with the same harness, one run cost up to ${spread.toFixed(1)} times as much as another.${longBelow}`;
+$("tCacheProse").textContent = `All of this assumes prompt caching, and caching is why the tax is small. Tokens the API has already seen cost ${usd(P.cr, 2)} per million instead of ${usd(P.in, 0)}. Priced with no cache, our ${fullH("cc").length} main-round Claude Code runs would cost ${usd(tot("cc", "usdNo"), 0)} instead of ${usd(tot("cc", "usd"), 0)}, and our ${fullH("pi").length} pi runs ${usd(tot("pi", "usdNo"), 0)} instead of ${usd(tot("pi", "usd"), 0)}. Counting total spend rather than the median run, pi's edge grows from ${Math.round(100 * (1 - tot("pi", "usd") / tot("cc", "usd")))}% with caching to ${Math.round(100 * (1 - tot("pi", "usdNo") / tot("cc", "usdNo")))}% without, and in the model a 15-call job shows a ${sv(15, modelNo)}% gap instead of ${sv(15)}%. Untick the box above to watch it happen.`;
 
 // ---------- stall ----------
 let drawStall = () => {};
@@ -613,9 +617,8 @@ if (stall) {
   const g0 = s[gi];
   $("stallH").textContent = `The run that waited ${Math.round(gap / 60)} minutes`;
   const twin = runs.find(r => r.task === stall.task && r.rep === stall.rep && r.h !== stall.h);
-  const seeds = /\bN=(\d+)/.exec(g0.label);
-  $("stallProse").innerHTML = `<p>One run shows a difference in harness design that has nothing to do with tokens. On the key-value store task, <span class="${stall.h}">${H[stall.h]}</span> had done its work by minute ${Math.round(g0.t / 60)}. Then, in one shell command, it ran its tests and a random stress test${seeds ? ` over ${(+seeds[1]).toLocaleString("en-US")} seeds` : ""}, and waited. The command never finished, and the run hit our 30-minute limit ${Math.round(gap / 60)} minutes later.</p>
-  <p>Its fixes were correct, and every hidden test passed. It cost only ${usd(stall.usd)}, because waiting is free. But it took ${mmss(stall.sec)} of wall clock${twin ? ` against ${mmss(twin.sec)} for <span class="${twin.h}">${H[twin.h]}</span> on the same task` : ""}. After two minutes, Claude Code's shell tool moves a command to the background and hands control back to the model, so the run goes on. pi's shell tool has no default limit, so one long command can hold the whole run.</p>`;
+  $("stallProse").innerHTML = `<p>One run shows a difference in harness design that has nothing to do with tokens. On the key-value store task, <span class="${stall.h}">${H[stall.h]}</span> had done its work by minute ${Math.round(g0.t / 60)}. Then, in one shell command, it ran its tests and then a long random stress test, and waited. The command never finished, and the run hit our 30-minute limit ${Math.round(gap / 60)} minutes later.</p>
+  <p>Its changes passed every hidden test. It cost only ${usd(stall.usd)}, because waiting is free. But it took ${mmss(stall.sec)} of wall clock${twin ? ` against ${mmss(twin.sec)} for <span class="${twin.h}">${H[twin.h]}</span> on the same task` : ""}. After two minutes, Claude Code's shell tool moves a command to the background and hands control back to the model, so the run goes on. pi's shell tool has no default limit, so one long command can hold the whole run.</p>`;
   drawStall = () => {
   const SW = VW("sChart"), sl = 20, sr = 20, sx = t => sl + (SW - sl - sr) * t / stall.sec;
   setVB("sChart", 120);
@@ -664,9 +667,23 @@ $("score").innerHTML = `<thead><tr><th scope="col">Task</th><th scope="col" clas
 const cheaper = mq < mc ? "pi" : "cc", other = cheaper === "pi" ? "cc" : "pi";
 const lo = Math.min(mc, mq), hi = Math.max(mc, mq), cut = 1 - lo / hi, clearCost = cut >= 0.15 && winsCost[cheaper] >= 5;
 const gc = gmean(C), gq = gmean(Q), better = gc >= gq ? "cc" : "pi", gap = Math.abs(gc - gq), clearQ = gap >= 1 && winsGrade[better] >= 4, clearTime = tcut >= 0.15 && winsTime[quicker] >= 5;
-$("scoreLead").innerHTML = `Across the ${full.length} main-round runs, <span class="${cheaper}">${H[cheaper]}</span> had the lower median cost per run, ${usd(lo)} against ${usd(hi)}, ${Math.round(100 * cut)}% less. It was cheaper on ${winsCost[cheaper]} of ${ft.length} tasks. Before running, we set the bar for a clear win at a median at least 15% lower and lower on at least 5 of 6 tasks, so ${clearCost ? "that is a clear win" : "this falls short of a clear win"}. On quality the lean goes ${better === cheaper ? "the same way" : "the other way"}: the blind graders (a fresh grader session for each task) gave <span class="${better}">${H[better]}</span>'s diffs ${g1(Math.max(gc, gq))} out of 10 against ${g1(Math.min(gc, gq))}, higher on ${winsGrade[better]} of ${ft.length} tasks. The bar there was a full point and 4 of 6 tasks, so ${clearQ ? "that one is a clear win" : "that falls short too"}. ${clearTime ? `Speed is a clear win for <span class="${quicker}">${H[quicker]}</span>` : `Speed leaned to <span class="${quicker}">${H[quicker]}</span>, again without clearing the bar`}: its median run took ${mmss(Math.min(tc, tq))} against ${mmss(Math.max(tc, tq))}, ${(100 * tcut).toFixed(1)}% less, and it was faster on ${winsTime[quicker]} of ${ft.length} tasks.`;
+const ms = x => { x = Math.round(x); return `${Math.floor(x / 60)} min ${x % 60} s`; };
+const pct = x => Math.round(100 * x);
+const noneClear = !(clearCost || clearQ || clearTime);
+$("dekLead").innerHTML = `In our runs, <span class="${cheaper}">${H[cheaper]}</span>'s median run cost ${pct(cut)}% less, <span class="${better}">${H[better]}</span>'s code graded slightly better, and ${clearCost || clearQ ? "only one gap cleared" : "neither gap cleared"} the bar we set before running.`;
+// cold start: what a run would cost if its first call found nothing in the prompt cache (runs shared one cache)
+const cold = r => r.usd + (r.calls[0] ? r.calls[0].cr * (P.cw - P.cr) / 1e6 : 0);
+const mcK = median(C.map(cold)), mqK = median(Q.map(cold)), cutK = 1 - mqK / mcK;
+const winsK = ft.filter(t => median(full.filter(r => r.task === t && r.h === "pi").map(cold)) < median(full.filter(r => r.task === t && r.h === "cc").map(cold))).length;
+const clearK = cutK >= 0.15 && winsK >= 5, warmCC = C.filter(r => r.calls[0] && r.calls[0].cr > 0).length;
 const allSolved = full.every(r => r.resolved), AG = DATA.agreement, RG = DATA.regrade;
-$("limitsLead").innerHTML = `<p>Quality is the weakest signal here, for the reason in the comic: ${allSolved ? "every run" : "almost every run"} solved its task, so the hidden tests can't rank the harnesses.</p><p>That leaves the blind graders: for each task, a fresh grader session read the diffs shuffled, with the harness names removed, and scored them against a rubric we wrote before the runs. They found real misses (an edge case in a stream seek, a crash on a 5,000-digit list index, one link-trim spot that a dependency hides), but they were small and spread over both sides: ${g1(gc)} against ${g1(gq)} out of 10.${AG ? ` A second grader re-scored the template engine task on its own. It gave the same total to ${AG.exact} of ${AG.n} diffs${AG.grader_b.cc > AG.grader_b.pi === AG.grader_a.cc > AG.grader_a.pi ? ` and also put ${H[AG.grader_b.cc > AG.grader_b.pi ? "cc" : "pi"]} ahead` : ""}, and its ranking of the ${AG.n} diffs correlates with the first grader's at ${AG.spearman.toFixed(2)} (they split on one diff: the first grader ranked it top, and the second gave it a 9 and ranked it fourth).` : ""}</p>${RG ? `<p>Those graders were Claude Opus 5.5, the same model as the agents, so later we had a non-Claude model, ${RG.model}, re-grade the ${RG.n} diffs we could still recover (${RG.tasks} of the ${ft.length} tasks). It graded harder and ${(RG.gpt.cc > RG.gpt.pi) === (RG.opus.cc > RG.opus.pi) ? "kept the same side ahead" : "flipped the order"}: ${H.cc} ${g1(RG.gpt.cc)} against ${H.pi} ${g1(RG.gpt.pi)}, where Opus gave the same diffs ${g1(RG.opus.cc)} against ${g1(RG.opus.pi)}. Averaging the two graders gives ${g1(RG.both.cc)} against ${g1(RG.both.pi)}.</p>${RG.gem ? `<p>A second outside model, ${RG.gem_model}, ${RG.gem.cc.toFixed(1) === RG.gem.pi.toFixed(1) ? `called the same diffs a tie: ${g1(RG.gem.cc)} each` : `gave them ${g1(RG.gem.cc)} against ${g1(RG.gem.pi)}`}. ${RG.same_winners ? "It picked the same winner as the other two graders on every task, but it" : "It"} put ${H.pi} ${Math.abs(RG.gem_pi_gap - 1) < 0.05 ? "a full point" : `${g1(RG.gem_pi_gap)} points`} ahead on the ${short(RG.gem_pi_task)} task. ${H.cc}'s lead was ${ld(RG.opus.cc - RG.opus.pi)} with Opus, ${ld(RG.gpt.cc - RG.gpt.pi)} with GPT and ${ld(RG.gem.cc - RG.gem.pi)} with Gemini. Averaged over all three graders, the score is ${g1(RG.all3.cc)} against ${g1(RG.all3.pi)}.</p>` : ""}` : ""}`;
+$("scoreLead").innerHTML = `<p>${allSolved ? `Every one of the ${full.length} main runs passed every hidden test, so the tests can't pick a winner. ` : ""}<span class="${cheaper}">${H[cheaper]}</span> was cheaper${quicker === cheaper ? " and a little faster" : ""}, and <span class="${better}">${H[better]}</span>'s code graded a little better. ${noneClear ? "None of these gaps cleared the bar we set before running." : "Not every gap cleared the bar we set before running."}</p>
+<p>Before running, we said a side wins clearly on cost or speed if its median run is at least 15% lower and it is lower on at least 5 of ${ft.length} tasks. <span class="${cheaper}">${H[cheaper]}</span>'s median run cost ${usd(lo)} against ${usd(hi)}, ${pct(cut)}% less, and it was cheaper on ${winsCost[cheaper]} of ${ft.length} tasks. ${clearCost ? "That clears the bar." : cut >= 0.15 ? "That misses the bar on the task count." : "That misses the bar."}${cheaper === "pi" && cutK > cut ? ` One caveat would widen the gap: the runs shared a prompt cache, which helped ${H.cc} more (see the <a href="#limits">limits</a>).` : ""} The median <span class="${quicker}">${H[quicker]}</span> run took ${ms(Math.min(tc, tq))} against ${ms(Math.max(tc, tq))}, ${(100 * tcut).toFixed(1)}% less, and it was faster on ${winsTime[quicker]} of ${ft.length} tasks. ${clearTime ? "That clears the bar." : tcut > 0.12 ? "That is just short of the bar." : "That is short of the bar."}</p>
+<p>For quality, blind graders scored each diff (the code change a run made) without knowing which harness wrote it, with a fresh grader session for each task. They gave <span class="${better}">${H[better]}</span>'s diffs ${g1(Math.max(gc, gq))} out of 10 against ${g1(Math.min(gc, gq))}, higher on ${winsGrade[better]} of ${ft.length} tasks. The bar there was a full point and 4 of ${ft.length} tasks, so ${clearQ ? "that is a clear win" : "that falls short too"}.</p>`;
+if (cheaper === "pi" && mqK < mcK) $("cacheLimit").innerHTML = `The runs shared one prompt cache, so in ${warmCC} of ${C.length} ${H.cc} runs the first call found the harness's prompt already cached by an earlier run. pi's prompt was cached too, but it is much smaller, so this helped ${H.cc} more. Priced as if every run had started cold, the median run would cost ${usd(mcK)} with ${H.cc} and ${usd(mqK)} with pi, ${pct(cutK)}% less, and pi would be cheaper on ${winsK} of ${ft.length} tasks${clearK ? ", which would clear our bar" : ", still short of our bar"}. The scorecard keeps what the runs actually paid. Our plan named the shared cache as a known limit before the runs.`;
+else $("cacheLimit").hidden = true;
+const gemTie = RG && RG.gem && Math.abs(RG.gem.cc - RG.gem.pi) < 0.05;
+$("limitsLead").innerHTML = `<p>Quality is the weakest signal here, for the reason in the comic: ${allSolved ? "every run" : "almost every run"} solved its task, so the hidden tests can't rank the harnesses.</p><p>That leaves the blind graders. For each task, a fresh grader session read the diffs shuffled, with the harness names removed, and scored them against a rubric we wrote before the runs. They found real bugs, such as an edge case in seeking a text stream, a crash on a 5,000-digit list index, and a link-trimming case hidden by a dependency. But the bugs were small and spread over both sides: ${g1(gc)} against ${g1(gq)} out of 10.${AG ? ` A second Opus session graded the template engine task again on its own. It gave the same total to ${AG.exact} of ${AG.n} diffs${AG.grader_b.cc > AG.grader_b.pi === AG.grader_a.cc > AG.grader_a.pi ? ` and also put ${H[AG.grader_b.cc > AG.grader_b.pi ? "cc" : "pi"]} ahead` : ""}.` : ""}</p>${RG ? `<p>The main graders were Claude Opus 5.5, the same model as the agents. So two other models re-graded the ${RG.n} diffs we still had (${RG.tasks} of the ${ft.length} tasks; we could rebuild only those after the run folders were lost). On those diffs, ${H.cc}'s lead was ${ld(RG.opus.cc - RG.opus.pi)} with Opus, ${ld(RG.gpt.cc - RG.gpt.pi)} with ${RG.model}${RG.gem ? ` and ${ld(RG.gem.cc - RG.gem.pi)} with ${RG.gem_model}` : ""}. ${RG.model} graded harder than Opus and gave ${H.cc} ${g1(RG.gpt.cc)} against ${g1(RG.gpt.pi)}${RG.gem ? `, and ${RG.gem_model} ${gemTie ? `called it a tie at ${g1(RG.gem.cc)} each` : `gave ${g1(RG.gem.cc)} against ${g1(RG.gem.pi)}`}` : ""}.${RG.gem && RG.same_winners ? ` All three picked the same winner on each task.${gemTie ? ` The tie comes from the ${short(RG.gem_pi_task)} task, where ${RG.gem_model} put ${H.pi} ${Math.abs(RG.gem_pi_gap - 1) < 0.05 ? "a full point" : `${g1(RG.gem_pi_gap)} points`} ahead.` : ""}` : ""}${gemTie ? " So the small quality lead depends on which model grades." : ""}</p>` : ""}`;
 $("comicPass").textContent = allSolved ? `"every run did."` : `"${full.filter(r => r.resolved).length} of ${full.length} did."`;
 })();
 </script>
