@@ -34,6 +34,9 @@ theme        = "hello-friend-ng"
   footerLeft  = "Powered by <a href=\"https://gohugo.io\">Hugo</a>"
   footerRight = '<a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
 
+[privacy.youtube]
+  privacyEnhanced = true
+
 [markup.goldmark.renderer]
   unsafe = true
 
