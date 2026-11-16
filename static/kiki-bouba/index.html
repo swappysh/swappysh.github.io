@@ -55,9 +55,12 @@ nav a:hover, nav a:focus-visible { border-color: var(--ink); }
 .strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x proximity; }
 .shot { flex: none; display: block; border: 1.5px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bg-2); scroll-snap-align: start; cursor: zoom-in; }
 .shot:hover, .shot:focus-visible { border-color: var(--ink); }
+/* auto margins center the shots but still let a long strip scroll from its first shot */
+.shot:first-child { margin-left: auto; }
+.shot:last-child { margin-right: auto; }
 .shot img { display: block; height: 340px; width: auto; }
 .strip.one .shot { flex: 1 1 auto; max-width: 100%; }
-.strip.one .shot img { width: 100%; height: auto; max-height: 720px; object-fit: contain; object-position: left top; }
+.strip.one .shot img { width: 100%; height: auto; max-height: 720px; object-fit: contain; object-position: center top; }
 footer { margin-top: 56px; color: var(--muted); font-size: 14px; border-top: 1.5px solid var(--line); padding-top: 14px; }
 footer a { color: var(--ink-2); }
 dialog { border: 0; padding: 0; background: transparent; max-width: 100vw; max-height: 100vh; width: 100vw; height: 100vh; }
