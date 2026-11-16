@@ -22,6 +22,7 @@ Authors and essays I keep coming back to live on their own page: [Library](/libr
 - [Mixmake](https://www.mixmake.com/): Edit audio by editing text: upload, transcribe, delete words, re-render and download. MCP server for agents.
 - [Beacon](https://testflight.apple.com/join/umQPEZpQ): Emoji-only messenger for close friends. DMs and groups, no text in chat.
 - **JournallingCompanion**: Guided journaling keyed to your MBTI, prompts and conversation by voice or text.
+- [Kiki Bouba](https://apps.apple.com/us/app/kiki-bouba-spiky-or-round/id6832421244): An iPhone game where friends call things spiky or round. Every mockup we tried is on the [mood board](/kiki-bouba/).
 - [Trait Dial](/trait-dial.html): Turn Big Five sliders, MBTI switches, an Enneagram pick, or a Hogwarts house, and watch one shared personality profile update across all four.
 
 I noticed a pattern, got curious, and built the thing that let me sit inside it longer.
