@@ -1,5 +1,5 @@
 +++
-title = "We asked AI to find our research idea from day one. It found it once in ten tries."
+title = "[Draft] We asked AI to find our research idea from day one. It found it once in ten tries."
 date = 2026-11-17T22:00:00Z
 draft = false
 description = "A replay of one project's first day: could AI question-askers, a field map or a pool of models find the idea we published?"
@@ -8,6 +8,8 @@ categories = ["research"]
 +++
 
 _By Swapnil Sharma, 17 November 2026_
+
+_Draft: still being edited. This label comes off when it is final._
 
 We gave an AI the plan we wrote on the first day of a project and let it hunt for the idea our paper ended up with. In ten games it got there once, on its very last guess. Extra helpers did not change that much. The problem was hard because the idea needed the question itself to change.
 
