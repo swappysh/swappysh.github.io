@@ -39,7 +39,7 @@ We ran five setups, two games each:
 
 Re-Search had tested both kinds of help. A pool of questions from several models lifted its weaker detectives by about a point. Its strongest model lost about half a point. A survey helped most when it named the answer: up to 1.25 points over a survey that left the answer out.
 
-![An animated diagram, built one step at a time: the detective sends questions to an answerer who knows the idea and gets yes or no back. A field map feeds the detective; three different models each send it a question; both together; then three copies of the detective's own model. The last frame shows all five setups with their cost per game: solo $0.43, map $0.45, pool $0.85, map plus pool $0.95, same-model pool $1.01.](/retro-ideation/five-setups.gif)
+![An animated diagram of one round. The parts stay in place: a field map on the left, three pool models above, the detective in the middle, the answerer on the right, two judges below. A survey sheet slides from the map into the detective. Three question marks fly down from the pool models and the detective keeps one. The question "Is it about X?" travels to the answerer and "No." comes back, a few more times. At question 20 a best-guess card goes to each judge, and both score it 5. Footer: solo has no map and no pool; cost per game is solo $0.43, map $0.45, pool $0.85, map plus pool $0.95, same-model pool $1.01.](/retro-ideation/game-flow.gif)
 
 ## What happened
 
