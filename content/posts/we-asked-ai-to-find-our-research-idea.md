@@ -2,7 +2,7 @@
 title = "[Draft] We asked AI to find our research idea from day one. It found it once in ten tries."
 date = 2026-11-17T22:00:00Z
 draft = false
-description = "A replay of one project's first day: could AI question-askers, a field map or a pool of models find the idea we published?"
+description = "A replay of one project's first day: could AI question-askers, a field map or a pool of models find where the project ended up?"
 tags = ["agents", "llm", "research"]
 categories = ["research"]
 +++
