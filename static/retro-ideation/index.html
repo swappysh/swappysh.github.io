@@ -1,0 +1,144 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="We gave an AI the plan from a project's first day and let it hunt for the idea our paper landed on two weeks later. It found it once in ten games."><link rel="canonical" href="https://swappysh.github.io/retro-ideation/">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Swapnil Sharma"><meta property="og:title" content="Twenty Questions With Our Own Paper"><meta property="og:description" content="We gave an AI the plan from a project's first day and let it hunt for the idea our paper landed on two weeks later. It found it once in ten games."><meta property="og:url" content="https://swappysh.github.io/retro-ideation/"><meta property="og:image" content="https://swappysh.github.io/retro-ideation/detective-game.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Twenty Questions With Our Own Paper"><meta name="twitter:description" content="We gave an AI the plan from a project's first day and let it hunt for the idea our paper landed on two weeks later. It found it once in ten games."><meta name="twitter:image" content="https://swappysh.github.io/retro-ideation/detective-game.png"><meta name="twitter:creator" content="@swappysh">
+<script>try{var m=localStorage.getItem('site-mode');document.documentElement.setAttribute('data-theme',m==='day'||m==='summer'?'light':'dark')}catch(e){}</script>
+<title>[Draft] Twenty Questions With Our Own Paper</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shantell+Sans:ital,wght@0,400;0,600;0,800;1,400&amp;family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<style>body{margin:0}
+/* Layout: a graph-paper lab notebook. One 64ch reading column; widgets break out to ~980px; comics sit between sections. */
+:root {
+  --paper: #f3f5f8;
+  --grid: #e3e8ef;
+  --panel: #ffffff;
+  --ink: #17202b;
+  --muted: #586374;
+  --line: #c9d1dc;
+  --cc: #b04a22;
+  --cc-soft: #f6dccf;
+  --pi: #18798a;
+  --pi-soft: #cfe9ed;
+  --hi: #f5cf55;
+  --hi-ink: #17202b;
+  --focus: #2d6fae;
+  --good: #2f7d4a;
+  --warn: #94570f;
+  --t-bash: #5a4aa6;
+  --t-read: #255f96;
+  --t-edit: #1d6a43;
+  --t-search: #715810;
+  --t-other: #555d6b;
+  --display: "Shantell Sans", "Comic Neue", "Segoe Print", system-ui, sans-serif;
+  --body: "Literata", "Iowan Old Style", Georgia, serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #11161d; --grid: #19202a; --panel: #19202a; --ink: #e5e9ef; --muted: #9aa5b5; --line: #2f3946;
+    --cc: #f08a5d; --cc-soft: #4a2a1d; --pi: #4cc0d0; --pi-soft: #173c43; --hi: #7a5c0e; --hi-ink: #ffffff; --focus: #f5cf55;
+    --good: #5fc283; --warn: #e0a050;
+    --t-bash: #a597f0; --t-read: #74b3ef; --t-edit: #5fcc94; --t-search: #e0bd52; --t-other: #a3acb9;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #11161d; --grid: #19202a; --panel: #19202a; --ink: #e5e9ef; --muted: #9aa5b5; --line: #2f3946;
+  --cc: #f08a5d; --cc-soft: #4a2a1d; --pi: #4cc0d0; --pi-soft: #173c43; --hi: #7a5c0e; --hi-ink: #ffffff; --focus: #f5cf55;
+  --good: #5fc283; --warn: #e0a050;
+  --t-bash: #a597f0; --t-read: #74b3ef; --t-edit: #5fcc94; --t-search: #e0bd52; --t-other: #a3acb9;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--ink);
+  font: 400 1.0625rem/1.65 var(--body);
+  padding-inline: 16px;
+  padding-block: 0 4rem;
+}
+.page { max-width: 64ch; margin-inline: auto; display: flex; flex-direction: column; gap: 1.1rem; }
+.wide { width: 100%; }
+
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(2.6rem, 8vw, 4.4rem); font-weight: 800; letter-spacing: -0.01em; }
+h2 { font-size: 1.7rem; font-weight: 800; margin-top: 2.2rem; }
+h3 { font-size: 1.15rem; font-weight: 600; }
+p { margin: 0; }
+a { color: inherit; text-decoration-color: var(--muted); text-underline-offset: 3px; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+.cc { color: var(--cc); font-weight: 600; }
+.pi { color: var(--pi); font-weight: 600; }
+.num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 0.92em; }
+.hl { background: linear-gradient(transparent 55%, var(--hi) 55%, var(--hi) 88%, transparent 88%); padding-inline: 0.1em; }
+
+header.hero { padding-block: 3rem 0.5rem; display: flex; flex-direction: column; gap: 0.9rem; }
+.eyebrow { font: 600 0.78rem/1.3 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.dek { font-size: 1.2rem; color: var(--ink); }
+.byline { font: 500 0.88rem/1.4 var(--mono); color: var(--muted); }
+.byline:empty { display: none; }
+.byline a { color: var(--ink); text-decoration-color: var(--hi); text-decoration-thickness: 3px; text-underline-offset: 3px; }
+.draft {
+  font: 500 0.85rem/1.45 var(--mono); color: var(--warn);
+  border: 1.5px dashed var(--warn); border-radius: 6px; padding: 0.6rem 0.8rem; background: var(--panel);
+}
+
+/* figure shell */
+.fig { background: var(--panel); border: 1.5px solid var(--line); border-radius: 10px; padding: 1rem; display: flex; flex-direction: column; gap: 0.9rem; }
+.figcap { font: 400 0.84rem/1.5 var(--body); color: var(--muted); }
+
+.fig img { width: 100%; height: auto; display: block; border-radius: 4px; }
+.fig { margin: 0.4rem 0; }
+ul { margin: 0; padding-left: 1.3rem; display: flex; flex-direction: column; gap: 0.4rem; }
+.back { font: 500 0.88rem/1.4 var(--mono); }
+footer { margin-top: 2rem; border-top: 1.5px solid var(--line); padding-top: 1rem; }
+</style></head><body>
+<main class="page">
+  <p class="back"><a href="/">← swappysh.github.io</a></p>
+  <header class="hero">
+    <div class="eyebrow">Field notes · research agents · replaying day one</div>
+    <h1>Twenty Questions With <span class="hl">Our Own Paper</span></h1>
+    <p class="dek">We gave an AI the plan we wrote on the first day of a project. Then we let it hunt for the idea our paper landed on about two weeks later. <span class="hl">In ten games it found that idea once, on its very last guess.</span> A map of the field and a team of models to suggest questions barely helped. The hard step was leaving the frame our plan started in.</p>
+    <p class="byline">By <a href="https://swappysh.github.io">Swapnil Sharma</a> · <a href="https://x.com/swappysh">@swappysh</a> · Nov 17, 2026</p>
+    <p class="draft">Draft: still being edited. This label comes off when it is final.</p>
+  </header>
+<h2>The game</h2>
+<p>A recent paper, <a href="https://arxiv.org/abs/2611.14487" target="_blank" rel="noopener">Re-Search</a>, turned research ideas into Twenty Questions. Its authors took 200 papers from ICML 2026. A model got only each paper's problem and asked up to 100 yes/no questions to rediscover the paper's idea. <span class="hl">Most models made nearly all their progress in the first 30 questions.</span></p>
+<p>We copied the game on a smaller scale. A detective model gets only the problem. It asks 60 yes/no questions to a model that knows the answer. After every 10 questions it writes its best guess on a card. Two judge models score each card from 0 to 10. A 5 means the right area but the wrong mechanism. An 8 means the card names the key mechanism. Claude Sonnet 5.5 played detective, gpt-5.4-mini answered, and gpt-5.5 and Claude Opus 5.5 judged.</p>
+<p>Most answers are No. <span class="hl">A detective playing alone heard Yes 4 times in 60 questions</span>, in both of its games.</p>
+<figure class="fig"><img loading="lazy" alt="A four-panel comic. A detective holds the day-one plan while another figure holds a sealed envelope with the real idea. The detective asks &quot;Is it about X?&quot; and hears &quot;No.&quot; Every 10 questions two judges score its best guess 5. In the last panel the detective slumps next to a heap of &quot;No.&quot; bubbles: 56 Noes, 4 Yeses." src="detective-game.png" /></figure>
+<h2>Our case</h2>
+<p>The target was one of our own projects. Its day-one plan was about how AI judges rate art. The paper ended up about a different kind of image. That paper is under blind review, so we stay vague about it here.</p>
+<h2>Five ways to play</h2>
+<p>We ran five setups, two games each:</p>
+<ul>
+<li>Solo: the detective asks every question itself.</li>
+<li>Map: before the game, the detective reads a short survey of the field's known approaches, written without seeing the answer.</li>
+<li>Pool: three different models each propose a question, and the detective picks one.</li>
+<li>Map plus pool: both kinds of help.</li>
+<li>Same-model pool: three calls to the detective's own model each propose a question.</li>
+</ul>
+<p>Re-Search had tested both kinds of help. A pool of questions from several models lifted its weaker detectives by about a point. Its strongest model lost about half a point. A survey helped most when it named the answer: up to 1.25 points over a survey that left the answer out.</p>
+<figure class="fig"><img loading="lazy" alt="An animated diagram of one round. The parts stay in place: a field map on the left, three pool models above, the detective in the middle, the answerer on the right, two judges below. A survey sheet slides from the map into the detective. Three question marks fly down from the pool models and the detective keeps one. The question &quot;Is it about X?&quot; travels to the answerer and &quot;No.&quot; comes back, a few more times. At question 20 a best-guess card goes to each judge, and both score it 5. Footer: solo has no map and no pool; cost per game is solo $0.43, map $0.45, pool $0.85, map plus pool $0.95, same-model pool $1.01." src="game-flow.gif" /></figure>
+<h2>What happened</h2>
+<p><span class="hl">No setup reliably found the idea.</span> Four setups ended with average final scores between 4.5 and 5. The three-model pool averaged 6.8, from one game at 8 and one at 5.5. With two games per setup, <span class="hl">that 6.8 is one lucky game</span>.</p>
+<p>The lucky game owes little to mixing models. The questions that cracked it came from the detective's own model. The other models' last two questions only confirmed what it had found. The same-model pool never got there, and its three proposals were often near-copies of each other. Every pool cost about twice as much per game as playing solo.</p>
+<p><span class="hl">The map did nothing.</span> Map games ended at 5.0 against solo's 4.8, and map plus pool scored lowest of all. Our map covered methods for studying art and never mentioned the other kind of image. In Re-Search's terms it was a decoy, the case where a survey helped least. Our detective was also a strong model, and Re-Search's pool helped its strongest model least.</p>
+<figure class="fig"><img loading="lazy" alt="Line chart of judge score against questions asked, 10 to 60, one line per game. Nine grey lines wander between 2 and 6.5 and mostly end near 5, the &quot;right area, wrong mechanism&quot; line. One orange line sits near 5 and 6, gets a Yes at question 20 to &quot;A different kind of image than art?&quot;, and jumps to 8 on its last card." src="scores.png" /><figcaption class="figcap">One game in ten reached 8, on its last card. Each line is one game; each dot is the judges' average score for its best guess after every 10 questions. Dashed lines mark 5 (right area, wrong mechanism) and 8 (found it).</figcaption></figure>
+<h2>The wall</h2>
+<p>The detectives failed for one reason. The plan was about art, and the answer was about a different kind of image. <span class="hl">Eight of ten games never learned that.</span> They stayed on art and settled on a card the judges scored 5.</p>
+<p>The winning game asked at question 20: "Is the paper about a different kind of image than art?" It got a Yes. Two questions later it knew which kind. At questions 54 to 57, four more Yeses pinned down the mechanism. Its last card named it, and both judges gave it 8.</p>
+<p>One other game left art at question 41. It then chased a different wrong idea and ended at 4.</p>
+<figure class="fig"><img loading="lazy" alt="A three-panel comic. Stick-figure detectives walk around inside a giant gilded picture frame labelled ART, one holding a map of the inside; outside the frame is fog. One detective reaches the frame's edge and asks &quot;Is it a different kind of image?&quot; and a voice outside says &quot;Yes.&quot; That detective climbs out and holds up an 8, while the ones inside hold 5s." src="the-wall.png" /></figure>
+<p><span class="hl">So the hardest step was dropping the starting frame.</span> More askers did not fix that, and neither did a map of the field we started in.</p>
+<h2>What we changed</h2>
+<p>Our own team started in the same frame. Over its first three days, our day-one plan went through about 40 review rounds. Almost all were small fixes to definitions and wording, and <span class="hl">all of them stayed inside art</span>. The idea came later, from running experiments and looking at what came back.</p>
+<p>So <span class="hl">we now keep a notebook of things we can't explain</span>: odd model outputs, results that shouldn't happen, methods failing where they should work. Before we rank ideas, we look at about 30 raw examples ourselves. We're not adding model pools or blind field maps to our idea step for now.</p>
+<p>A map that pointed toward the answer might help, and we did not test one. This was one project with two games per setup. The whole test cost $8.77.</p>
+  <footer class="back"><a href="/">← swappysh.github.io</a></footer>
+</main>
+</body></html>
