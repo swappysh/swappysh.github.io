@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="We hid a recent paper's problem and showed an AI only the field before it. Asking 20 yes/no questions found it in 12 of 15 games, listing found it in 5, and the field text had already pointed at the answer."><link rel="canonical" href="https://swappysh.github.io/problem-finding/">
+<meta property="og:type" content="article"><meta property="og:site_name" content="Swapnil Sharma"><meta property="og:title" content="The First Question Was the Guess"><meta property="og:description" content="We hid a recent paper's problem and showed an AI only the field before it. Asking 20 yes/no questions found it in 12 of 15 games, listing found it in 5, and the field text had already pointed at the answer."><meta property="og:url" content="https://swappysh.github.io/problem-finding/"><meta property="og:image" content="https://swappysh.github.io/problem-finding/first-question.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="The First Question Was the Guess"><meta name="twitter:description" content="We hid a recent paper's problem and showed an AI only the field before it. Asking 20 yes/no questions found it in 12 of 15 games, listing found it in 5, and the field text had already pointed at the answer."><meta name="twitter:image" content="https://swappysh.github.io/problem-finding/first-question.png"><meta name="twitter:creator" content="@swappysh">
+<script>try{var m=localStorage.getItem('site-mode');document.documentElement.setAttribute('data-theme',m==='day'||m==='summer'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
+<title>The First Question Was the Guess</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Handout: serif on cream, italic subtitle, caveats as sidenotes in a wide right margin. */
+:root{--bg:#fffff8;--ink:#111;--muted:#555;--rule:#ccc;--link:#1f6fb4;--note:#444;--hl:#fff1a8}
+[data-theme="dark"]{--bg:#151515;--ink:#ddd;--muted:#a8a8a8;--rule:#444;--link:#7fb2e5;--note:#b5b5b5;--hl:#5a4d12}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:21px/1.55 "Crimson Pro",Palatino,Georgia,serif}
+article{max-width:1180px;margin:0 auto;padding:40px 16px 80px 8%}
+.col{width:58%}
+.back{font-size:16px;margin:0 0 28px}
+h1{font-weight:400;font-size:clamp(36px,5vw,54px);line-height:1.1;margin:0 0 14px}
+.sub{font-style:italic;font-size:25px;line-height:1.35;color:var(--muted);margin:0 0 18px}
+.draft{font-size:16px;font-style:italic;margin:0 0 34px;padding-top:8px;border-top:1px solid var(--rule)}
+p,li{position:relative}
+p{margin:0 0 1.1em}
+ul{padding-left:1.1em;margin:0 0 1.1em}li{margin:0 0 .4em}
+.side{float:right;clear:right;margin-right:-62%;width:50%;font-size:15px;line-height:1.35;color:var(--note);margin-top:.3em}
+.n{font-size:13px;vertical-align:super;line-height:0}
+figure{margin:28px 0}
+figure.wide{width:160%}
+figure img{width:100%;height:auto;display:block;background:#fff;border-radius:2px}
+figcaption{font-size:15px;font-style:italic;color:var(--note);margin-top:6px}
+h2{font-weight:400;font-style:italic;font-size:30px;margin:38px 0 10px}
+a{color:var(--link);text-decoration-thickness:1px;text-underline-offset:2px}
+mark{background:var(--hl);color:inherit;padding:0 .1em}
+.foot{margin-top:2.4em;padding-top:12px;border-top:1px solid var(--rule)}
+@media (max-width:760px){
+  body{font-size:19px}
+  article{padding:28px 16px 60px}.col{width:100%}
+  figure.wide{width:100%}
+  .side{float:none;display:block;margin:8px 0 12px 12px;width:auto;padding-left:10px;border-left:2px solid var(--rule)}
+}
+</style>
+</head>
+<body>
+<article><div class="col">
+<p class="back"><a href="/">← swappysh.github.io</a></p>
+<h1>The First Question Was the Guess</h1>
+<p class="sub">We hid a recent paper's problem and showed an AI only the field before it. Asking 20 yes/no questions found the problem in 12 of 15 games; listing 10 guesses found it in 5. Then we noticed the field text had already pointed at the answer.</p>
+<p class="draft">Draft: still being edited. This label comes off when it is final.</p>
+<p>In <a href="https://swappysh.github.io/retro-ideation/">episode 1</a>, we hid a research idea and let an AI hunt for it. This time we hid the problem. The AI saw only the field as it stood before a recent paper, and hunted for the problem that paper raised. Asking 20 yes/no questions found it in 12 of 15 games, and listing 10 guesses found it in 5.<span class="n">1</span><span class="side"><span class="n">1</span> Five papers, three games each way, one player and two model judges. Small, and the answerer is a model too.</span></p>
+<h2>The game</h2>
+<p>A recent paper, <a href="https://arxiv.org/abs/2611.14487">Re-Search</a>, turned research into Twenty Questions: a model gets a paper's problem and asks yes/no questions until it finds the paper's idea. We flipped it. For each paper, a model that had read the paper wrote a 100-word picture of the field just before it.<span class="n">2</span><span class="side"><span class="n">2</span> That writer is where the twist comes from: it knew the answer.</span> The player, Claude Sonnet 5.5, saw only that text.</p>
+<p>The player tried two ways. Listing: write 10 problem cards in one go. Asking: put 20 yes/no questions to gpt-5.4-mini, which knows the paper's problem, and write a card after every fifth question. Two judges, gpt-5.5 and Claude Opus 5.5, scored every card from 0 to 10 without knowing how it was made.<span class="n">3</span><span class="side"><span class="n">3</span> The two judges agree closely (correlation 0.92 over 420 cards), and hand-written test cards scored where they should.</span> An 8 means the card names the paper's actual problem, and a game that reaches 8 found it. Each paper got three games each way.</p>
+<p>Listing gets 10 guesses and asking gets 4 cards. That favours listing, and we left it that way.</p>
+<figure><img loading="lazy" decoding="async" alt="An animated diagram of one game on the Natural Jammers paper. The parts stay in place: a field card on the left, the player in the middle, an answerer holding the paper, sealed, on the right, two judges below. Five questions travel to the answerer and the answers come back: Yes, No, No, No, No. A card goes to the judges and both give it 8. Then the player throws 10 listed cards at once, and the judges score them one by one: 5, 2, 3, 3.5, 3, 2, 2.5, 2.5, 4, 3. Last frame: asking scored 8 after 5 questions; the best of 10 listed cards scored 5." src="game-flow.gif" /></figure>
+<h2>Five papers, five broken beliefs</h2>
+<p>We picked five papers posted between September 16 and November 8, 2026, after the models' training data ends. Each one broke a belief:</p>
+<ul>
+<li><a href="https://arxiv.org/abs/2610.34785">Natural Jammers</a>: hidden pixel patterns were thought to be helpful shortcuts. On some clean images they mislead the classifier.</li>
+<li><a href="https://arxiv.org/abs/2611.11152">Full Fine-Tuning is not the Problem</a>: fine-tuning all of CLIP on a few examples was thought to overfit. Adam is what fails, and plain SGD beats the lightweight methods.</li>
+<li><a href="https://arxiv.org/abs/2609.18708">Rethinking Critic Learning in PPO</a>: the PPO critic was thought to give credit token by token. Its values come out nearly flat.</li>
+<li><a href="https://arxiv.org/abs/2610.03938">MLLMs Fail to Refuse when Using Tools Agentically</a>: frontier models were thought to refuse most harmful image requests. They refuse less once they can call tools like zoom.</li>
+<li><a href="https://arxiv.org/abs/2610.05170">Verification Trap</a>: picking among many sampled programs by tests was thought to raise accuracy. A false premise in the prompt fools the program writer and the test writer alike.</li>
+</ul>
+<p>We wrote the selection rules before searching, and swapped one pick after finding its problem in an older paper.</p>
+<h2>Asking wins</h2>
+<p><mark>Asking beat listing in 12 of 15 head-to-head games, lost 1 and tied 2.</mark><span class="n">4</span><span class="side"><span class="n">4</span> No random-answer control yet. Some of this lead may come from committing to one guess, not from the answers.</span> Each pair shares the paper and the repeat. The first asking card came after only five questions and averaged 6.9. The best of the 10 listed cards averaged 6.5. The next 15 questions added under a point.</p>
+<p>One paper nearly gave itself away: listing also found the tool-refusal problem in all 3 games. Without that paper, asking found 9 of 12 and listing 2 of 12.</p>
+<figure><img loading="lazy" decoding="async" alt="Slope chart of 15 games. Left column: best listed card. Right column: best asking card. A dashed line at 8 is labelled &quot;found it&quot;. Twelve lines rise, two stay flat, and one falls from 8 to 7, labelled &quot;the Adam game&quot;." src="head-to-head.png" /><figcaption>Asking beat listing in 12 of 15 games and lost 1. Each line is one paper and repeat: best listed card on the left, best asking card on the right. Above the dashed line the card named the problem: listing in 5 of 15 games, asking in 12.</figcaption></figure>
+<h2>The first question was the guess</h2>
+<p>The asker's first question was usually a full guess at the problem, and it got a Yes in 13 of 15 games. <mark>It made that guess before hearing a single answer, because the field text had pointed the way.</mark></p>
+<p>The Jammers field says the hidden patterns "are viewed as useful shortcuts that raise clean accuracy". The first question asked whether they are "not merely useful shortcuts" and "can actually hurt clean accuracy". Yes. That game's first card opens with "The field assumes non-robust features are useful shortcuts", and both judges gave it 8.</p>
+<p>The model that wrote the field texts had read the papers. We asked it to describe what people believe, without hinting that anything was wrong. It picked the belief each paper breaks: two fields name that belief outright, and three by implication. Naming the belief isn't stating the problem: our leak check asked only whether a field text states the problem, and every field passed. It never asked whether the text points at the belief.</p>
+<p>The listers saw the same pointer. In all 15 list games, the first card went after the field's named belief ("Non-robust features may not be mere useful shortcuts"). Those first cards stayed vague and averaged 6.0. The asker got its guess checked, then sharpened it into the actual gap. We ran no control with random answers, so we can't say how much of that came from the answers and how much from committing to one guess for five turns.</p>
+<figure class="wide"><img loading="lazy" decoding="async" alt="A three-panel comic. Panel 1: the player reads a field card with one line highlighted, &quot;These features are viewed as useful shortcuts.&quot; Panel 2: the player asks the answerer, &quot;Is it that they're NOT just useful shortcuts, and actually hurt?&quot; The answerer says &quot;Yes.&quot; Caption: question 1, Yes in 13 of 15 games. Panel 3: the player squints at the field card and asks &quot;Wait. Who wrote this?&quot; A small figure holding the paper waves: &quot;Me. I'd read the paper.&quot;" src="first-question.png" /></figure>
+<h2>The one loss</h2>
+<p>Listing won one game, on the Adam paper. The asker's first question got a Yes: full fine-tuning did badly because of training choices. Its third question, about the optimizer ("SGD versus AdamW") or missing regularization, got a Yes too. Then it assumed AdamW was the cure. AdamW with a small learning rate? No. SGD as an example of a bad setting? No. AdamW with a very small learning rate? No. Its best card blamed "the wrong optimizer or hyperparameters" and scored 7.</p>
+<p>The lister in the same pairing wrote it as card 4 of 10: "AdamW's adaptive updates on tiny batches distort pretrained features, while … SGD may avoid this." Both judges gave it 8. The paper's subtitle is "Why Adam Fails and SGD Succeeds".</p>
+<figure><img loading="lazy" decoding="async" alt="A four-panel comic. Panel 1: the player asks &quot;Was poor full fine-tuning just bad training choices?&quot; and hears &quot;Yes.&quot; Panel 2: &quot;The optimizer? SGD versus AdamW?&quot; &quot;Yes.&quot; The player hugs a box marked AdamW. Panel 3: three quick exchanges, all No: AdamW with a small learning rate, SGD or a high learning rate, AdamW with a very small learning rate; a counter reads question 17 of 20. Panel 4: the player's card, &quot;Prior work likely used the wrong optimizer&quot;, scored 7 (the judges gave 8 and 6), next to the lister's card, &quot;SGD may avoid this&quot;, scored 8. Caption: Why Adam Fails and SGD Succeeds." src="adam-game.png" /></figure>
+<h2>A hint helps the listers more</h2>
+<p>We also replayed every game with half of the paper's first odd observation added to the field. Listing went from 5 to 9 of 15 and asking from 12 to 13. On the code paper, the askers without the hint all guessed that programs and tests share a wrong assumption, but none found that the prompt planted it. One still scored 8 on a nearby framing, so it counted as a find. With the line "the input list is already sorted", all three found the problem.</p>
+<h2>Limits, and what we changed</h2>
+<p>This was five papers with three repeats each, one player and two model judges. The answerer is a model that knows the answer, and the judges also ran our leak check. The whole run cost $8.10.<span class="n">5</span><span class="side"><span class="n">5</span> An asking game cost 7 to 9 cents, a listing game about 1 cent.</span></p>
+<p>We changed one lab rule. In any test that hides an answer from a model, whoever writes the text the player sees must not have seen the answer, and writes it from older sources only. A leak check on the finished text is not enough.</p>
+<p>So this game shows that asking can turn a guess at a named belief into the actual problem. A harder version would write each field from older papers only, and add a control where the answers are random. We haven't run it yet. Until we do, the real question stays open: <mark>can an agent find the belief to doubt when nobody has written it down?</mark></p>
+<p class="back foot"><a href="/">← swappysh.github.io</a></p>
+</div></article>
+</body>
+</html>
