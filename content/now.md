@@ -18,6 +18,7 @@ Memes are one of the tools I take seriously for this, compressed cultural knowle
 - Context and form fit, after [Henrik & Johanna Karlsson](https://www.henrikkarlsson.xyz/p/problem-solving): *you don't solve a hard problem, you understand its context until the solution stops needing to be found.*
 - Attention and will, after Simone Weil: *what you pay attention to is a choice long before it's a feeling.*
 - Discernment and boundaries, after David Schnarch: *knowing what you'll give and what you won't isn't the same as being closed off.*
+- Curiosity and the watcher, after Porch: *the part of me that watches and judges goes quiet when I get curious about what's actually happening. I can't interrogate something and wonder about it at the same time.*
 
 ## Current threads
 
