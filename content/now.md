@@ -13,6 +13,27 @@ In practice, that means I want to be an illuminator in people's lives: a communi
 
 Memes are one of the tools I take seriously for this, compressed cultural knowledge that travels on its own. Movies too: one of the better ways to put some light in front of someone without forcing it on them, letting them arrive at it themselves.
 
+## On love
+
+Love, to me, is a quality of a person, an orientation of character, not something that only exists between two people. I have a baseline of care for almost everyone. Sometimes attraction sits on top of it, and whether to explore that is a separate choice.
+
+I'd rather love from abundance than scarcity. The point isn't to ration love but to love more. The people I love will love others too, and I'll let them, and I want to be glad of it: compersion, or mudita, joy that someone I love is loved by others. Jealousy and scarcity still show up. When they do, I try to meet them with curiosity, not hide them or obey them. Loving broadly doesn't make loving one person smaller. Both are true.
+
+It's the gardener love from above: tending people and letting them grow, without carrying or saving them.
+
+## How I hold a belief
+
+Every push has a pull-back. Lean hard into any good belief and it can overshoot into its own failure. So each belief I hold gets four parts:
+
+- *Position:* what I believe now.
+- *Direction:* where I'm moving from and to.
+- *Counter pole:* a practice at the opposite end, so the move doesn't overshoot.
+- *Overshoot signal:* a concrete behavior that shows it has gone too far.
+
+Loving from abundance is one. Its counter pole is room for jealousy, met with curiosity. Its overshoot signal is using "abundance" to talk myself out of a real need. Gardener love is another. Its counter pole is letting myself be cared for too. Its overshoot signal is rescuing or carrying people, or feeling flat when no one needs me.
+
+Once a month I ask, for each belief: which pole went quiet? That one usually needs tending.
+
 ## Frameworks I keep coming back to
 
 - Context and form fit, after [Henrik & Johanna Karlsson](https://www.henrikkarlsson.xyz/p/problem-solving): *you don't solve a hard problem, you understand its context until the solution stops needing to be found.*
