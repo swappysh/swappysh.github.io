@@ -5,6 +5,10 @@ draft = false
 description = "Frameworks I keep coming back to, and what I'm currently curious about."
 +++
 
+> Curiosity is what quiets the watcher
+>
+> — Porch
+
 ## What I'm oriented toward
 
 A lot of what drives me comes down to this: suffering shouldn't go unnoticed, and people shouldn't have to fight so hard to find a way out of it. I want to build paths toward safety that people can actually walk, not just point at from a distance. I want help to reach people quickly, with as little resistance as possible between someone's pain and the support that could meet it.
