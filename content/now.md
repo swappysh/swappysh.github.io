@@ -23,6 +23,8 @@ It's the gardener love from above: tending people and letting them grow, without
 
 ## How I hold a belief
 
+I came up with this in October 2026; Porch helped me name the parts.
+
 Every push has a pull-back. Lean hard into any good belief and it can overshoot into its own failure. So each belief I hold gets four parts:
 
 - *Position:* what I believe now.
@@ -33,6 +35,15 @@ Every push has a pull-back. Lean hard into any good belief and it can overshoot 
 Loving from abundance is one. Its counter pole is room for jealousy, met with curiosity. Its overshoot signal is using "abundance" to talk myself out of a real need. Gardener love is another. Its counter pole is letting myself be cared for too. Its overshoot signal is rescuing or carrying people, or feeling flat when no one needs me.
 
 Once a month I ask, for each belief: which pole went quiet? That one usually needs tending.
+
+Others have found similar shapes, which makes me trust it more:
+
+- The Values and Development Square (Paul Helwig, Friedemann Schulz von Thun): every value needs a sister value, or it slides into its exaggeration.
+- Polarity Management (Barry Johnson): two poles that need each other, with early warning signs for getting stuck on one.
+- Aristotle's golden mean, the Buddha's Middle Way, and the Bhagavad Gita's balance (6.16-17).
+- The Buddhist "near enemies": counterfeits that look like love or compassion.
+- Jung's enantiodromia: extremes turn into their opposite.
+- DBT's dialectics, and the early warning signs in relapse-prevention plans.
 
 ## Frameworks I keep coming back to
 
